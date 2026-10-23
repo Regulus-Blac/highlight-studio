@@ -1,0 +1,4 @@
+[submodule "vendor/competition"]
+	path = vendor/competition
+	url = https://github.com/Regulus-Blac/aigc_HighlightEditing_TokenBurntOut.git
+	branch = sym

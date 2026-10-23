@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PredictionResultV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["api_version", "video_id", "target_ratio", "engine", "mock", "predictions"],
+  "properties": {
+    "api_version": {"const": "1"},
+    "video_id": {"type": "string", "minLength": 1},
+    "target_ratio": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 1}},
+    "engine": {"type": "string", "minLength": 1},
+    "mock": {"type": "boolean"},
+    "predictions": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["frame", "bboxes"],
+        "properties": {
+          "frame": {"type": "integer", "minimum": 0},
+          "bboxes": {
+            "type": "array", "minItems": 3, "maxItems": 3,
+            "prefixItems": [{"type": "number", "minimum": 0}, {"type": "number", "minimum": 0}, {"type": "number", "exclusiveMinimum": 0}]
+          }
+        }
+      }
+    }
+  }
+}

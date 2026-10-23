@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Highlight Studio · 联调入口</title>
+<style>
+  body { margin: 64px auto; padding: 0 24px; max-width: 760px; font: 16px/1.7 system-ui; color: #243148; background: #f5f7fc; }
+  main { background: white; padding: 32px; border-radius: 18px; }
+  label { display: block; margin: 18px 0; } input, select, button { padding: 10px; font: inherit; }
+  button { background: #3159da; color: white; border: 0; border-radius: 6px; cursor: pointer; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f0f3fa; padding: 18px; }
+</style>
+<main>
+  <h1>Highlight Studio</h1>
+  <p>视频高光剪辑 · 软件工程联调入口</p>
+  <p>当前为模拟模式，用于开发任务流程。不会读取视频或执行模型推理。</p>
+  <form id="job">
+    <label>示例视频编号 <input id="video" value="demo-001" required></label>
+    <label>目标画幅 <select id="ratio"><option value="9,16">9:16 竖屏</option><option value="16,9">16:9 横屏</option></select></label>
+    <button>创建模拟任务</button>
+  </form>
+  <pre id="result" aria-live="polite">等待创建任务</pre>
+</main>
+<script>
+  document.querySelector('#job').addEventListener('submit', async event => {
+    event.preventDefault();
+    const output = document.querySelector('#result');
+    output.textContent = '正在创建任务…';
+    try {
+      const response = await fetch('/api/v1/jobs', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
+        api_version: '1', video_id: document.querySelector('#video').value,
+        video_path: 'demo.mp4', target_ratio: document.querySelector('#ratio').value.split(',').map(Number)
+      })});
+      output.textContent = JSON.stringify(await response.json(), null, 2);
+    } catch (error) { output.textContent = '请求失败：' + error.message; }
+  });
+</script>
+</html>

@@ -1,0 +1,9 @@
+# 临时集成负责人。请在真实 A/B 账号确定后替换/添加。
+/.gitmodules @Regulus-Blac
+/model.lock.json @Regulus-Blac
+/vendor/competition @Regulus-Blac
+/services/model_adapter/ @Regulus-Blac
+/contracts/ @Regulus-Blac
+/.github/ @Regulus-Blac
+/.githooks/ @Regulus-Blac
+/scripts/ @Regulus-Blac

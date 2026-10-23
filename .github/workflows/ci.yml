@@ -1,0 +1,24 @@
+name: Product checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Read private competition repository
+        env:
+          COMPETITION_READ_KEY: ${{ secrets.COMPETITION_READ_KEY }}
+        run: python scripts/ci_submodule.py
+      - run: python scripts/check_repository.py
+      - run: python scripts/smoke.py

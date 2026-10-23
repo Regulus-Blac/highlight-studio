@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+runtime/
+models/
+*.pt
+*.pth
+*.safetensors
+*.mp4
+*.mov
+node_modules/
+dist/
+.DS_Store

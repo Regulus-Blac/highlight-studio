@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PredictionRequestV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["api_version", "video_id", "video_path", "target_ratio"],
+  "properties": {
+    "api_version": {"const": "1"},
+    "video_id": {"type": "string", "minLength": 1},
+    "video_path": {"type": "string", "minLength": 1},
+    "target_ratio": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 1}}
+  }
+}

@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Competition submodule is a reference. Commit model changes in the original ABC repository." >&2
+exit 1
