@@ -1,0 +1,22 @@
+flowchart LR
+    user["视频使用者"]
+    operator["部署维护者"]
+    subgraph app["首版系统边界"]
+        direction TB
+        upload(["创建项目与上传视频"])
+        analyze(["提交分析与查看状态"])
+        edit(["检查建议与微调片段"])
+        exportVideo(["导出、预览与下载"])
+        history(["继续编辑与删除项目"])
+        configure(["配置模型与处理故障"])
+    end
+    model["自部署模型"]
+    renderer["视频渲染器"]
+    user --- upload
+    user --- analyze
+    user --- edit
+    user --- exportVideo
+    user --- history
+    operator --- configure
+    analyze --- model
+    exportVideo --- renderer

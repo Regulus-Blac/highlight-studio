@@ -1,0 +1,35 @@
+sequenceDiagram
+    autonumber
+    actor U as 用户与浏览器
+    participant API as 业务后端
+    participant S as 持久化存储
+    participant W as 后台执行端
+    U->>API: 上传视频
+    API->>API: 校验媒体内容与限制
+    API->>S: 保存有效素材及元数据
+    API-->>U: 素材编号与支持的选项
+    U->>API: 提交分析（幂等键）
+    API->>S: 原子登记 queued 任务
+    API-->>U: 202 与任务编号
+    W->>S: 唯一领取任务，标记 running
+    Note over W: 调用模型适配器，校验真实预测
+    alt 分析成功
+        W->>S: 保存不可变结果与 succeeded
+    else 执行或校验失败
+        W->>S: 保存错误与 failed
+    end
+    U->>API: 查询任务
+    API->>S: 读取持久化状态
+    API-->>U: 状态、错误或结果编号
+    Note over U,W: 以下仅在真实结果有片段时继续
+    U->>API: 保存编辑（基础版本号）
+    API->>S: 检查版本并保存新版本
+    API-->>U: 已保存版本编号
+    U->>API: 导出指定版本（幂等键）
+    API->>S: 登记导出及任务快照
+    API-->>U: 202 与导出编号
+    W->>S: 领取任务，读取固定版本
+    Note over W: 裁剪画面和原声，拼接并检查成片
+    W->>S: 发布文件与成功状态，或记录失败
+    U->>API: 查询导出并下载成功文件
+    API-->>U: 成片、版本与媒体信息

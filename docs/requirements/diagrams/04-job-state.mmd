@@ -1,0 +1,18 @@
+stateDiagram-v2
+    direction LR
+    state "排队 queued" as Queued
+    state "执行 running" as Running
+    state "成功 succeeded" as Succeeded
+    state "失败 failed" as Failed
+    [*] --> Queued: 持久化创建
+    Queued --> Running: 唯一执行者领取
+    Queued --> Failed: 依赖失效
+    Running --> Succeeded: 产物验证并发布
+    Running --> Failed: 异常、超时或中断
+    Succeeded --> [*]
+    Failed --> [*]
+    note right of Failed
+        重试创建新的任务
+        用 retry_of 关联原任务
+        原失败终态不修改
+    end note

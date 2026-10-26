@@ -1,0 +1,35 @@
+flowchart TB
+    start(["创建项目并上传视频"])
+    check{"素材有效？"}
+    reject["显示原因，允许重新上传"]
+    queue["选择画幅并提交分析"]
+    run["排队后执行真实模型"]
+    result{"分析与校验成功？"}
+    failure["记录失败，保留素材"]
+    empty{"存在建议片段？"}
+    none["无高光：返回或重新分析"]
+    edit["预览并微调片段"]
+    saved["校验并保存编辑版本"]
+    enabled{"存在启用片段？"}
+    disabled["至少启用一个片段"]
+    render["固定版本，提交导出任务"]
+    verify{"成片验证成功？"}
+    retry["保留方案，允许重新导出"]
+    done(["预览并下载成片"])
+    start --> check
+    check -->|否| reject
+    reject --> start
+    check -->|是| queue
+    queue --> run --> result
+    result -->|否| failure
+    failure -. "排除原因后新建任务" .-> queue
+    result -->|是| empty
+    empty -->|否| none
+    empty -->|是| edit
+    edit --> saved --> enabled
+    enabled -->|否| disabled
+    disabled --> edit
+    enabled -->|是| render --> verify
+    verify -->|否| retry
+    retry -. "新导出任务" .-> render
+    verify -->|是| done

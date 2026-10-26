@@ -1,0 +1,39 @@
+classDiagram
+    direction TB
+    class Project["项目 Project"] {
+        id
+        name
+        current_edit_revision_id
+    }
+    class SourceVideo["源视频 SourceVideo"] {
+        sha256
+        frame_count
+        fps_num / fps_den
+    }
+    class Job["任务 Job"] {
+        kind
+        status
+        retry_of
+    }
+    class AnalysisResult["高光预测 AnalysisResult"] {
+        target_ratio
+        engine / mock
+        predictions
+    }
+    class EditRevision["剪辑版本 EditRevision"] {
+        revision
+        segments
+        analysis_result_id
+    }
+    class Export["成片记录 Export"] {
+        edit_revision_id
+        output_profile
+        storage_key
+    }
+    Project "1" *-- "0..1" SourceVideo : 绑定
+    Project "1" *-- "0..*" Job : 拥有
+    SourceVideo "1" --> "0..*" AnalysisResult : 分析对象
+    Job "1" --> "0..1" AnalysisResult : 分析成功产生
+    AnalysisResult "1" --> "0..*" EditRevision : 作为编辑依据
+    EditRevision "1" --> "0..*" Export : 固定版本导出
+    Job "1" --> "0..1" Export : 导出执行记录
