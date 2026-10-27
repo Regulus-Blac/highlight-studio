@@ -12,10 +12,19 @@ cd highlight-studio
 python scripts/bootstrap.py
 python scripts/check_repository.py
 python scripts/smoke.py
+python -m pip install -r requirements-dev.txt
+# 完整媒体测试还需在 PATH 中安装 FFmpeg/FFprobe 6.1+
+python -m unittest discover -s tests -v
 python -m apps.backend.server
 ```
 
-打开 http://127.0.0.1:8000 查看联调页。当前提供模拟任务创建、查询和结果接口；返回明确标记的模拟结果。视频上传、持久化任务队列、真实 GPU 模型接入和视频渲染属于后续产品开发，不代表已完成。
+当前提供文件上传、SQLite 持久异步预测任务、查询结果、幂等提交、排队取消和可配置推理适配器，默认返回明确标记的 Mock 结果。打开 http://127.0.0.1:8000 可查看旧 jobs 兼容页；D/E 新开发使用 uploads/tasks 接口，见 [联调交接](docs/integration.md)。CPU 媒体核心已支持片段预览、固定剪辑快照、JSONL/MP4 导出和 Range 播放，使用方法见 [A/B CPU 开发交接](docs/ab-cpu-preparation.md)。真实 F1 recipe、完整资产与 GPU 验收仍待完成；预测任务成功和导出成功分别查询。
+
+```sh
+python scripts/demo_task.py /path/to/owned-video.mp4 --ratio 9:16
+```
+
+该命令在另一个终端运行，连接已经启动的服务。产品联调只需要 Python 标准库；参考服务默认仅监听本机。
 
 ## 需求文档（初稿）
 
@@ -29,12 +38,21 @@ python -m apps.backend.server
 | `apps/backend/` | 文件、用户、任务、存储及业务 API | E |
 | `contracts/` | 产品 v1 请求/响应契约；前后端共同依据 | ABDE |
 | `services/model_adapter/` | 唯一模型接入点；隔离比赛实现差异 | A/B |
+| `services/media/` | 元数据、片段/裁剪规则、CPU 渲染与参考导出队列 | A/B 提供核心，E 业务化 |
 | `vendor/competition/` | 原比赛仓库完整源码子模块 | ABC 在原仓库维护 |
 | `scripts/` | 初始化、模型引用更新/切换、验证 | A/B |
 | `docs/` | 架构、分工、开发流程与验收计划 | ABDE |
 | `.github/workflows/` | CPU 检查、每日模型更新 PR | A/B |
 
 分工是建议，可在 `docs/team.md` 填入真实成员。大仓库保存产品代码及比赛源码引用；权重和数据不保存在 Git 中。克隆时需要 `--recurse-submodules`，GitHub 的普通源码 ZIP 不会包含子模块内容。
+
+## 后续发布方向
+
+后续 v1.0 开发以 [baseline应用开发计划书](docs/baseline应用开发计划书.md) 为执行基线，详见 [开发说明](docs/development.md)。首先交付网页调用云端处理：上传视频 → 业务后端与持久任务队列 → GPU worker 调用模型适配器 → 视频渲染 → 预览与下载。前端只依赖产品契约，模型升级由适配层与部署配置处理。已提供上传、预测及导出的单 worker 参考实现，CPU 合成视频可跑通成片；正式网页、业务 v2、真实模型与云端部署仍待完成。
+
+权重通过私有模型资产库（可选 Hugging Face）归档和分发，在服务器部署或更新时下载固定版本并校验，视频任务复用服务器本地模型。Git 只保存代码、源码引用及不含凭据的版本清单。用户明确要求本地处理时，按计划书单独交付本机服务与首次下载/导入、持久缓存的模型包，仍使用网页交互；该可选模式当前尚未实现。
+
+详细职责、接口兼容、版本回退和验收方向见 [架构与发布设计](docs/architecture.md)。
 
 ## 更新与切换比赛分支
 
@@ -56,7 +74,7 @@ git push -u origin HEAD
 
 ## 为什么采用这种方式
 
-采用“子模块固定提交 + 适配层 + 自动更新 PR”。直接复制容易分叉；subtree 更新容易引入合并冲突；共享 worktree 不适合独立交付。独立模型服务/版本化包适合后续部署，但现在仍需要交付比赛源码，增加服务发布体系收益有限。
+源码管理采用“子模块固定提交 + 适配层 + 自动更新 PR”。直接复制容易分叉；subtree 更新容易引入合并冲突；共享 worktree 不适合独立交付。产品运行采用独立 GPU worker 或模型服务，与源码组织分别管理；部署与模型发布体系按设计文档逐步实现。
 
 子模块本身可写，固定的是提交而非实时镜像。本项目通过本地禁止提交/推送、独立克隆和版本一致性检查防止误操作；真正的访问控制仍由 GitHub 仓库权限决定。A/B 在原仓库仍保有写权限，但产品开发只在本仓库进行。C 无需进入产品仓库。
 

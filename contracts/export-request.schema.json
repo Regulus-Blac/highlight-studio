@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "export-request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "api_version",
+    "task_id",
+    "format"
+  ],
+  "properties": {
+    "api_version": {
+      "const": "1"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "format": {
+      "enum": [
+        "mp4",
+        "jsonl"
+      ]
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "segment.schema.json"
+      }
+    }
+  }
+}

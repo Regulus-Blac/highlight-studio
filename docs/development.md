@@ -1,5 +1,11 @@
 # 开发、同步与边界
 
+## v1.0 开发基线
+
+后续应用开发必须按照 [baseline应用开发计划书](baseline应用开发计划书.md) 的功能范围、M/L 阶段与验收标准推进：首先交付网页＋云端推理/渲染服务，用户明确要求时提供首次下载并缓存模型的可选本地模式。普通用户不以 CLI 或桌面客户端为主入口。
+
+`需求分析文档-初步.md` 与 `软件设计文档-初步.md` 保留为需求/设计来源，其中与当前形态冲突的单机离线和 CLI 优先约束按计划书调整。实际请求/响应遵循 `contracts/`；新增功能先评审契约，不直接破坏已有 v1 接口。开发任务及 PR/交接说明应列出计划书中的阶段、需求、完成条件和验证证据；范围变化先更新计划书与关联文档。
+
 ## 日常开发
 
 首次克隆后执行 `python scripts/bootstrap.py`。之后从 `main` 建立 `feat/<功能>` 分支，只改自己负责的产品目录，提交 PR。拉取别人合并的版本后执行：
@@ -10,7 +16,11 @@ git submodule update --init --recursive
 python scripts/bootstrap.py
 ```
 
+ABDE 共同使用 `main` 作为开发基线，按任务分别创建功能分支，例如 A/B 的 `feat/f1-runtime`、D 的 `feat/web-editor`、E 的 `feat/business-api`。功能评审合并后继续从更新后的 main 开始下一项任务；不长期拆分为各自独立的 AB/DE 主线。`sync/competition` 只承载比赛引用升级候选，由 A/B 单独审核。
+
 普通拉取使用父仓库已经确认的固定版本。只有 A/B 或同步工作流执行 `model_ref.py update/switch` 来升级。不要在子模块里直接 `git pull`，也不要让 D/E 修改研究脚本。
+
+D/E 无权重联调、上传与持久任务接口、命令适配器配置和资产校验见 [联调交接](integration.md)。新的客户端使用 uploads/tasks，旧 jobs 仅保留 Mock 兼容。完整 CPU 回归先安装 FFmpeg/FFprobe 6.1+ 与 `python -m pip install -r requirements-dev.txt`，再运行 `python -m unittest discover -s tests -v`；测试使用合成媒体，不下载模型，也不启动训练。CPU 媒体、F1 资产与 runner 交接见 [A/B 开发记录](ab-cpu-preparation.md)。
 
 ## 子模块防误操作
 

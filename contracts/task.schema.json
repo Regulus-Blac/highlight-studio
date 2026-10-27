@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PredictionTaskV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["api_version", "task_id", "video_id", "target_ratio", "status", "progress", "engine", "mock", "created_at", "updated_at", "result", "error"],
+  "properties": {
+    "api_version": {"const": "1"},
+    "task_id": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+    "video_id": {"type": "string", "minLength": 1},
+    "target_ratio": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 1}},
+    "status": {"enum": ["queued", "running", "succeeded", "failed", "cancelled"]},
+    "progress": {
+      "type": "object", "additionalProperties": false, "required": ["stage", "percent"],
+      "properties": {
+        "stage": {"enum": ["queued", "predicting", "completed", "failed", "cancelled"]},
+        "percent": {"type": ["integer", "null"], "minimum": 0, "maximum": 100}
+      }
+    },
+    "engine": {"type": "string", "minLength": 1},
+    "mock": {"type": "boolean"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "result": {"anyOf": [{"type": "null"}, {"$ref": "prediction-result.schema.json"}]},
+    "error": {
+      "anyOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["code", "message", "retryable"], "properties": {"code": {"type": "string"}, "message": {"type": "string"}, "retryable": {"type": "boolean"}}}
+      ]
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"status": {"const": "succeeded"}}}, "then": {"properties": {"result": {"$ref": "prediction-result.schema.json"}, "error": {"type": "null"}}}, "else": {"properties": {"result": {"type": "null"}}}},
+    {"if": {"properties": {"status": {"const": "failed"}}}, "then": {"properties": {"error": {"type": "object"}}}, "else": {"properties": {"error": {"type": "null"}}}}
+  ]
+}

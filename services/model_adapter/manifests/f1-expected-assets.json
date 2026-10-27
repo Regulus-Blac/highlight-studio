@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "release_id": "f1-43.37-preparation-v1",
+  "complete": false,
+  "competition_commit": "4cfe92894953b006752cd539ec4815945212c0f6",
+  "declared_parameters": 8926602839,
+  "source": "resources/team_model_materials_20261023/manifest.json and docs/F1_FULL2D_REPRO.md at the locked competition commit",
+  "path_policy": "Known files use the supplemental package layout. Unknown paths are proposed release slots, not discovered originals.",
+  "artifacts": [
+    {
+      "path": "vh_pl2_L1/fold0.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "20c8d26d3fb69f36fecfdc663f17a9482c459a8418820967ee62bc03a11d0591"
+    },
+    {
+      "path": "vh_pl2_L1/fold1.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "2115da563a51e03873de2109768ef4d3725d3ab5b7aaa9d5f18f2ef37cf51fbd"
+    },
+    {
+      "path": "vh_pl2_L1/fold2.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "ef743624a4c7e4f7c5af5c0f1e6f3d411fa89443e6e4ad0d16b2de170bcbd0a7"
+    },
+    {
+      "path": "vh_pl2_L1/fold3.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "9f0819e8d4046326bd1439e0d31bc36f907546adc9eab648cb762f81b1d0d607"
+    },
+    {
+      "path": "vh_pl2_L1/fold4.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "d9cf4a2bb0a5ac64e302ba6db7aeff1f17e34c7ac3fc559eb35faa76953a135e"
+    },
+    {
+      "path": "vh_pl2_L2/fold0.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "2b851bf7c2377e7315b6479a943840591b91b1e567fb222bf7262d42c00a6655"
+    },
+    {
+      "path": "vh_pl2_L2/fold1.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "bd67816839a63eeb5227f16748115015c0e51fe6ce807d5d41283dd954b069e0"
+    },
+    {
+      "path": "vh_pl2_L2/fold2.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "3480b48243d8b3c581c6b0fec14fe45f9adf9eef36d51e3bdb6945fd428438a1"
+    },
+    {
+      "path": "vh_pl2_L2/fold3.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "417794da669b65a29300fec96fa089e5be5cd73d57ce92cec5ff912f0c404c8b"
+    },
+    {
+      "path": "vh_pl2_L2/fold4.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "c392f557254af73c9742fad0f07bab37cba39e39965de6da0594fd40df093857"
+    },
+    {
+      "path": "yolo11x/yolo11x.pt",
+      "kind": "weight",
+      "bytes": 114636239,
+      "sha256": "7bc158aa95c0ebfdd87f70f01653c1131b93e92522dbe15c228bcd742e773a24"
+    },
+    {
+      "path": "vh_pl2_L1/config.json",
+      "kind": "original_config",
+      "bytes": 342836,
+      "sha256": "b4dbd789fcd2845bdef3a760bf2a49a465e7b4bb9a53c3875f7dacacede8ee25"
+    },
+    {
+      "path": "vh_pl2_L2/config.json",
+      "kind": "original_config",
+      "bytes": 333524,
+      "sha256": "c33c07968f0a57385c1fafa68c20708818d60447f449ac28a41457e27deb2a21"
+    },
+    {
+      "path": "g1_y_448/head.pt",
+      "kind": "weight",
+      "bytes": 8460862,
+      "sha256": "b2cebf02f46f8ff75d98ec3e06e93372d1a6b7baff662fc6c8b460a7c05dba57"
+    },
+    {
+      "path": "g1_y_448/config.json",
+      "kind": "original_config",
+      "bytes": 37078,
+      "sha256": "b856b8f4a5aa49f66ea10e8142dfb9ab58e7e721783e2b9fbeb9e2b50b60a192"
+    },
+    {
+      "path": "g1_y_672/head.pt",
+      "kind": "weight",
+      "bytes": 8460862,
+      "sha256": "db5dec2323674cb00fc920975fd34586fa07fc2ad655cda484424d1d9c307bd0"
+    },
+    {
+      "path": "g1_y_672/config.json",
+      "kind": "original_config",
+      "bytes": 37098,
+      "sha256": "3a41449cba476d5b83c8b11a6647ebcd065affea3d75cb70c1d9bf346fd82556"
+    },
+    {
+      "path": "retarget_x_448/head.pt",
+      "kind": "weight",
+      "bytes": 8461253,
+      "sha256": "3299a1c17e94fd898ed4b791150d4b6a6439b70608e9834053a725c9cfac1b1c"
+    },
+    {
+      "path": "retarget_x_448/config.json",
+      "kind": "original_config",
+      "bytes": 596,
+      "sha256": "fba626e884d950cfad6d8a388b2e4d3557b50c3d4e4940dc6ca486798d6c20e8"
+    },
+    {
+      "path": "retarget_x_672/head.pt",
+      "kind": "weight",
+      "bytes": 8461253,
+      "sha256": "88b63e90d4d4c8700681b3e8bc306dec3f0b005b07a73ccbd85c8386737d72ec"
+    },
+    {
+      "path": "retarget_x_672/config.json",
+      "kind": "original_config",
+      "bytes": 600,
+      "sha256": "78d92ba38f159f33cdecec909b5ef844596afc58cf3cb81076d0f161c88e7c37"
+    },
+    {
+      "path": "f1_full16x9/head.pt",
+      "kind": "weight",
+      "bytes": 412522,
+      "sha256": "24896308a8f93f59a4fde091ca50ab794c852c5aff06666beab62895e8de3b1c"
+    },
+    {
+      "path": "f1_full16x9/head.json",
+      "kind": "original_config",
+      "bytes": 664,
+      "sha256": "8c402d7e038dc866103f59d386286fd14a0db918f5b9da4d8f9d5204fa5bf916"
+    },
+    {
+      "path": "timelens/model.safetensors.index.json",
+      "kind": "backbone_index",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "timelens/config.json",
+      "kind": "backbone_config",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "timelens/preprocessor_config.json",
+      "kind": "processor_config",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "timelens/tokenizer_config.json",
+      "kind": "tokenizer_config",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "parent/f1-parameter-inventory.json",
+      "kind": "complete_parent_inventory",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "parent/temporal-ensemble.json",
+      "kind": "frozen_temporal_recipe",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "parent/decoder-trim.json",
+      "kind": "frozen_decoder_and_postprocess",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "detectors/yolo11s.pt",
+      "kind": "weight",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "environment/lock.json",
+      "kind": "inference_environment",
+      "sha256": null,
+      "bytes": null
+    },
+    {
+      "path": "recipe/f1-new-video.json",
+      "kind": "arbitrary_video_runtime_recipe",
+      "sha256": null,
+      "bytes": null
+    }
+  ],
+  "unresolved_requirements": [
+    "Resolve complete parent inventory (G1/X1 requirements declare 30 weight files; F1 adds one); enumerate all backbone shards and inherited temporal heads with original hashes, configs and parameter counts",
+    "Pin TimeLens source revision, all shards, tokenizer and processor; no assumption that old HF feature caches contain the backbone",
+    "Recover exact temporal ensemble, decoder shift, selection and trim settings; inherited historical predictions cannot serve new video input",
+    "Bind the arbitrary-video feature sampler and 448/672 spatial path to frozen G1/X1/F1 code and configs",
+    "Supply locked inference environment and a verified new-video runtime recipe; tools/run_final.py is not F1",
+    "GPU end-to-end acceptance and product distribution/source-license review remain pending"
+  ]
+}

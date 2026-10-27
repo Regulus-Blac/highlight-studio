@@ -1,0 +1,2 @@
+# Optional CPU media worker dependencies; model research environment is separate.
+Pillow>=10,<13

@@ -1,0 +1,17 @@
+{
+  "api_version": "1",
+  "segments": [
+    {
+      "suggestion_id": "0",
+      "start_frame": 0,
+      "end_frame_exclusive": 2,
+      "enabled": true
+    },
+    {
+      "suggestion_id": "1",
+      "start_frame": 20,
+      "end_frame_exclusive": 21,
+      "enabled": true
+    }
+  ]
+}
