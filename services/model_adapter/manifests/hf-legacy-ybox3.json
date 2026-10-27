@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "release_id": "hf-legacy-ybox3-f0cfb12",
+  "prediction_api_version": "1",
+  "competition_commit": null,
+  "complete": false,
+  "description": "Historical asset verification sample only. Not a complete F1 inference release.",
+  "source": {
+    "repo_id": "aicsym/aic_weights",
+    "revision": "f0cfb12f0b11255a4dac89cb463e63b5c53527da"
+  },
+  "artifacts": [
+    {"name": "spatial_y_448", "path": "sph_ybox3_448/head.pt", "sha256": "265aed905f31f50570337307fdc40aa322c610e728e07f11dc6c948c3099943f"},
+    {"name": "spatial_y_448_config", "path": "sph_ybox3_448/config.json", "sha256": "6944cc82bf7f203e934a7397a4ab77bacf9cadcabe8f792fffa6725f53a975c5"},
+    {"name": "spatial_y_672", "path": "sph_ybox3_672/head.pt", "sha256": "e6ebb0c05aaa570624792e5c22db70804c74b2b6de1151f8bce5b00929a338bb"},
+    {"name": "spatial_y_672_config", "path": "sph_ybox3_672/config.json", "sha256": "6944cc82bf7f203e934a7397a4ab77bacf9cadcabe8f792fffa6725f53a975c5"}
+  ]
+}

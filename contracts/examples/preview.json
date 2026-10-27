@@ -1,0 +1,87 @@
+{
+  "api_version": "1",
+  "rules_version": "consecutive-inward-v1",
+  "video_id": "11111111111111111111111111111111",
+  "target_ratio": [
+    16,
+    9
+  ],
+  "engine": "synthetic-media-v1",
+  "mock": true,
+  "metadata": {
+    "width": 192,
+    "height": 108,
+    "fps_num": 10,
+    "fps_den": 1,
+    "frame_count": 30,
+    "duration_seconds": 3.0,
+    "has_audio": true,
+    "rotation": 0,
+    "validation_profile": "cpu-cfr-v1"
+  },
+  "suggestions": [
+    {
+      "suggestion_id": "0",
+      "start_frame": 0,
+      "end_frame_exclusive": 2,
+      "enabled": true
+    },
+    {
+      "suggestion_id": "1",
+      "start_frame": 20,
+      "end_frame_exclusive": 21,
+      "enabled": true
+    }
+  ],
+  "segments": [
+    {
+      "suggestion_id": "0",
+      "start_frame": 0,
+      "end_frame_exclusive": 2,
+      "enabled": true
+    },
+    {
+      "suggestion_id": "1",
+      "start_frame": 20,
+      "end_frame_exclusive": 21,
+      "enabled": true
+    }
+  ],
+  "frame_crops": [
+    {
+      "frame": 0,
+      "crop": [
+        0,
+        0,
+        192,
+        108
+      ]
+    },
+    {
+      "frame": 1,
+      "crop": [
+        0,
+        0,
+        192,
+        108
+      ]
+    },
+    {
+      "frame": 20,
+      "crop": [
+        96,
+        0,
+        64,
+        36
+      ]
+    }
+  ],
+  "output": {
+    "width": 64,
+    "height": 36
+  },
+  "duration_seconds": 0.3,
+  "plan_id": "87bab8a7903152aa8b8c9bd18bb01b310d3270732dc5a3ae6086c1a15ab36cc8",
+  "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source_url": "/api/v1/tasks/22222222222222222222222222222222/source"
+}

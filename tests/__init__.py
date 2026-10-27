@@ -1,0 +1,1 @@
+"""Product CPU integration checks."""

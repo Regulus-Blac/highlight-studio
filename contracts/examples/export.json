@@ -1,0 +1,14 @@
+{
+  "api_version": "1",
+  "export_id": "33333333333333333333333333333333",
+  "task_id": "22222222222222222222222222222222",
+  "plan_id": "87bab8a7903152aa8b8c9bd18bb01b310d3270732dc5a3ae6086c1a15ab36cc8",
+  "engine": "synthetic-media-v1",
+  "mock": true,
+  "format": "mp4",
+  "status": "queued",
+  "artifact": null,
+  "error": null,
+  "created_at": "2026-10-27T00:00:00Z",
+  "updated_at": "2026-10-27T00:00:00Z"
+}

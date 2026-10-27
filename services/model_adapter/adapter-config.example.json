@@ -1,0 +1,6 @@
+{
+  "manifest": "model-assets.json",
+  "asset_root": "/external/models/f1",
+  "command": ["/external/env/bin/python", "/external/inference/predict.py", "--request", "{request}", "--result", "{result}", "--assets", "{asset_root}", "--manifest", "{manifest}"],
+  "timeout_seconds": 900
+}

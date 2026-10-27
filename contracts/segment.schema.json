@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "segment v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "suggestion_id",
+    "start_frame",
+    "end_frame_exclusive",
+    "enabled"
+  ],
+  "properties": {
+    "suggestion_id": {
+      "type": "string"
+    },
+    "start_frame": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "end_frame_exclusive": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "enabled": {
+      "type": "boolean"
+    }
+  }
+}

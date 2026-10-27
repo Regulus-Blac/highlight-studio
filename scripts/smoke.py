@@ -3,6 +3,7 @@
 import json
 from pathlib import Path
 import sys
+import tempfile
 import threading
 import urllib.error
 import urllib.request
@@ -12,7 +13,8 @@ from apps.backend.server import make_server
 
 
 def main():
-    server = make_server(port=0)
+    runtime = tempfile.TemporaryDirectory()
+    server = make_server(port=0, runtime=runtime.name)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     base = f"http://127.0.0.1:{server.server_port}"
@@ -48,6 +50,7 @@ def main():
         server.shutdown()
         server.server_close()
         thread.join(timeout=5)
+        runtime.cleanup()
 
 
 if __name__ == "__main__":

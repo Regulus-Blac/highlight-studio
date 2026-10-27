@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EditedPreviewRequestV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["api_version", "segments"],
+  "properties": {
+    "api_version": {"const": "1"},
+    "segments": {"type": "array", "items": {"$ref": "segment.schema.json"}}
+  }
+}

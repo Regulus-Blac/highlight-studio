@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TaskRequestV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["api_version", "upload_id", "target_ratio"],
+  "properties": {
+    "api_version": {"const": "1"},
+    "upload_id": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+    "target_ratio": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 1}}
+  }
+}

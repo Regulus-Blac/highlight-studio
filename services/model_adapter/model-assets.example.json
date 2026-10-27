@@ -1,8 +1,11 @@
 {
+  "schema_version": 1,
+  "release_id": "REPLACE_WITH_VERIFIED_RELEASE_ID",
+  "prediction_api_version": "1",
   "competition_commit": "COPY_FROM_MODEL_LOCK",
+  "complete": false,
+  "environment_manifest": "REPLACE_WITH_ENVIRONMENT_VERSION",
   "artifacts": [
-    {"name": "backbone", "path": "/external/models/backbone", "sha256": "REPLACE_WITH_ACTUAL_MANIFEST_HASH"},
-    {"name": "heads", "path": "/external/models/heads", "sha256": "REPLACE_WITH_ACTUAL_MANIFEST_HASH"}
-  ],
-  "environment_manifest": "/external/environments/inference-lock.txt"
+    {"name": "REPLACE_WITH_COMPONENT", "path": "relative/component-file", "sha256": "REPLACE_WITH_ACTUAL_FILE_SHA256"}
+  ]
 }

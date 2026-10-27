@@ -1,6 +1,7 @@
 # 本仓库协作边界
 
 - 用中文交流。产品由 ABDE 开发；比赛训练和算法由 ABC 在原仓库维护。
+- 应用 v1.0 开发按 [baseline应用开发计划书](docs/baseline应用开发计划书.md) 的范围、阶段与验收推进：网页＋云端服务优先，用户要求时提供首次下载并缓存模型的可选本地模式。
 - `vendor/competition/` 为外部比赛子模块。不要在其中改文件、提交或推送；需要的算法变更回原仓库处理。
 - 前后端只依赖 `contracts/` 的 v1 接口。比赛导入和命令转换只允许放在 `services/model_adapter/`。
 - 升级或切换模型引用使用 `python scripts/model_ref.py update` 或 `switch <branch>`，一起提交子模块指针、`.gitmodules` 和 `model.lock.json`。

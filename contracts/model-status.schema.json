@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ModelStatusV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["api_version", "engine", "mock", "available", "prediction_api_version"],
+  "properties": {
+    "api_version": {"const": "1"},
+    "engine": {"type": "string", "minLength": 1},
+    "mock": {"type": "boolean"},
+    "available": {"type": "boolean"},
+    "prediction_api_version": {"const": "1"}
+  }
+}
