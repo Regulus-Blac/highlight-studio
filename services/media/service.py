@@ -1,6 +1,7 @@
 """Persistent reference export queue; E can reuse the core behind business v2."""
 
 import json
+import logging
 from pathlib import Path
 import re
 import threading
@@ -65,6 +66,8 @@ class MediaService:
     def create(self, request, key=None):
         if not isinstance(request, dict) or not {"api_version", "task_id", "format"} <= set(request) or set(request) - {"api_version", "task_id", "format", "segments"} or request["api_version"] != "1" or not isinstance(request["task_id"], str) or not re.fullmatch(r"[0-9a-f]{32}", request["task_id"]) or request["format"] not in ("mp4", "jsonl"):
             raise TaskError(400, "invalid_request", "Expected api_version=1, task_id, format=mp4|jsonl and optional segments")
+        if "segments" in request and not isinstance(request["segments"], list):
+            raise MediaError("invalid_segments", "Explicit segments must be an array; omit the field to use suggestions")
         if key is not None and (not key.strip() or len(key) > 128):
             raise TaskError(400, "invalid_request", "Idempotency-Key must contain 1 to 128 characters")
         encoded = json.dumps(request, sort_keys=True)
@@ -111,10 +114,10 @@ class MediaService:
             db.execute("UPDATE exports SET status='running',updated_at=? WHERE export_id=?", (now(), row["export_id"]))
         artifact, error = None, None
         directory = self.root / row["export_id"]
-        directory.mkdir(exist_ok=True)
         request, snapshot = json.loads(row["request"]), json.loads(row["snapshot"])
         partial = directory / ("partial." + request["format"])
         try:
+            directory.mkdir(exist_ok=True)
             if digest_file(snapshot["source"]) != snapshot["source_sha256"]:
                 raise MediaError("source_changed", "Source bytes changed after the export snapshot")
             if request["format"] == "mp4":
@@ -130,11 +133,13 @@ class MediaService:
         except MediaError as failure:
             error = {"code": failure.code, "message": str(failure), "retryable": False}
         except Exception:
-            import logging
             logging.exception("Export %s failed", row["export_id"])
             error = {"code": "render_failed", "message": "Export failed; inspect private worker logs", "retryable": False}
         finally:
-            partial.unlink(missing_ok=True)
+            try:
+                partial.unlink(missing_ok=True)
+            except OSError:
+                logging.warning("Could not clean temporary output for export %s", row["export_id"], exc_info=True)
         with self.store.connect() as db:
             db.execute("UPDATE exports SET status=?,artifact=?,error=?,updated_at=? WHERE export_id=? AND status='running'", ("failed" if error else "succeeded", json.dumps(artifact) if artifact else None, json.dumps(error) if error else None, now(), row["export_id"]))
         return True

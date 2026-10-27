@@ -262,6 +262,33 @@ class MediaTests(unittest.TestCase):
         self.assertEqual(failed["error"]["code"], "worker_interrupted")
         validate_contract("export", failed)
 
+    def test_http_explicit_null_segments_are_rejected(self):
+        _, _, task_id, _ = self.seed()
+        with serve(self.root, start_worker=False, allow_mock_media=True) as (request, _):
+            payloads = [
+                (f"/api/v1/tasks/{task_id}/preview", {"api_version": "1", "segments": None}),
+                ("/api/v1/exports", {"api_version": "1", "task_id": task_id, "format": "jsonl", "segments": None}),
+            ]
+            for route, payload in payloads:
+                with self.subTest(route=route):
+                    status, body, _ = request(route, payload)
+                    self.assertEqual(status, 422)
+                    self.assertEqual(body["error"]["code"], "invalid_segments")
+
+    def test_export_storage_failure_marks_failed_and_allows_next_export(self):
+        _, media, task_id, _ = self.seed()
+        payload = {"api_version": "1", "task_id": task_id, "format": "jsonl"}
+        item, _ = media.create(payload)
+        (media.root / item["export_id"]).write_text("A file blocks the output directory")
+        with self.assertLogs(level="ERROR"):
+            self.assertTrue(media.run_once())
+        failed = media.get(item["export_id"])
+        self.assertEqual(failed["status"], "failed")
+        self.assertEqual(failed["error"]["code"], "render_failed")
+        next_item, _ = media.create(payload)
+        self.assertTrue(media.run_once())
+        self.assertEqual(media.get(next_item["export_id"])["status"], "succeeded")
+
     def test_http_preview_export_range_and_existing_v1(self):
         with serve(self.root, adapter=FixtureAdapter(), allow_mock_media=True) as (request, server):
             status, item, _ = request("/api/v1/uploads?filename=fixture.mp4", self.source.read_bytes())

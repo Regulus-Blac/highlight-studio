@@ -16,6 +16,8 @@ git submodule update --init --recursive
 python scripts/bootstrap.py
 ```
 
+ABDE 共同使用 `main` 作为开发基线，按任务分别创建功能分支，例如 A/B 的 `feat/f1-runtime`、D 的 `feat/web-editor`、E 的 `feat/business-api`。功能评审合并后继续从更新后的 main 开始下一项任务；不长期拆分为各自独立的 AB/DE 主线。`sync/competition` 只承载比赛引用升级候选，由 A/B 单独审核。
+
 普通拉取使用父仓库已经确认的固定版本。只有 A/B 或同步工作流执行 `model_ref.py update/switch` 来升级。不要在子模块里直接 `git pull`，也不要让 D/E 修改研究脚本。
 
 D/E 无权重联调、上传与持久任务接口、命令适配器配置和资产校验见 [联调交接](integration.md)。新的客户端使用 uploads/tasks，旧 jobs 仅保留 Mock 兼容。完整 CPU 回归先安装 FFmpeg/FFprobe 6.1+ 与 `python -m pip install -r requirements-dev.txt`，再运行 `python -m unittest discover -s tests -v`；测试使用合成媒体，不下载模型，也不启动训练。CPU 媒体、F1 资产与 runner 交接见 [A/B 开发记录](ab-cpu-preparation.md)。

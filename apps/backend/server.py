@@ -191,6 +191,8 @@ def make_server(host="127.0.0.1", port=8000, *, runtime=None, adapter=None, star
                     payload = self.read_json()
                     if len(parts) != 2 or not isinstance(payload, dict) or set(payload) != {"api_version", "segments"} or payload["api_version"] != "1":
                         raise TaskError(400, "invalid_request", "Edited preview requires api_version=1 and segments")
+                    if not isinstance(payload["segments"], list):
+                        raise MediaError("invalid_segments", "Edited preview segments must be an array")
                     self.respond(200, media.preview(parts[0], payload["segments"]))
                 elif path.startswith("/api/v1/tasks/") and path.endswith("/cancel"):
                     parts = path.removeprefix("/api/v1/tasks/").split("/")
