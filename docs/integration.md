@@ -10,7 +10,7 @@
 python -m apps.backend.server
 ```
 
-默认监听 `127.0.0.1:8000`，使用 mock-v1。根页面仍是旧 jobs 兼容页，新的页面按 [v1 契约](../contracts/README.md) 对接 uploads/tasks。如果 D 的前端开发服务在另一端口，可显式允许其准确 origin：
+默认监听 `127.0.0.1:8000`，使用 mock-v1。根页面已提供本地剪辑工作台，按 [v1 契约](../contracts/README.md) 对接 uploads/tasks、预览和导出。启动与验证说明见 [前端工作台](../apps/frontend/README.md)。如果 D 的前端开发服务在另一端口，可显式允许其准确 origin：
 
 ```sh
 python -m apps.backend.server --cors-origin http://localhost:5173

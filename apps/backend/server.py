@@ -85,10 +85,19 @@ def make_server(host="127.0.0.1", port=8000, *, runtime=None, adapter=None, star
         def do_GET(self):
             path = urlsplit(self.path).path
             try:
-                if path == "/":
-                    data = (ROOT / "apps/frontend/index.html").read_bytes()
+                if path in {"/", "/assets/styles.css", "/assets/app.js"}:
+                    # Explicit allowlist: never expose repository files or runtime uploads.
+                    assets = {
+                        "/": ("index.html", "text/html; charset=utf-8"),
+                        "/assets/styles.css": ("styles.css", "text/css; charset=utf-8"),
+                        "/assets/app.js": ("app.js", "text/javascript; charset=utf-8"),
+                    }
+                    filename, content_type = assets[path]
+                    data = (ROOT / "apps/frontend" / filename).read_bytes()
                     self.send_response(200)
-                    self.send_header("Content-Type", "text/html; charset=utf-8")
+                    self.send_header("Content-Type", content_type)
+                    self.send_header("Cache-Control", "no-cache")
+                    self.send_header("X-Content-Type-Options", "nosniff")
                     self.send_header("Content-Length", str(len(data)))
                     self.end_headers()
                     self.wfile.write(data)
