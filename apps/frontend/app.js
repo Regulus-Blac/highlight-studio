@@ -1,11 +1,45 @@
 'use strict';
 const $ = (id) => document.getElementById(id);
 const STORE = 'highlight.studio.workspace.v1';
+const EXECUTION_STORE='highlight.studio.execution.v1';
+let execution='cloud';
+try{const saved=localStorage.getItem(EXECUTION_STORE);if(['cloud','local','debug'].includes(saved))execution=saved;}catch{}
 const ACTIVE = new Set(['queued', 'running']);
 const names = {queued:'排队等待',running:'正在分析',succeeded:'分析完成',failed:'分析失败',cancelled:'已取消'};
 const state = {file:null, url:null, ratio:[9,16], model:null, ready:false, task:null, plan:null, record:null, exporting:null, dirty:false, busy:false, epoch:0, crop:false, cropMap:new Map(), records:[], pending:null};
 let taskTimer, exportTimer;
 const localHost = ['127.0.0.1','localhost','[::1]'].includes(location.hostname);
+function canProcess(){
+  if(!localHost||!state.ready||!state.model)return false;
+  return execution==='debug'?state.model.mock===true:execution==='local'&&state.model.mock===false;
+}
+function renderExecution(){
+  const locked=state.busy||!!state.task||!!state.pending;
+  document.querySelectorAll('[data-execution]').forEach(button=>{
+    const selected=button.dataset.execution===execution;
+    button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));button.disabled=locked;
+  });
+  $('debug-mode').disabled=locked||!state.model?.mock;
+  $('debug-mode').setAttribute('aria-pressed',String(execution==='debug'));
+  $('debug-mode').textContent=execution==='debug'?'正在使用本机模拟联调':'进入本机模拟联调';
+  $('execution-badge').textContent={cloud:'CLOUD',local:'LOCAL',debug:'MOCK'}[execution];
+  $('execution-detail').textContent=execution==='cloud'
+    ?'云端处理：视频会上传到产品服务并交由远程 GPU 计算，结果返回后再预览和下载。当前云端服务尚未接入，可先选择素材进行本地预览。'
+    :execution==='local'
+      ?'本机处理：首次准备运行环境、模型与权重，校验后缓存；后续使用本机算力，素材不上传云端。当前下载入口和设备检测尚未接入，只有本机真实模型服务就绪后才能开始。'
+      :'开发联调：素材仅提交到当前本机服务，使用明确标记的模拟结果验证流程，不代表云端 GPU 或真实模型已接通。';
+  const configured=localHost&&state.model?.mock===false&&state.ready;
+  $('local-availability').textContent=configured?'本机模型服务就绪':'真实模型待准备';
+  $('local-service-status').textContent=!state.model?'未连接':state.model.mock?'已连接，仅模拟模式':configured?'真实模型服务就绪':'真实模型未就绪';
+  $('privacy-title').textContent=execution==='cloud'?'云端计算，轻装创作':'本机算力，自主处理';
+  $('privacy-copy').textContent=execution==='cloud'?'视频提交到云端后处理；当前尚未连接云端服务。':'视频保留在本机；首次准备模型可能需要联网。';
+  $('analysis-step-copy').textContent={cloud:'云端 GPU 分析与构图',local:'本机模型分析与构图',debug:'本机模拟任务流程'}[execution];
+}
+function chooseExecution(mode){
+  if(state.busy||state.task||state.pending)return;
+  execution=mode;try{localStorage.setItem(EXECUTION_STORE,mode);}catch{}
+  clearMessage();renderControls();
+}
 function uid(){ return crypto.randomUUID(); }
 function time(value){
   if(!Number.isFinite(Number(value)))return '—';
@@ -50,17 +84,18 @@ function reset(){
   $('video').hidden=true;$('empty-state').hidden=false;$('video-caption').hidden=true;$('crop-canvas').hidden=true;$('crop-placeholder').hidden=true;$('file-input').value='';$('video-meta').textContent='尚未导入素材';$('file-summary').textContent='选择视频后即可开始';$('task-state').textContent='等待导入视频';$('task-state').classList.remove('busy');$('export-state').textContent='';$('export-state').classList.remove('busy');$('download').hidden=true;$('upload-progress').hidden=true;$('playhead').textContent='00:00.00';$('resume-task').hidden=true;$('source-view').classList.add('selected');$('crop-view').classList.remove('selected');$('source-view').setAttribute('aria-pressed','true');$('crop-view').setAttribute('aria-pressed','false');clearMessage();renderPlan();renderControls();persist();view('editor');
 }
 function renderControls(){
+  renderExecution();
   const locked=state.busy||!!state.task||!!state.pending;
-  $('start-analysis').disabled=!state.file||locked||!state.ready;
+  $('start-analysis').disabled=!state.file||locked||!canProcess();
   $('choose-file').disabled=locked; $('new-project').disabled=state.busy;
   $('replace-file').hidden=!state.file;$('replace-file').disabled=locked;
   $('resume-task').disabled=state.busy;
   document.querySelectorAll('.history-card').forEach(b=>b.disabled=state.busy);
-  $('start-analysis').textContent=state.model?.mock?'✦ 运行模拟任务':'✦ 开始分析';
+  $('start-analysis').textContent=execution==='cloud'?'云端服务待接入':execution==='debug'?'✦ 运行模拟任务':canProcess()?'✦ 使用本机模型分析':'本机模型待准备';
   document.querySelectorAll('[data-ratio]').forEach(b=>{b.disabled=locked;const chosen=b.dataset.ratio===state.ratio.join(',');b.classList.toggle('selected',chosen);b.setAttribute('aria-pressed',String(chosen));});
   $('export-ratio').textContent=state.ratio.join(':');
   $('cancel-task').hidden=state.task?.status!=='queued';$('retry-task').hidden=!(state.task&&['failed','cancelled'].includes(state.task.status))&&!state.pending;
-  $('retry-task').disabled=state.busy||!state.ready;$('crop-view').disabled=!state.plan?.frame_crops.length;
+  $('retry-task').disabled=state.busy||!canProcess();$('crop-view').disabled=!state.plan?.frame_crops.length;
   $('prev-frame').disabled=$('next-frame').disabled=!state.plan;
   $('play-toggle').disabled=$('seek-video').disabled=!$('video').getAttribute('src');
   const exportActive=state.exporting&&ACTIVE.has(state.exporting.status);
@@ -97,13 +132,13 @@ function upload(file){return new Promise((resolve,reject)=>{
   xhr.onerror=xhr.ontimeout=()=>reject(Object.assign(new Error('导入连接中断'),{code:'network_error'}));xhr.send(file);
 });}
 async function start(){
-  if(state.busy||!state.ready||!localHost)return;state.busy=true;clearMessage();renderControls();renderHistory();
+  if(state.busy||!canProcess())return;state.busy=true;clearMessage();renderControls();renderHistory();
   try{
     if(!state.pending){let uploadId=state.record?.uploadId;if(!uploadId){if(!state.file)throw new Error('请先选择视频');$('upload-progress').hidden=false;const result=await upload(state.file);uploadId=result.upload_id;}
-      state.pending={uploadId,ratio:[...state.ratio],fileName:state.file?.name||state.record.fileName,key:uid()};persist();}
+      state.pending={execution,uploadId,ratio:[...state.ratio],fileName:state.file?.name||state.record.fileName,key:uid()};persist();}
     $('upload-progress').hidden=true;$('task-state').textContent='正在创建分析任务…';
     const pending=state.pending;const task=await post('/api/v1/tasks',{api_version:'1',upload_id:pending.uploadId,target_ratio:pending.ratio},pending.key);
-    state.record={id:task.task_id,uploadId:pending.uploadId,fileName:pending.fileName,ratio:pending.ratio,created:task.created_at,status:task.status};state.pending=null;state.plan=null;state.exporting=null;state.dirty=false;state.record.edits=null;saveRecord();renderPlan();state.busy=false;handleTask(task);pollTask(state.epoch);
+    state.record={execution:pending.execution||execution,id:task.task_id,uploadId:pending.uploadId,fileName:pending.fileName,ratio:pending.ratio,created:task.created_at,status:task.status};state.pending=null;state.plan=null;state.exporting=null;state.dirty=false;state.record.edits=null;saveRecord();renderPlan();state.busy=false;handleTask(task);pollTask(state.epoch);
   }catch(error){message(describe(error));$('task-state').textContent=state.pending?'任务创建未确认，重试将复用同一请求。':'导入未完成，可重新开始。';}
   finally{state.busy=false;$('upload-progress').hidden=true;renderControls();renderHistory();}
 }
@@ -173,7 +208,7 @@ function handleExport(item){state.exporting=item;$('download').hidden=true;$('ex
 }
 async function pollExport(epoch){clearTimeout(exportTimer);if(epoch!==state.epoch||!state.exporting||!ACTIVE.has(state.exporting.status))return;exportTimer=setTimeout(async()=>{try{const item=await api(`/api/v1/exports/${state.exporting.export_id}`);if(epoch!==state.epoch)return;handleExport(item);pollExport(epoch);}catch(error){if(epoch!==state.epoch)return;message(describe(error));$('export-state').textContent='导出状态连接中断，点击「重新连接任务」恢复。';$('resume-task').hidden=false;}},1500);}
 async function restore(record){
-  reset();view('editor');state.record={...record};state.ratio=[...record.ratio];state.busy=true;renderControls();const epoch=state.epoch;
+  reset();view('editor');execution=record.execution||'debug';state.record={...record};state.ratio=[...record.ratio];state.busy=true;renderControls();const epoch=state.epoch;
   $('file-summary').textContent=record.fileName;$('task-state').textContent='正在恢复任务…';
   try{const task=await api(`/api/v1/tasks/${record.id}`);if(epoch!==state.epoch)return;handleTask(task);if(task.status==='succeeded')await loadPlan(epoch);else pollTask(epoch);
     if(record.exportId){try{const item=await api(`/api/v1/exports/${record.exportId}`);if(epoch!==state.epoch)return;handleExport(item);pollExport(epoch);}catch(error){message(describe(error));}}
@@ -183,7 +218,9 @@ async function restore(record){
 $('dismiss-message').onclick=clearMessage;
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>view(b.dataset.view));
 $('refresh-service').onclick=$('settings-refresh').onclick=checkService;
-$('mode-help').onclick=()=>view('settings');
+$('mode-help').onclick=$('execution-guide').onclick=()=>view('settings');
+for(const button of document.querySelectorAll('[data-execution]'))button.onclick=()=>chooseExecution(button.dataset.execution);
+$('debug-mode').onclick=()=>chooseExecution('debug');
 $('choose-file').onclick=$('replace-file').onclick=()=>$('file-input').click();$('file-input').onchange=e=>selectFile(e.target.files[0]);
 $('dropzone').ondragover=e=>{e.preventDefault();if(!state.task&&!state.busy)$('dropzone').classList.add('dragover');};
 $('dropzone').ondragleave=()=>$('dropzone').classList.remove('dragover');$('dropzone').ondrop=e=>{e.preventDefault();$('dropzone').classList.remove('dragover');if(e.dataTransfer.files.length!==1){message('请一次选择一个视频，每段视频建立独立任务。');return;}selectFile(e.dataTransfer.files[0]);};
@@ -208,7 +245,7 @@ window.addEventListener('beforeunload',e=>{if(state.busy||state.dirty){e.prevent
 async function init(){
   let saved=null;try{saved=JSON.parse(localStorage.getItem(STORE)||'null');if(saved&&Array.isArray(saved.records))state.records=saved.records.filter(r=>/^[a-f0-9]{32}$/.test(r.id)&&Array.isArray(r.ratio)&&typeof r.fileName==='string').slice(0,20);}catch{message('本地任务记录无法读取，将开启新的工作区。');}
   renderHistory();await checkService();const active=state.records.find(r=>r.id===saved?.activeId);
-  if(saved?.pending){state.pending=saved.pending;state.ratio=saved.pending.ratio;$('file-summary').textContent=saved.pending.fileName;$('task-state').textContent='有待确认的创建请求，点击重试继续。';renderControls();}
+  if(saved?.pending){execution=saved.pending.execution||'debug';state.pending=saved.pending;state.ratio=saved.pending.ratio;$('file-summary').textContent=saved.pending.fileName;$('task-state').textContent='有待确认的创建请求，点击重试继续。';renderControls();}
   else if(active)await restore(active);
   if('requestVideoFrameCallback'in $('video'))$('video').requestVideoFrameCallback(videoFrame);
 }

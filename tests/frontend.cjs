@@ -16,10 +16,12 @@ const planTemplate = JSON.parse(fs.readFileSync('contracts/examples/preview.json
   let fixtureServer;
   page.on('pageerror', e => errors.push(e.message));
   try {
-    let basicPreviewRequests=0;page.on('request',r=>{if(r.url().endsWith('/preview'))basicPreviewRequests++;});
+    let basicPreviewRequests=0,processingRequests=0;page.on('request',r=>{if(r.url().endsWith('/preview'))basicPreviewRequests++;if(r.method()==='POST'&&/\/api\/v1\/(uploads|tasks)/.test(r.url()))processingRequests++;});
     await page.goto(base);
     await expect(page.locator('#service-label')).toHaveText('本机服务已连接');
     await expect(page.locator('#start-analysis')).toBeDisabled();
+    await expect(page.locator('[data-execution=cloud]')).toHaveAttribute('aria-pressed','true');
+    await expect(page.locator('#start-analysis')).toHaveText('云端服务待接入');
     assert.equal(await page.evaluate(()=>time(59.999)),'01:00.00');
     await page.locator('#mode-help').click();
     await expect(page.locator('#mode-explanation')).toContainText('不会调用 AI');
@@ -45,9 +47,17 @@ const planTemplate = JSON.parse(fs.readFileSync('contracts/examples/preview.json
     await expect(page.locator('#replace-file')).toBeVisible();
     await expect(page.locator('#replace-file')).toBeEnabled();
     await page.locator('[data-ratio="16,9"]').click();
+    await expect(page.locator('#start-analysis')).toBeDisabled();
+    await page.locator('[data-execution=local]').click();
+    await expect(page.locator('#start-analysis')).toHaveText('本机模型待准备');
+    await expect(page.locator('#start-analysis')).toBeDisabled();
+    await page.evaluate(()=>start());assert.equal(processingRequests,0,'Unready cloud/local modes must not transmit video');
+    await page.locator('#debug-mode').click();
     await page.locator('#start-analysis').click();
     await expect(page.locator('#task-state')).toContainText('模拟分析完成',{timeout:15000});
     await expect(page.locator('#mode-notice')).toContainText('基础模拟模式');
+    await expect(page.locator('[data-execution=cloud]')).toBeDisabled();
+    await expect(page.locator('#debug-mode')).toBeDisabled();
     await page.reload();
     await expect(page.locator('#task-state')).toContainText('模拟分析完成',{timeout:15000});
     assert.equal(basicPreviewRequests,0,'Basic mock must not request unavailable media preview');
@@ -103,7 +113,7 @@ const planTemplate = JSON.parse(fs.readFileSync('contracts/examples/preview.json
       return route.continue();
     });
     await p.goto(mediaBase);await expect(p.locator('#service-label')).toHaveText('本机服务已连接');
-    await p.locator('#file-input').setInputFiles(video);await p.locator('[data-ratio="16,9"]').click();await p.locator('#start-analysis').click();
+    await p.locator('#file-input').setInputFiles(video);await p.locator('[data-ratio="16,9"]').click();await p.locator('#debug-mode').click();await p.locator('#start-analysis').click();
     await expect(p.locator('#task-state')).toContainText('任务创建未确认');
     await p.reload();await expect(p.locator('#task-state')).toContainText('有待确认');await p.locator('#retry-task').click();
     await expect(p.locator('#task-state')).toContainText('正在分析视频',{timeout:10000});
@@ -130,6 +140,12 @@ const planTemplate = JSON.parse(fs.readFileSync('contracts/examples/preview.json
     await p.setViewportSize({width:390,height:844});await p.evaluate(()=>scrollTo(0,0));await p.screenshot({path:'runtime/frontend-mobile.png',fullPage:true});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Mobile must not overflow horizontally');
     await p.locator('#new-project').click();await p.locator('#new-dialog [value=confirm]').click();await expect(p.locator('#empty-state')).toBeVisible();
     await p.locator('[data-view=history]').click();await expect(p.locator('.history-card')).toHaveCount(1);
+    await p.locator('[data-view=editor]').click();
+    await p.route('**/api/v1/model',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({api_version:'1',engine:'configured-local-test',mock:false,available:true,prediction_api_version:'1'})}));
+    await p.locator('#refresh-service').click();await expect(p.locator('#local-availability')).toHaveText('本机模型服务就绪');
+    await p.locator('[data-execution=local]').click();await p.locator('#file-input').setInputFiles(video);
+    await expect(p.locator('#start-analysis')).toBeEnabled();await expect(p.locator('#start-analysis')).toHaveText('✦ 使用本机模型分析');
+    console.log('PASS execution modes: default cloud, unready upload guard, mode lock, configured local service');
     console.log('PASS contract-fixture browser: ambiguous create recovery, idempotency, running state, crop, invalid edits, selection, export/download, reload, empty selection, mobile, new task');
     assert.deepEqual(errors,[]);console.log('PASS no browser JavaScript errors');await mediaContext.close();
   } finally {await browser.close();if(fixtureServer)await new Promise(resolve=>fixtureServer.close(resolve));}
