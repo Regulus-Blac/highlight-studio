@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "release_id": "f1-43.37-downloaded-assets-20261104",
+  "complete": false,
+  "competition_commit": "4cfe92894953b006752cd539ec4815945212c0f6",
+  "bundle_source_commit": "df03d1bcba3f8a4d128d197ce7cc9775d8ac7451",
+  "f1_tag_commit": "39337b84ee81428b680f4907ea4cbab0864ac653",
+  "declared_parameters": 8926602839,
+  "source": "Downloaded final competition delivery: model SHA256SUMS, F1_inventory_original.json and fixed backbone shard checksums.",
+  "path_policy": "Relative to the delivered model-and-runtime directory. No files are copied into the product repository.",
+  "source_metadata_sha256": {
+    "SHA256SUMS": "a61cd1a1542f7a1a3199145bf47fff6f403ccdd8f83526c2bafc674ae40f8ec5",
+    "模型清单.json": "31541b84668de6d137d55580a74024f86aea0a0afabb52d22407bf4fbe76a953",
+    "metadata/F1_inventory_original.json": "3511c91561521807509964b275a572224a5f14311a2f8bd80923abb05ed46d44",
+    "主干官方下载与校验.json": "b910519c77051f889771c9cd5ecabf4d0f91ff8baf74fedbf7f771090ff9efc2",
+    "metadata/原生产processor_0c351dd.json": "8c753f9b835bd9b81141fdec08d49fcc847006216d78ea21f8d6882b3c58eea3"
+  },
+  "backbone": {
+    "model_id": "TencentARC/TimeLens-8B",
+    "revision": "5557f14bfad6b17379d9cfd68b90aaabdbd7d1a9",
+    "shards_total_bytes": 17534339488
+  },
+  "processor_revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+  "artifacts": [
+    {
+      "path": "models/TimeLens-8B/chat_template.json",
+      "kind": "config",
+      "bytes": 5499,
+      "sha256": "5c72a170d2a4a1a3bc5adad2e689ae28138a9700e5b8c96c0266331e86c0acce"
+    },
+    {
+      "path": "models/TimeLens-8B/config.json",
+      "kind": "config",
+      "bytes": 1569,
+      "sha256": "74329718555984a1da1479e3781d9713e0de9898e720b63a4a2bd2ac38436428"
+    },
+    {
+      "path": "models/TimeLens-8B/generation_config.json",
+      "kind": "config",
+      "bytes": 199,
+      "sha256": "3ff2e83a0510cccccc85c8c96c7df4207985c098b526d798bc2bc68e50bb1a41"
+    },
+    {
+      "path": "models/TimeLens-8B/merges.txt",
+      "kind": "config",
+      "bytes": 1671839,
+      "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3"
+    },
+    {
+      "path": "models/TimeLens-8B/model.safetensors.index.json",
+      "kind": "config",
+      "bytes": 67795,
+      "sha256": "859146bff8db1d617fca8b457a5223edff963bb70076b3645f2189fe0540a147"
+    },
+    {
+      "path": "models/TimeLens-8B/preprocessor_config.json",
+      "kind": "config",
+      "bytes": 390,
+      "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516"
+    },
+    {
+      "path": "models/TimeLens-8B/tokenizer.json",
+      "kind": "config",
+      "bytes": 7032403,
+      "sha256": "a5d85b6dcc535e6b93115a9ef287e6132fdbf30270da6218194ba742261173c7"
+    },
+    {
+      "path": "models/TimeLens-8B/tokenizer_config.json",
+      "kind": "config",
+      "bytes": 10868,
+      "sha256": "c2da771801886ad9ae98181793ffd3dfb7f1af30f6f7c6a4e15d7dbba52e2399"
+    },
+    {
+      "path": "models/TimeLens-8B/video_preprocessor_config.json",
+      "kind": "config",
+      "bytes": 385,
+      "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13"
+    },
+    {
+      "path": "models/TimeLens-8B/vocab.json",
+      "kind": "config",
+      "bytes": 2776833,
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    {
+      "path": "models/detectors/yolo11s.pt",
+      "kind": "weight",
+      "bytes": 19313732,
+      "sha256": "85a76fe86dd8afe384648546b56a7a78580c7cb7b404fc595f97969322d502d5"
+    },
+    {
+      "path": "models/detectors/yolo11x.pt",
+      "kind": "weight",
+      "bytes": 114636239,
+      "sha256": "7bc158aa95c0ebfdd87f70f01653c1131b93e92522dbe15c228bcd742e773a24"
+    },
+    {
+      "path": "models/full16x9/head.json",
+      "kind": "config",
+      "bytes": 664,
+      "sha256": "8c402d7e038dc866103f59d386286fd14a0db918f5b9da4d8f9d5204fa5bf916"
+    },
+    {
+      "path": "models/full16x9/head.pt",
+      "kind": "weight",
+      "bytes": 412522,
+      "sha256": "24896308a8f93f59a4fde091ca50ab794c852c5aff06666beab62895e8de3b1c"
+    },
+    {
+      "path": "models/spatial/gnmc_y_448/config.json",
+      "kind": "config",
+      "bytes": 37078,
+      "sha256": "b856b8f4a5aa49f66ea10e8142dfb9ab58e7e721783e2b9fbeb9e2b50b60a192"
+    },
+    {
+      "path": "models/spatial/gnmc_y_448/head.pt",
+      "kind": "weight",
+      "bytes": 8460862,
+      "sha256": "b2cebf02f46f8ff75d98ec3e06e93372d1a6b7baff662fc6c8b460a7c05dba57"
+    },
+    {
+      "path": "models/spatial/gnmc_y_672/config.json",
+      "kind": "config",
+      "bytes": 37098,
+      "sha256": "3a41449cba476d5b83c8b11a6647ebcd065affea3d75cb70c1d9bf346fd82556"
+    },
+    {
+      "path": "models/spatial/gnmc_y_672/head.pt",
+      "kind": "weight",
+      "bytes": 8460862,
+      "sha256": "db5dec2323674cb00fc920975fd34586fa07fc2ad655cda484424d1d9c307bd0"
+    },
+    {
+      "path": "models/spatial/retarget_x_448/config.json",
+      "kind": "config",
+      "bytes": 596,
+      "sha256": "fba626e884d950cfad6d8a388b2e4d3557b50c3d4e4940dc6ca486798d6c20e8"
+    },
+    {
+      "path": "models/spatial/retarget_x_448/head.pt",
+      "kind": "weight",
+      "bytes": 8461253,
+      "sha256": "3299a1c17e94fd898ed4b791150d4b6a6439b70608e9834053a725c9cfac1b1c"
+    },
+    {
+      "path": "models/spatial/retarget_x_672/config.json",
+      "kind": "config",
+      "bytes": 600,
+      "sha256": "78d92ba38f159f33cdecec909b5ef844596afc58cf3cb81076d0f161c88e7c37"
+    },
+    {
+      "path": "models/spatial/retarget_x_672/head.pt",
+      "kind": "weight",
+      "bytes": 8461253,
+      "sha256": "88b63e90d4d4c8700681b3e8bc306dec3f0b005b07a73ccbd85c8386737d72ec"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L1/config.json",
+      "kind": "config",
+      "bytes": 342836,
+      "sha256": "b4dbd789fcd2845bdef3a760bf2a49a465e7b4bb9a53c3875f7dacacede8ee25"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L1/fold0.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "20c8d26d3fb69f36fecfdc663f17a9482c459a8418820967ee62bc03a11d0591"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L1/fold1.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "2115da563a51e03873de2109768ef4d3725d3ab5b7aaa9d5f18f2ef37cf51fbd"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L1/fold2.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "ef743624a4c7e4f7c5af5c0f1e6f3d411fa89443e6e4ad0d16b2de170bcbd0a7"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L1/fold3.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "9f0819e8d4046326bd1439e0d31bc36f907546adc9eab648cb762f81b1d0d607"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L1/fold4.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "d9cf4a2bb0a5ac64e302ba6db7aeff1f17e34c7ac3fc559eb35faa76953a135e"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L2/config.json",
+      "kind": "config",
+      "bytes": 333524,
+      "sha256": "c33c07968f0a57385c1fafa68c20708818d60447f449ac28a41457e27deb2a21"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L2/fold0.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "2b851bf7c2377e7315b6479a943840591b91b1e567fb222bf7262d42c00a6655"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L2/fold1.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "bd67816839a63eeb5227f16748115015c0e51fe6ce807d5d41283dd954b069e0"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L2/fold2.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "3480b48243d8b3c581c6b0fec14fe45f9adf9eef36d51e3bdb6945fd428438a1"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L2/fold3.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "417794da669b65a29300fec96fa089e5be5cd73d57ce92cec5ff912f0c404c8b"
+    },
+    {
+      "path": "models/temporal/vh_pl2_L2/fold4.pt",
+      "kind": "weight",
+      "bytes": 16915844,
+      "sha256": "c392f557254af73c9742fad0f07bab37cba39e39965de6da0594fd40df093857"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L1/config.json",
+      "kind": "config",
+      "bytes": 343440,
+      "sha256": "80045495eef9e76baafc143723c426458819a6c6787070e4c6f18f39878ed769"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L1/fold0.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "093c3573cefedead829e3219cd937b4522597221892f550a1d24e5739b05915f"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L1/fold1.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "abb5a25f18379ff6085d040a0d725e10191f858c3975ed7b2b427d06648a5cf8"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L1/fold2.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "fe2b715b6978b91fbdba87b4562a5177eaf63f2f5421510f33d680441f4846f0"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L1/fold3.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "34b46791817c091f5d5cf95a8ac3bcf768583be8326df5f9f21d2c2c310d28be"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L1/fold4.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "03c487beb63dd542e9bcbc36c5d82a3f66f454a9642ea54aa73cf53a41b41e3a"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L2/config.json",
+      "kind": "config",
+      "bytes": 333940,
+      "sha256": "8d5bd1772dd14851d43b18b8459e0b2a32bad0d6df5387054c60a0e5a3c68408"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L2/fold0.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "96b38f912b8b642c7acc34d3eb632092b30a17507b083bc1a4edc2f01e23c15a"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L2/fold1.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "91ba106a32d3baeaea1410f350e2b5e0bb5a7bf45ffdb7731f9fa5d0074c93b4"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L2/fold2.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "00e7bad91d0bc1af228e31509ab475813442305c344864aad67423770669c349"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L2/fold3.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "ffd2bf34860bffa458f4ecd122996713183b2c05d0dc7656dcf73ac394acfa45"
+    },
+    {
+      "path": "models/temporal/vh_restore_baseline_L2/fold4.pt",
+      "kind": "weight",
+      "bytes": 16916548,
+      "sha256": "b2667a670b1ebba1727c9fb07f62641e8663f8894bd8a3d354d2fdf0408f1a7f"
+    },
+    {
+      "path": "models/TimeLens-8B/model-00001-of-00004.safetensors",
+      "kind": "weight",
+      "bytes": 4998056552,
+      "sha256": "1b274420735fecc790f17d7ca195908feaced42d67aec1b64bafd9ec512e8828",
+      "url": "https://huggingface.co/TencentARC/TimeLens-8B/resolve/5557f14bfad6b17379d9cfd68b90aaabdbd7d1a9/model-00001-of-00004.safetensors?download=true"
+    },
+    {
+      "path": "models/TimeLens-8B/model-00002-of-00004.safetensors",
+      "kind": "weight",
+      "bytes": 4915962464,
+      "sha256": "b7d929727b99cb958d56793d28576be23dac177beb1363d02a104e047587f3cd",
+      "url": "https://huggingface.co/TencentARC/TimeLens-8B/resolve/5557f14bfad6b17379d9cfd68b90aaabdbd7d1a9/model-00002-of-00004.safetensors?download=true"
+    },
+    {
+      "path": "models/TimeLens-8B/model-00003-of-00004.safetensors",
+      "kind": "weight",
+      "bytes": 4915962496,
+      "sha256": "5f11a54b15a82c3a8b217501c4dd05a99a0d50908ff7abd06046941af6020d93",
+      "url": "https://huggingface.co/TencentARC/TimeLens-8B/resolve/5557f14bfad6b17379d9cfd68b90aaabdbd7d1a9/model-00003-of-00004.safetensors?download=true"
+    },
+    {
+      "path": "models/TimeLens-8B/model-00004-of-00004.safetensors",
+      "kind": "weight",
+      "bytes": 2704357976,
+      "sha256": "19c865d354c28de92746191d9856fa1d18e15272f0f3cd82b45418351fd6fe6b",
+      "url": "https://huggingface.co/TencentARC/TimeLens-8B/resolve/5557f14bfad6b17379d9cfd68b90aaabdbd7d1a9/model-00004-of-00004.safetensors?download=true"
+    }
+  ],
+  "unresolved_requirements": [
+    "new_video_four_stage_recipe_not_gpu_validated",
+    "unified_inference_environment_not_validated",
+    "bundle_source_compatibility_with_locked_code_not_validated",
+    "gpu_new_video_prediction_and_mp4_not_verified"
+  ]
+}
