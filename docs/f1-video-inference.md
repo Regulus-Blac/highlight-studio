@@ -13,7 +13,9 @@
 
 ## A/B：部署准备与候选验收
 
-在 Linux 产品目录提供已验证的 Python 推理环境、FFmpeg/FFprobe 与资产。Python 需要 PyTorch/CUDA、transformers、accelerate、NumPy、Pillow、OpenCV headless、PyAV、decord 和 Ultralytics；实际版本以 GPU 实测为准。运行时无需 Hub 凭据，模型文件都读本机。
+在 Linux 产品目录提供已验证的 Python 推理环境、FFmpeg/FFprobe 与资产。Python 需要 PyTorch/CUDA、transformers、accelerate、NumPy、Pillow、OpenCV headless、PyAV、decord 和 Ultralytics。运行时无需 Hub 凭据，模型文件都读本机。
+
+比赛解码器要求 OpenCV wheel 内的 libswscale 提供 `sws_test_transfer`。在独立推理环境安装 Ultralytics 的其余依赖后，将 `opencv-python` 替换为 `opencv-python-headless==4.13.0.92`，配合 `av==18.1.0`。两个 OpenCV wheel 共用 `cv2` 路径，应只保留 headless 版。Ultralytics 的包元数据仍声明 `opencv-python`，`pip check` 会报告这项差异。用 `aic.data.reliable_video.decoder_metadata` 实测样片解码，再开始 GPU 验收。
 
 - 源码使用[固定 F1 参考 PR #4](https://github.com/Regulus-Blac/highlight-studio/pull/4) 的 `references/competition-f1`，可单独从产品仓库获取。准备程序校验来源清单及全部 129 个原文件，不能拿任意比赛 checkout 替代。E/D 不需要比赛仓库权限。
 - `manifests/f1-downloaded-assets.json` 保存 50 项资产 SHA，匹配清单中的 `models/...` 相对布局。已经分散保存的同盘资产可用 `--receipt <路径映射 JSON> --allowed-root <资产所在根目录>` 建立新的硬链接布局；使用 SHA 已核对的本机路径，不复制大权重。不要修改硬链接文件内容。
@@ -47,6 +49,19 @@ python -m services.model_adapter.f1_setup \
 ```
 
 `--validate-candidate` 只接受固定的 F1 候选清单。输出目录必须是新运行目录，四个阶段各有日志。对至少一个有权使用的新视频分别验证 9:16 和 16:9，记录引擎、输入与结果 SHA、预测帧数、耗时、峰值显存。通过后再用产品后端验证预览、编辑与真实成片。没有 GPU 验收证据时，保留未就绪状态。
+
+### RTX 4090 验收记录（2026-11-05）
+
+产品代码 `42f9ef6`，F1 源码快照 `beefb57`，50 项模型资产逐项通过 SHA256 校验。环境为 Ubuntu 24.04、Python 3.12.3、PyTorch 2.8.0+cu128、torchvision 0.23.0+cu128、transformers 4.57.6、accelerate 1.10.1、Ultralytics 8.3.222、FFmpeg 6.1.1，以及前述解码依赖。测试样片为 12 秒、640×360、25 fps、带音频。
+
+| 画幅 | 真实预测帧数 | 独立推理耗时 | 未编辑成片 |
+| --- | ---: | ---: | --- |
+| 16:9 | 83 | 87 秒 | 608×342、3.32 秒、含音频 |
+| 9:16 | 91 | 86 秒 | 198×352、3.64 秒、含音频 |
+
+两个结果均返回 `engine=f1-derived-video-v0`、`mock=false`。在串行执行的两次独立测试中，`nvidia-smi` 按秒采样的显存峰值为 19,282 MiB。
+
+另用隔离的 `command` 服务通过产品 HTTP API 重新上传样片，两种画幅均完成真实预测、片段调整、Range 预览及 JSONL、带音频 MP4 导出和下载。两次导出均核对文件 SHA256，MP4 的画幅、帧数和音频与编辑方案一致。样片、预测结果、成片、逐阶段日志和验收回执保存在验收主机的数据盘。
 
 ## E：接入已审核发布
 
