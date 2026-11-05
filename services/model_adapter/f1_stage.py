@@ -82,6 +82,8 @@ class Run:
         self.meta_path = self.work / "video.json"
         os.environ.update(HF_HUB_OFFLINE="1", TRANSFORMERS_OFFLINE="1", HF_HUB_DISABLE_TELEMETRY="1",
                           YOLO_AUTOINSTALL="false", YOLO_CONFIG_DIR=str(self.work / "yolo"))
+        for name in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS"):
+            os.environ.setdefault(name, "4")
 
     def upstream(self, name, *argv, module_path=None):
         env = dict(os.environ)
@@ -180,10 +182,8 @@ class Run:
             return
 
         import numpy as np
-        import torch
         self.import_tools(self.src)
         from highlight.geometry import center_crop, dof_range, place_1d, safe_crop_size
-        from train_spatial_head import SpatialHead, load_clip, medfilt, predict
 
         width, height, n, fps = (meta[k] for k in ("width", "height", "frame_count", "fps"))
         tw, th = ratio
@@ -207,6 +207,10 @@ class Run:
                         or any(feat[k].ndim != 4 or feat[k].shape[0] != len(indices) or not np.isfinite(feat[k]).all()
                                for k in ("col", "row"))):
                     raise ValueError(f"Spatial features disagree with requested source frames: {res}")
+        # Import the CPU heads only after the large spatial subprocesses have exited.
+        import torch
+        from train_spatial_head import SpatialHead, load_clip, medfilt, predict
+
         torch.set_num_threads(4)
 
         def load(res, dim):
