@@ -1,0 +1,16 @@
+{
+  "sph_ybox3_448/head.pt": "265aed905f31f50570337307fdc40aa322c610e728e07f11dc6c948c3099943f",
+  "sph_ybox3_672/head.pt": "e6ebb0c05aaa570624792e5c22db70804c74b2b6de1151f8bce5b00929a338bb",
+  "sph_restore_448_x/head.pt": "1187432d85e03234ef8d807c722ca167063898ce520ff4305bea85c06c5da97f",
+  "sph_restore_672_x/head.pt": "ad99dc7ed7655d89f991f43b4088f2a4d39cd9041a107b54443a885d0f873064",
+  "vh_restore_baseline_L1/fold0.pt": "093c3573cefedead829e3219cd937b4522597221892f550a1d24e5739b05915f",
+  "vh_restore_baseline_L1/fold1.pt": "abb5a25f18379ff6085d040a0d725e10191f858c3975ed7b2b427d06648a5cf8",
+  "vh_restore_baseline_L1/fold2.pt": "fe2b715b6978b91fbdba87b4562a5177eaf63f2f5421510f33d680441f4846f0",
+  "vh_restore_baseline_L1/fold3.pt": "34b46791817c091f5d5cf95a8ac3bcf768583be8326df5f9f21d2c2c310d28be",
+  "vh_restore_baseline_L1/fold4.pt": "03c487beb63dd542e9bcbc36c5d82a3f66f454a9642ea54aa73cf53a41b41e3a",
+  "vh_restore_baseline_L2/fold0.pt": "96b38f912b8b642c7acc34d3eb632092b30a17507b083bc1a4edc2f01e23c15a",
+  "vh_restore_baseline_L2/fold1.pt": "91ba106a32d3baeaea1410f350e2b5e0bb5a7bf45ffdb7731f9fa5d0074c93b4",
+  "vh_restore_baseline_L2/fold2.pt": "00e7bad91d0bc1af228e31509ab475813442305c344864aad67423770669c349",
+  "vh_restore_baseline_L2/fold3.pt": "ffd2bf34860bffa458f4ecd122996713183b2c05d0dc7656dcf73ac394acfa45",
+  "vh_restore_baseline_L2/fold4.pt": "b2667a670b1ebba1727c9fb07f62641e8663f8894bd8a3d354d2fdf0408f1a7f"
+}
