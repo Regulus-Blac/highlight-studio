@@ -2,7 +2,9 @@
 
 import hashlib
 import json
+import os
 from pathlib import Path
+import signal
 import subprocess
 import threading
 import time
@@ -12,6 +14,28 @@ from .adapter import AdapterError, MockAdapter, validate_request, validate_resul
 from .assets import read_manifest, verify_assets
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def stop_runner(process):
+    """Stop the Linux inference tree, including GPU children of a timed-out stage."""
+    if os.name == "posix":
+        try:
+            os.killpg(process.pid, signal.SIGTERM)
+        except ProcessLookupError:
+            return
+    elif process.poll() is None:
+        process.terminate()
+    try:
+        process.wait(timeout=3)
+    except subprocess.TimeoutExpired:
+        if os.name != "posix":
+            process.kill()
+    if os.name == "posix":
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    process.wait()
 
 
 class UnavailableAdapter:
@@ -68,7 +92,8 @@ class CommandAdapter:
             raise AdapterError("inference_interrupted", "Inference worker is stopping", True)
         with (directory / "runner.log").open("wb") as log:
             try:
-                process = subprocess.Popen(command, cwd=directory, stdout=log, stderr=subprocess.STDOUT)
+                process = subprocess.Popen(command, cwd=directory, stdout=log, stderr=subprocess.STDOUT,
+                                           start_new_session=os.name == "posix")
             except OSError as error:
                 raise AdapterError("runner_unavailable", "Inference runner could not be started") from error
             deadline = time.monotonic() + self.timeout
@@ -79,13 +104,8 @@ class CommandAdapter:
                     if time.monotonic() >= deadline:
                         raise AdapterError("inference_timeout", "Inference exceeded its configured time limit", True)
             finally:
-                if process.poll() is None:
-                    process.terminate()
-                    try:
-                        process.wait(timeout=3)
-                    except subprocess.TimeoutExpired:
-                        process.kill()
-                        process.wait()
+                if process.poll() is None or process.returncode:
+                    stop_runner(process)
         if process.returncode:
             raise AdapterError("inference_failed", "Inference runner failed; see the worker's local runner.log")
         try:

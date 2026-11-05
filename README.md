@@ -4,7 +4,7 @@ ABDE 维护产品；ABC 在原比赛仓库训练、改进算法。本仓库通�
 
 ## 首次使用
 
-需要 Git 和 Python 3.11+。默认联调仅用 Python 标准库，不安装比赛训练环境，也不需要 GPU。
+需要 Git 和 Python 3.11+。D/E 可按 [开发与 baseline 验收交接](docs/de-baseline-handoff.md) 普通克隆并在本机做 CPU 媒体联调。下面的完整初始化流程适用于需要检出比赛子模块且有读取权限的成员。
 
 ```sh
 git clone --recurse-submodules https://github.com/Regulus-Blac/highlight-studio.git
@@ -18,7 +18,7 @@ python -m unittest discover -s tests -v
 python -m apps.backend.server
 ```
 
-当前提供文件上传、SQLite 持久异步预测任务、查询结果、幂等提交、排队取消和可配置推理适配器，默认返回明确标记的 Mock 结果。打开 http://127.0.0.1:8000 可查看旧 jobs 兼容页；D/E 新开发使用 uploads/tasks 接口，见 [联调交接](docs/integration.md)。CPU 媒体核心已支持片段预览、固定剪辑快照、JSONL/MP4 导出和 Range 播放，使用方法见 [A/B CPU 开发交接](docs/ab-cpu-preparation.md)。真实 F1 recipe、完整资产与 GPU 验收仍待完成；预测任务成功和导出成功分别查询。
+当前提供网页工作台、视频上传、SQLite 持久任务、片段预览、JSONL/MP4 导出和 Range 播放。默认启动返回明确标记的 Mock 结果。完整模拟成片请用 `mock-media`。真实 F1 候选已在 RTX 4090 验证 16:9 和 9:16 的新视频推理与成片。预测和导出分别查询任务状态。[接口交接](docs/integration.md) · [F1 验收记录](docs/f1-video-inference.md)
 
 ```sh
 python scripts/demo_task.py /path/to/owned-video.mp4 --ratio 9:16
@@ -44,11 +44,11 @@ python scripts/demo_task.py /path/to/owned-video.mp4 --ratio 9:16
 | `docs/` | 架构、分工、开发流程与验收计划 | ABDE |
 | `.github/workflows/` | CPU 检查、每日模型更新 PR | A/B |
 
-分工是建议，可在 `docs/team.md` 填入真实成员。大仓库保存产品代码及比赛源码引用；权重和数据不保存在 Git 中。克隆时需要 `--recurse-submodules`，GitHub 的普通源码 ZIP 不会包含子模块内容。
+分工是建议，可在 `docs/team.md` 填入真实成员。产品仓库保存固定 F1 源码快照和完整比赛仓库的子模块引用。需要完整比赛源码时使用 `--recurse-submodules`，并确认有比赛仓库权限。权重和数据保存在仓库外。
 
 ## 后续发布方向
 
-后续 v1.0 开发以 [baseline应用开发计划书](docs/baseline应用开发计划书.md) 为执行基线，详见 [开发说明](docs/development.md)。首先交付网页调用云端处理：上传视频 → 业务后端与持久任务队列 → GPU worker 调用模型适配器 → 视频渲染 → 预览与下载。前端只依赖产品契约，模型升级由适配层与部署配置处理。已提供上传、预测及导出的单 worker 参考实现，CPU 合成视频可跑通成片；正式网页、业务 v2、真实模型与云端部署仍待完成。
+后续 v1.0 开发以 [baseline应用开发计划书](docs/baseline应用开发计划书.md) 为执行基线，详见 [开发说明](docs/development.md)。当前可用参考工作台验证上传、预测和导出。正式云端入口、用户与文件归属、业务存储和对外部署由 D/E 后续接入。前端依赖产品契约，模型升级由适配层与部署配置处理。
 
 权重通过私有模型资产库（可选 Hugging Face）归档和分发，在服务器部署或更新时下载固定版本并校验，视频任务复用服务器本地模型。Git 只保存代码、源码引用及不含凭据的版本清单。用户明确要求本地处理时，按计划书单独交付本机服务与首次下载/导入、持久缓存的模型包，仍使用网页交互；该可选模式当前尚未实现。
 

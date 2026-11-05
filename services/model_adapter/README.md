@@ -23,4 +23,4 @@
 
 2026-10-27：增加显式 `SyntheticMediaAdapter`（CLI `mock-media`，始终 mock=true）供 CPU 媒体联调；默认 Mock 空预测保持原行为。`manifests/f1-expected-assets.json` 与 `readiness.py` 覆盖已知 F1 补充材料及主干/父级账本/recipe 等缺口，完整逐文件 inventory 仍待取回。
 
-`python -m services.model_adapter.f1_runner --check --asset-root <目录>` 不加载模型，未就绪退出 2。`--run` 仅在提供经过审阅的 recipe、完整 release manifest、request/result 路径后编排四个阶段；本仓库目前没有可默认执行的新视频 F1 recipe。不能使用 `tools/run_final.py` 冒充最高分路线。详见 [F1 审计与后续前提](../../docs/ab-cpu-preparation.md)。
+`python -m services.model_adapter.f1_runner --check --asset-root <目录>` 不加载模型，未就绪退出 2。[单视频 F1 候选交接](../../docs/f1-video-inference.md) 说明如何生成候选 recipe、验证实际 GPU 和接入 E 的 worker；候选不默认启用。历史比赛结果不能作为上传视频的预测。
