@@ -1,0 +1,33 @@
+{
+  "_note": "复赛最终流水线参数（AM = AK(static_k 0.25) + 片头证据）。reframe = Q（anchor_y 0.20, shrink 0）；trim = 基础去尾 5% + 静止/无主体证据（≤35%）+ 片头证据。见 tools/README.md 排行榜记录。",
+  "detector": "yolo11s.pt",
+  "imgsz": 640,
+  "reframe": {
+    "stride": 4,
+    "classes": "all",
+    "conf": 0.15,
+    "link_iou": 0.3,
+    "area_pow": 1.5,
+    "center_w": 0.9,
+    "union": 0.4,
+    "frame_fallback": false,
+    "anchor_y": 0.2,
+    "motion": true,
+    "motion_min": 3.0,
+    "median": 1,
+    "ema": 0.25,
+    "dead": 0.05,
+    "shrink": 0.0,
+    "shrink_y": null,
+    "head": false
+  },
+  "trim": {
+    "tail_base": 0.05,
+    "tail_cap": 0.35,
+    "head": true,
+    "head_cap": 0.35,
+    "static_k": 0.25,
+    "subject_conf": 0.25,
+    "min_keep_s": 3.0
+  }
+}

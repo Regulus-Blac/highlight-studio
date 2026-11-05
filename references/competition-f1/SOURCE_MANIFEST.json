@@ -1,0 +1,3786 @@
+{
+  "schema": "official_algorithm_source_bundle_v1",
+  "source_commit": "df03d1bcba3f8a4d128d197ce7cc9775d8ac7451",
+  "f1_source_tag": "lb-43.37-F1_gnmc_full2d_audited",
+  "f1_tag_commit": "39337b84ee81428b680f4907ea4cbab0864ac653",
+  "selected_submission": "F1_gnmc_full2d_audited",
+  "reported_score": 43.37,
+  "total_production_parameters": 8926602839,
+  "export_method": "Git archive of committed tree, with explicit data/media exclusions; historical original source bytes copied separately",
+  "worktree_included": false,
+  "tracked_sources": 56,
+  "historical_sources": 73,
+  "files": [
+    {
+      "path": "historical/fixed_configs/full_shift3.decode.json",
+      "origin": "fixed_global_config:Z42_ens2c_full.decode.json (8 global constants only)",
+      "bytes": 116,
+      "sha256": "d22a119b6e15e7a2df22e1051643baf3213f560c96f94b21a9f3adb3a4015804"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/__init__.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/__init__.py",
+      "bytes": 77,
+      "sha256": "18c6835d266e870c0f84b70c6eb1ed26178f50c755c89856e414f10415d9303f"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/__init__.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/data/__init__.py",
+      "bytes": 45,
+      "sha256": "1d28cf46510cc7d33bfb04c147ef596ed2c3fb9b32c7266d7b511425e1ae2aaa"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/reliable_video.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/data/reliable_video.py",
+      "bytes": 6551,
+      "sha256": "c669e195691c344cbdbedfc8f81793c748776e97569770783d3a4c39addb9fce"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/__init__.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/deployment/__init__.py",
+      "bytes": 42,
+      "sha256": "728f61f1ec996fb506128634c0f8177e0abc4ebff13c33ff109a0a6add038cd9"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/shared_reproduction.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/deployment/shared_reproduction.py",
+      "bytes": 16558,
+      "sha256": "e1a6db64126b2f5756426c040aa3a8ed79fab344392f5ab4159759820839294f"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/__init__.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/evaluation/__init__.py",
+      "bytes": 49,
+      "sha256": "ad69ee1d5394e8a99aa13a7fafce2da201c4379b48631402368735a713af6113"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/predictions.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/evaluation/predictions.py",
+      "bytes": 2209,
+      "sha256": "06cdebfbbd5a18163197357190adc3fe94b2b089a71aa5e7ebc1b54432fbe8e7"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/__init__.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/inference/__init__.py",
+      "bytes": 46,
+      "sha256": "09bc6f0785f07ba162096bc781867d0d85fd0aff7d245bdba8cbbf84f402b02d"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/checked_shared_script.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/inference/checked_shared_script.py",
+      "bytes": 1734,
+      "sha256": "2701a2942f109c080a58f2adf18c167458b5dffec3e404ea796ebbb0993aaa54"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/shared_recipe.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/inference/shared_recipe.py",
+      "bytes": 26813,
+      "sha256": "b7d61ca496a2b48c74c9a9154533dbafa59dc5362717d6fa37394a583b312364"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/numeric.py",
+      "origin": "git:a4809a1c908b99743acbea5b3a7ca8875777af01:aic/numeric.py",
+      "bytes": 209,
+      "sha256": "dedf682f7def568f12759fd9ea1c869008c7dd9b4c7f25fe529aea88fa03f106"
+    },
+    {
+      "path": "historical/git_r43_c638/configs/r43/qwen_processor_0c351dd.json",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:configs/r43/qwen_processor_0c351dd.json",
+      "bytes": 1157,
+      "sha256": "8c753f9b835bd9b81141fdec08d49fcc847006216d78ea21f8d6882b3c58eea3"
+    },
+    {
+      "path": "historical/git_r43_c638/configs/r43/scored_recipe.json",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:configs/r43/scored_recipe.json",
+      "bytes": 4525,
+      "sha256": "bb535dee1d5c4838f33360c8dd4d42dad205ae8220e0e40016066480ab65bce8"
+    },
+    {
+      "path": "historical/git_r43_c638/configs/r43/shared_heads.sha256.json",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:configs/r43/shared_heads.sha256.json",
+      "bytes": 1440,
+      "sha256": "35608a6b2bffe1e5260b7ed1db8d49f13403ef4d2eae31b9d998fc59b4f273f2"
+    },
+    {
+      "path": "historical/git_r43_c638/scripts/reproduce/r42_yopt.py",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:scripts/reproduce/r42_yopt.py",
+      "bytes": 13202,
+      "sha256": "145540f65c281f3d8980ac32ed3c96a63ba2ac54ea8386bed5974c121c39785d"
+    },
+    {
+      "path": "historical/git_r43_c638/scripts/reproduce/r43_crop_context.py",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:scripts/reproduce/r43_crop_context.py",
+      "bytes": 10907,
+      "sha256": "9b2b8bcdc49ad82c3511bbbd53adaae64a3fb69db4e01549d3f4243a0ec77e34"
+    },
+    {
+      "path": "historical/git_r43_c638/scripts/reproduce/r43_hybrid.py",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:scripts/reproduce/r43_hybrid.py",
+      "bytes": 16740,
+      "sha256": "31fd2601b0705e488b1833aa1bdb9b88488462b067299e810411c2ad87abc125"
+    },
+    {
+      "path": "historical/git_r43_c638/scripts/reproduce/r43_hybrid.sh",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:scripts/reproduce/r43_hybrid.sh",
+      "bytes": 387,
+      "sha256": "e0876dafac0d2d33ebecc6beac8cebe833ae46c71975949c89966623be09511d"
+    },
+    {
+      "path": "historical/git_r43_c638/scripts/reproduce/r43_predict.py",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:scripts/reproduce/r43_predict.py",
+      "bytes": 1446,
+      "sha256": "e7ccf8107b01541f647a0388e738f9235eac4073893737c28b668ac1debc99b4"
+    },
+    {
+      "path": "historical/git_r43_c638/scripts/reproduce/r43_prepare_decoder.py",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:scripts/reproduce/r43_prepare_decoder.py",
+      "bytes": 1883,
+      "sha256": "2721041fe79703f2399200999808de509cebda67748ecfb0ec5135a25aa1cf8b"
+    },
+    {
+      "path": "historical/git_r43_c638/scripts/reproduce/r43_readers.py",
+      "origin": "git:c63800fcbe29359e14968113694a7b2ebe3ab9c4:scripts/reproduce/r43_readers.py",
+      "bytes": 3227,
+      "sha256": "63f73cbbb3efafa151de911b8c20bc177b5c4c253ea162f76720e377704fb714"
+    },
+    {
+      "path": "historical/git_sym8a18/baseline/baseline_center.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:baseline/baseline_center.py",
+      "bytes": 4428,
+      "sha256": "c5cfca0d8b33a38b45007862d8df3f6322b76eb0108a3464ec093817ad8094bd"
+    },
+    {
+      "path": "historical/git_sym8a18/baseline/baseline_qwen.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:baseline/baseline_qwen.py",
+      "bytes": 19765,
+      "sha256": "c27f269b3d9787c3cb161900db6e3b069552889350b78834c8c78de2d509163b"
+    },
+    {
+      "path": "historical/git_sym8a18/highlight/__init__.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:highlight/__init__.py",
+      "bytes": 693,
+      "sha256": "60245f3ed3589c493c0a3504518faa0fd8243cba68e2cbf36b8db098d734715a"
+    },
+    {
+      "path": "historical/git_sym8a18/highlight/geometry.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:highlight/geometry.py",
+      "bytes": 10818,
+      "sha256": "231faafd0f91a6c74f6ab9c1128d24e0dfe9c679a5b5c69c0bd0149642e000dc"
+    },
+    {
+      "path": "historical/git_sym8a18/highlight/io/__init__.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:highlight/io/__init__.py",
+      "bytes": 328,
+      "sha256": "e502a51c96ce0f87895d27d65442ebaf26770e6c40eb9ba17decb1e757194e08"
+    },
+    {
+      "path": "historical/git_sym8a18/highlight/io/index.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:highlight/io/index.py",
+      "bytes": 6208,
+      "sha256": "afe0ac0adf1936da67c6614db9d2f82b9d60458b410115310c113eaaf2017b01"
+    },
+    {
+      "path": "historical/git_sym8a18/highlight/io/video.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:highlight/io/video.py",
+      "bytes": 6591,
+      "sha256": "03c660e0b0050937b01ac760e72dff1fde1f9015223cb9b3d26227a861d34508"
+    },
+    {
+      "path": "historical/git_sym8a18/highlight/metric/__init__.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:highlight/metric/__init__.py",
+      "bytes": 339,
+      "sha256": "288230c945b66e5293cb4e3a802bec5edf3c57ad800cdd7b588ca943923aadb8"
+    },
+    {
+      "path": "historical/git_sym8a18/highlight/metric/evaluate.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:highlight/metric/evaluate.py",
+      "bytes": 16498,
+      "sha256": "2b576d320f1c3abd47b60ee1b10bc6f7e118a4d776d5b0035e945e8bcc9c2973"
+    },
+    {
+      "path": "historical/git_sym8a18/highlight/metric/validate.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:highlight/metric/validate.py",
+      "bytes": 10466,
+      "sha256": "19b8bfba18e60cf0fb57b89cb750888a42a87cfca7391f798783630b1db6d5c6"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/api_spatial.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/api_spatial.py",
+      "bytes": 9500,
+      "sha256": "16c133176b36dd01cdbb0f8b316f78d1fb1f2ff72dc9ac01e021c2df5f400ef3"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/api_teacher.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/api_teacher.py",
+      "bytes": 9723,
+      "sha256": "eeafd60aae4fd98416f18fb387ea312b00feac56e389c3bdb5fc6fe0766f5bcd"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/audit_videos.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/audit_videos.py",
+      "bytes": 12531,
+      "sha256": "db20e6bcbc9cb0879ee9b371cca5b6444a0be501290498d3a276d03bbc4fe687"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/build_ext_labels.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/build_ext_labels.py",
+      "bytes": 8891,
+      "sha256": "1c8ce1db89226b124854e8c968dda46e540b728ea1e03f2924456755c3f24047"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/build_sft_temporal.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/build_sft_temporal.py",
+      "bytes": 12564,
+      "sha256": "7365bba652caab0f3f950b85d980ea436edf33df035de7fc8084d69ca8b45aba"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/build_train_clips.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/build_train_clips.py",
+      "bytes": 9662,
+      "sha256": "3c8dea5cf1efdbeeec59040e15d502e678617485266a392b91f5a8313d68c651"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/calibrate_probs.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/calibrate_probs.py",
+      "bytes": 4059,
+      "sha256": "55dcf2492d52f093fb5907cd34bd5f77de05086f19b23b6c3fb66d3e4a0365f2"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/configs/d3_decode.json",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/configs/d3_decode.json",
+      "bytes": 135,
+      "sha256": "0f5d6ac2f00011094f25e97aac1d8ba0f8812bd6aa41a54be136c1c6ab8ca6f2"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/configs/final_AM.json",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/configs/final_AM.json",
+      "bytes": 825,
+      "sha256": "9e83fb49e0f87e39737f70939453891d475eadd932b913cea31c73e359139b2c"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/decode_scores.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/decode_scores.py",
+      "bytes": 26592,
+      "sha256": "c832fb26ebb89378f7582126ce164056431d0725c4a1d4da6a81a13d163e960b"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/empty_rule.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/empty_rule.py",
+      "bytes": 7325,
+      "sha256": "d7b2cccf86feec62544db80a9317acb5380e8c5c45e40b1f4df17416da27f9a0"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/ensemble_probs.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/ensemble_probs.py",
+      "bytes": 4929,
+      "sha256": "487b6e12760b76505c6d4b72a58d2f1d0d9a506f379743a787712dd973ade9ba"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/eval_spatial.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/eval_spatial.py",
+      "bytes": 21173,
+      "sha256": "b4ca513f87152eca1e1c28936d85f38ca0c1e2046a548225401da33612605597"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/evaluate.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/evaluate.py",
+      "bytes": 8792,
+      "sha256": "be5c43861872b3abaf25d7b6ba124ec5c8cc1f2857d8a43d07a6e33ad6cb822d"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/extract_feats.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/extract_feats.py",
+      "bytes": 9557,
+      "sha256": "305d137ab98d189968921984f129208749bf524354e0201196e7e5a1f7697b4d"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/fetch_sources.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/fetch_sources.py",
+      "bytes": 3961,
+      "sha256": "5129fbc820e3e746f94b132eee7615930f118a51632c29edf8238ad405524163"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/fill_det_cache.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/fill_det_cache.py",
+      "bytes": 2968,
+      "sha256": "da136a55d563c6a9349bd58dcc1a3181263e37a3cc038c5d4730249d7a0bb9cc"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/fuse_motion.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/fuse_motion.py",
+      "bytes": 768,
+      "sha256": "e9cefb2e3f836b3c38deeb877e21fd83efc00abeb6c37c6bd338b7e007c67a28"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/highlight_metric.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/highlight_metric.py",
+      "bytes": 5874,
+      "sha256": "926b97c78d32d46152b9ab848b949f01ed4760d089fe9dbe6f7c7ed620dc74e0"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/infer_scores.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/infer_scores.py",
+      "bytes": 9601,
+      "sha256": "44e996128bfa020bbe0aa785032145258562b90904a13e269aefb879ccb48fbb"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/infer_temporal.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/infer_temporal.py",
+      "bytes": 5974,
+      "sha256": "4fc8487c93558b1bb1e5d8304ec852cacdcd12d40a2067461ecef3ef452ded8c"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/infer_window_feats.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/infer_window_feats.py",
+      "bytes": 10476,
+      "sha256": "922d5584b5d85bf353e2074472300bbaede0e8209fa4c89a9e13876e443bbf2f"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/infer_yesno.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/infer_yesno.py",
+      "bytes": 26639,
+      "sha256": "bb78d4237adeb83b3945f1ba164988fd8344c0dd4eb2852293f9832b38112509"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/lb_estimate.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/lb_estimate.py",
+      "bytes": 9201,
+      "sha256": "9dcabbdf717d241380c37ea8bbf72b7113cc2f0f19ce043c34d5488933478190"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/local_spatial.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/local_spatial.py",
+      "bytes": 7353,
+      "sha256": "ea9cbe08da979ab738491f2b349dcea7704d2592f2b72fe10888a1b887e7caf8"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/motion_feats.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/motion_feats.py",
+      "bytes": 4279,
+      "sha256": "180fc08e3614f9a603dfcbe8ce7d20131f9f4b86c793be1f003484a8c4208386"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/reframe.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/reframe.py",
+      "bytes": 32942,
+      "sha256": "136337ad6c94ccb80b1b4f98976444706e538c4e91d6a25e0d2eac175c15ab0f"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/restore_sources.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/restore_sources.py",
+      "bytes": 1924,
+      "sha256": "4e751cabf15235018dc4557c035745ef1f7f716f04e789fc0b64b514e0ebb5d9"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/run_final.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/run_final.py",
+      "bytes": 7077,
+      "sha256": "44e628585b90894069ddfee65469074e72b0a3c532b72d6f74bb185f7b673c0f"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/sam_refine.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/sam_refine.py",
+      "bytes": 5959,
+      "sha256": "81e206836a05559cbafb4d10dbcabe4af4b7f9a9418b3c0eb93ade16de8adddf"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/selfcheck.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/selfcheck.py",
+      "bytes": 9799,
+      "sha256": "9e64fb7d2ce2b2dd698367d242c936576d5e8d91116a3ff6428af4a048146e4d"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/spatial_feats.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/spatial_feats.py",
+      "bytes": 10003,
+      "sha256": "fa883ae36bb514755e3f08e90affe0d498df09cedd52835d8bb427ac8282a1b1"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/teacher_eval.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/teacher_eval.py",
+      "bytes": 4709,
+      "sha256": "1f80d0a9872e7bb46961a52870de7f77c9fb2525ea385053c5c6d6b3b607699a"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/temporal_vl.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/temporal_vl.py",
+      "bytes": 13997,
+      "sha256": "b6b386de1765a61bd9f8a4846a242f15de2b8d2f90dc68b121aa323c911a51ea"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/test_validate_submission.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/test_validate_submission.py",
+      "bytes": 9771,
+      "sha256": "19833c8933429cf3abd6021fd57b746a4c1e6b3d791915f4f8cc372e073239b7"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/train_sft_qlora.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/train_sft_qlora.py",
+      "bytes": 14924,
+      "sha256": "a9187709c0e9b79bb3137bfd22ef5671f436f609df474526706f9775ef00b2e7"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/train_spatial_head.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/train_spatial_head.py",
+      "bytes": 10344,
+      "sha256": "24ba25fc32b5e5c09a34dc9e56f78e7d9a3352612b6d03f025299734d6b3809b"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/train_temporal_head.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/train_temporal_head.py",
+      "bytes": 14204,
+      "sha256": "d9904d0bec7ecefe643007736ca0435129478580394c7d9e42d8f3119bd08e10"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/train_vlm_head.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/train_vlm_head.py",
+      "bytes": 23566,
+      "sha256": "8b7bbbb31edaff63fdfe9af393869c60266e1c4593f5c9c2f096dff2e4d783b9"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/trim_frames.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/trim_frames.py",
+      "bytes": 6781,
+      "sha256": "0f1419c43debb500b979d06a5c6c461cf3d0044467961c346b9b870cddd03b97"
+    },
+    {
+      "path": "historical/git_sym8a18/tools/validate_submission.py",
+      "origin": "git:8a18db2ef5dd6bf0d8a2eb88a274341421479a43:tools/validate_submission.py",
+      "bytes": 11441,
+      "sha256": "d95f9f643705b1f37dc3dabb9acca7df0afa219ce0c72d09868d205eb10fa300"
+    },
+    {
+      "path": "src/LICENSE",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:LICENSE",
+      "bytes": 11558,
+      "sha256": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6"
+    },
+    {
+      "path": "src/baseline/baseline_qwen.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:baseline/baseline_qwen.py",
+      "bytes": 19765,
+      "sha256": "c27f269b3d9787c3cb161900db6e3b069552889350b78834c8c78de2d509163b"
+    },
+    {
+      "path": "src/highlight/__init__.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:highlight/__init__.py",
+      "bytes": 693,
+      "sha256": "60245f3ed3589c493c0a3504518faa0fd8243cba68e2cbf36b8db098d734715a"
+    },
+    {
+      "path": "src/highlight/geometry.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:highlight/geometry.py",
+      "bytes": 10818,
+      "sha256": "231faafd0f91a6c74f6ab9c1128d24e0dfe9c679a5b5c69c0bd0149642e000dc"
+    },
+    {
+      "path": "src/scripts/plan_c/content_box.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/content_box.py",
+      "bytes": 2783,
+      "sha256": "1fb8dbc027d5aab7bb78afef82c7c92efb7327b0c98b4ac5a2cd71c852e523e5"
+    },
+    {
+      "path": "src/scripts/plan_c/content_build.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/content_build.py",
+      "bytes": 4119,
+      "sha256": "9799c630e204d0f48b938fe08a510e2caf80fcb9185c165669267eab03b5901a",
+      "modified_after_export": "docstring wording only; code unchanged"
+    },
+    {
+      "path": "src/scripts/plan_c/ground_build.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/ground_build.py",
+      "bytes": 2458,
+      "sha256": "b7705e9d8b9be0ef5ff2ab650fe8484e303a3fca29e425b83c7cf318a1aea53d"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_build.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/motion_build.py",
+      "bytes": 10135,
+      "sha256": "3eb95bc8aaff1ecbcd5a4cedb6133b491e2b30d70ed2d9b3d7d9646cb17bed6f"
+    },
+    {
+      "path": "src/scripts/plan_c/research_crop_scale.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_crop_scale.py",
+      "bytes": 16247,
+      "sha256": "cc5491caebcfe44e022f08ed59660be682f131a4c7fe18de56e8ee073d2dfa60"
+    },
+    {
+      "path": "src/scripts/plan_c/research_crop_scale_apply.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_crop_scale_apply.py",
+      "bytes": 7330,
+      "sha256": "04a239c384ee46f13d9e1464f3680038a3444a457d76609849b92125f38ecd68"
+    },
+    {
+      "path": "src/scripts/plan_c/research_crop_scale_encode.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_crop_scale_encode.py",
+      "bytes": 10410,
+      "sha256": "35bcc831d76f4ed6b162f56efaca5e401d8a782ccd4dd8c9376474aec55f12d6"
+    },
+    {
+      "path": "src/scripts/plan_c/research_crop_scale_meta.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_crop_scale_meta.py",
+      "bytes": 2477,
+      "sha256": "02a1131d673046fc4e0009cb920178a973cdfdad0ec1a90ad5b663cf9932184c"
+    },
+    {
+      "path": "src/scripts/plan_c/research_crop_scale_package_audit.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_crop_scale_package_audit.py",
+      "bytes": 6639,
+      "sha256": "eb32339e81a39b9172cf2da58c3c6eaf8ab906a6a169928aba0955f992465b1d"
+    },
+    {
+      "path": "src/scripts/plan_c/research_dense_feats.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_dense_feats.py",
+      "bytes": 1090,
+      "sha256": "0a35212966a15bffcfd5d7a9f9bfe1218607d9efae3a3c49ebf68ca8ec6f7e02"
+    },
+    {
+      "path": "src/scripts/plan_c/research_eval.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_eval.py",
+      "bytes": 2691,
+      "sha256": "e96febec9a7477b0c00205b03f14f612b6acf5d815ea441784a9cb17f605c1d0"
+    },
+    {
+      "path": "src/scripts/plan_c/research_gnmc_dedup.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_gnmc_dedup.py",
+      "bytes": 5804,
+      "sha256": "2320705cdda36a95959c5d97e5c359ed806beaf2d6cdc2c723b7ffc41890ccae"
+    },
+    {
+      "path": "src/scripts/plan_c/research_gnmc_predict.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_gnmc_predict.py",
+      "bytes": 2524,
+      "sha256": "f99e35280efb2219b9f706f127bd908d38e4ea5f88db2c8e4c074c3ae6307fb5"
+    },
+    {
+      "path": "src/scripts/plan_c/research_gnmc_train.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_gnmc_train.py",
+      "bytes": 14968,
+      "sha256": "13b4f477a40f137034c9c96d6f51769a0d908f9bd7bb88d3fadd4cbb463c6cb8"
+    },
+    {
+      "path": "src/scripts/plan_c/research_gnmc_y.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_gnmc_y.py",
+      "bytes": 6350,
+      "sha256": "5096212f99216a9f33efc5e512b05aee0056828809a13cce670e1a728c3e1060"
+    },
+    {
+      "path": "src/scripts/plan_c/research_residual_build.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_residual_build.py",
+      "bytes": 2244,
+      "sha256": "c9da3ceac380b0696bfac3df4efe40d9f59d1c54587ea352dd4bb8c6e0e6ef7d"
+    },
+    {
+      "path": "src/scripts/plan_c/research_residual_features.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_residual_features.py",
+      "bytes": 3712,
+      "sha256": "bebc5be2b7d69413a090ab3012f33b394eca3d2e65acda3a3dfa91a81d676a39"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retarget_feats.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_retarget_feats.py",
+      "bytes": 3659,
+      "sha256": "a30bb29b3e1bd752a25bc374b6e59bd9f963aca8faa85f55f0e9741f9af2ec32"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retarget_x.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_retarget_x.py",
+      "bytes": 16927,
+      "sha256": "e1cb8b84f1022641bc21967e19f56d818de0293046418c13aa3a7c74f9b1e992"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retarget_x_build.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_retarget_x_build.py",
+      "bytes": 2816,
+      "sha256": "06783c0aeb2871259e0765d5215e4672aa556ee776a058f50250a63fd0472285"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retarget_x_generate.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_retarget_x_generate.py",
+      "bytes": 3173,
+      "sha256": "440676873de2222ec735702a154cd1daa20b1c6eb5d47637b3ada8e46081389a"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retargetvid_finalize.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_retargetvid_finalize.py",
+      "bytes": 12281,
+      "sha256": "79b2ebc130e5f1a1ce9bb380fa7fcf06059db549ba0b755bab9989f747bce1a8"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retargetvid_labels.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_retargetvid_labels.py",
+      "bytes": 9515,
+      "sha256": "bff00797a07e875a17000c25062e2f5b9f4d61834c6baccc022860f74f3cd054"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retargetvid_recover.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_retargetvid_recover.py",
+      "bytes": 8154,
+      "sha256": "12b82d91cda701159c964db06b180326ca85f9cdcccea7854f3a1447efccf332"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retargetvid_samples.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/research_retargetvid_samples.py",
+      "bytes": 4631,
+      "sha256": "708507ab10f1b10ee909178c98777c8714db266bbe4141e857d42160a8c27680"
+    },
+    {
+      "path": "src/scripts/plan_c/teacher_to_ext.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/teacher_to_ext.py",
+      "bytes": 1520,
+      "sha256": "c54eac158d457a17e36524d73d661c4540e69c0dfc6367bdde869361369a5779"
+    },
+    {
+      "path": "src/scripts/plan_c/ybox_labels.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:scripts/plan_c/ybox_labels.py",
+      "bytes": 9219,
+      "sha256": "e8a79085e54c4a1bddbf21cf232bc6288b6b203d3da3374900a9de781dd6f275"
+    },
+    {
+      "path": "src/tools/api_spatial.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/api_spatial.py",
+      "bytes": 9500,
+      "sha256": "16c133176b36dd01cdbb0f8b316f78d1fb1f2ff72dc9ac01e021c2df5f400ef3"
+    },
+    {
+      "path": "src/tools/api_teacher.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/api_teacher.py",
+      "bytes": 9723,
+      "sha256": "eeafd60aae4fd98416f18fb387ea312b00feac56e389c3bdb5fc6fe0766f5bcd"
+    },
+    {
+      "path": "src/tools/audit_videos.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/audit_videos.py",
+      "bytes": 12531,
+      "sha256": "db20e6bcbc9cb0879ee9b371cca5b6444a0be501290498d3a276d03bbc4fe687"
+    },
+    {
+      "path": "src/tools/build_sft_temporal.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/build_sft_temporal.py",
+      "bytes": 12564,
+      "sha256": "7365bba652caab0f3f950b85d980ea436edf33df035de7fc8084d69ca8b45aba"
+    },
+    {
+      "path": "src/tools/configs/d3_decode.json",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/configs/d3_decode.json",
+      "bytes": 135,
+      "sha256": "0f5d6ac2f00011094f25e97aac1d8ba0f8812bd6aa41a54be136c1c6ab8ca6f2"
+    },
+    {
+      "path": "src/tools/configs/final_AM.json",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/configs/final_AM.json",
+      "bytes": 825,
+      "sha256": "9e83fb49e0f87e39737f70939453891d475eadd932b913cea31c73e359139b2c"
+    },
+    {
+      "path": "src/tools/decode_scores.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/decode_scores.py",
+      "bytes": 26592,
+      "sha256": "c832fb26ebb89378f7582126ce164056431d0725c4a1d4da6a81a13d163e960b"
+    },
+    {
+      "path": "src/tools/ensemble_probs.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/ensemble_probs.py",
+      "bytes": 4929,
+      "sha256": "487b6e12760b76505c6d4b72a58d2f1d0d9a506f379743a787712dd973ade9ba"
+    },
+    {
+      "path": "src/tools/eval_spatial.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/eval_spatial.py",
+      "bytes": 21173,
+      "sha256": "b4ca513f87152eca1e1c28936d85f38ca0c1e2046a548225401da33612605597"
+    },
+    {
+      "path": "src/tools/extract_feats.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/extract_feats.py",
+      "bytes": 9557,
+      "sha256": "305d137ab98d189968921984f129208749bf524354e0201196e7e5a1f7697b4d"
+    },
+    {
+      "path": "src/tools/fuse_motion.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/fuse_motion.py",
+      "bytes": 768,
+      "sha256": "e9cefb2e3f836b3c38deeb877e21fd83efc00abeb6c37c6bd338b7e007c67a28"
+    },
+    {
+      "path": "src/tools/highlight_metric.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/highlight_metric.py",
+      "bytes": 5874,
+      "sha256": "926b97c78d32d46152b9ab848b949f01ed4760d089fe9dbe6f7c7ed620dc74e0"
+    },
+    {
+      "path": "src/tools/infer_scores.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/infer_scores.py",
+      "bytes": 9601,
+      "sha256": "44e996128bfa020bbe0aa785032145258562b90904a13e269aefb879ccb48fbb"
+    },
+    {
+      "path": "src/tools/infer_yesno.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/infer_yesno.py",
+      "bytes": 26645,
+      "sha256": "0231145feab98a033f29bd1fbc33d929145f7be43dd5f5fb4879d818bbd27bb3"
+    },
+    {
+      "path": "src/tools/local_spatial.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/local_spatial.py",
+      "bytes": 7353,
+      "sha256": "ea9cbe08da979ab738491f2b349dcea7704d2592f2b72fe10888a1b887e7caf8"
+    },
+    {
+      "path": "src/tools/motion_feats.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/motion_feats.py",
+      "bytes": 4279,
+      "sha256": "180fc08e3614f9a603dfcbe8ce7d20131f9f4b86c793be1f003484a8c4208386"
+    },
+    {
+      "path": "src/tools/reframe.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/reframe.py",
+      "bytes": 32942,
+      "sha256": "136337ad6c94ccb80b1b4f98976444706e538c4e91d6a25e0d2eac175c15ab0f"
+    },
+    {
+      "path": "src/tools/reliable_decode.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/reliable_decode.py",
+      "bytes": 4062,
+      "sha256": "8ffb9da025c5de5c0b53bc54d23f694307b26bcb7a481e774377ea0a16cf53a4"
+    },
+    {
+      "path": "src/tools/spatial_feats.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/spatial_feats.py",
+      "bytes": 10314,
+      "sha256": "942b48be6aa321118ae73b7a6f59bd974d2febd667291db7282f78bda4aa447a"
+    },
+    {
+      "path": "src/tools/temporal_vl.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/temporal_vl.py",
+      "bytes": 13997,
+      "sha256": "b6b386de1765a61bd9f8a4846a242f15de2b8d2f90dc68b121aa323c911a51ea"
+    },
+    {
+      "path": "src/tools/train_spatial_head.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/train_spatial_head.py",
+      "bytes": 14013,
+      "sha256": "a34403db689c2f906f5a6dc8710866c1070140cedd8b42667b7a326898b0a5db"
+    },
+    {
+      "path": "src/tools/train_temporal_head.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/train_temporal_head.py",
+      "bytes": 14204,
+      "sha256": "d9904d0bec7ecefe643007736ca0435129478580394c7d9e42d8f3119bd08e10"
+    },
+    {
+      "path": "src/tools/train_vlm_head.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/train_vlm_head.py",
+      "bytes": 23566,
+      "sha256": "8b7bbbb31edaff63fdfe9af393869c60266e1c4593f5c9c2f096dff2e4d783b9"
+    },
+    {
+      "path": "src/tools/trim_frames.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/trim_frames.py",
+      "bytes": 6781,
+      "sha256": "0f1419c43debb500b979d06a5c6c461cf3d0044467961c346b9b870cddd03b97"
+    },
+    {
+      "path": "src/tools/validate_submission.py",
+      "origin": "git:df03d1bcba3f8a4d128d197ce7cc9775d8ac7451:tools/validate_submission.py",
+      "bytes": 11441,
+      "sha256": "d95f9f643705b1f37dc3dabb9acca7df0afa219ce0c72d09868d205eb10fa300"
+    }
+  ],
+  "excluded_tracked_files": [
+    {
+      "path": "baseline/predictions.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "data/ext_summe_eval.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "data/timelens_grpo_train.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "docs/assets/timelens_bench_full.png",
+      "reason": "文档媒体资源"
+    },
+    {
+      "path": "docs/assets/timelens_bench_full.svg",
+      "reason": "文档媒体资源"
+    },
+    {
+      "path": "resources/human_annotations_20261022/.gitignore",
+      "reason": "资源实物与数据元信息，另由对应材料目录管理"
+    },
+    {
+      "path": "resources/human_annotations_20261022/annotation_summary.json",
+      "reason": "资源实物与数据元信息，另由对应材料目录管理"
+    },
+    {
+      "path": "resources/human_annotations_20261022/consumed_blind/human_blind_v2_effective.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/dev/human_dev_v2_effective.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/dev/human_dev_v2_frozen_log.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/files_sha256.json",
+      "reason": "资源实物与数据元信息，另由对应材料目录管理"
+    },
+    {
+      "path": "resources/human_annotations_20261022/provenance.json",
+      "reason": "资源实物与数据元信息，另由对应材料目录管理"
+    },
+    {
+      "path": "resources/human_annotations_20261022/raw_v1/human_blind_consumed.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/raw_v1/human_dev.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/raw_v2/human_blind_consumed_append.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/raw_v2/human_dev_append.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/sources/consumed_blind_sources.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/sources/dev_sources.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/human_annotations_20261022/sources/official_qvh_sources.jsonl",
+      "reason": "数据/标签文件不放算法代码目录"
+    },
+    {
+      "path": "resources/team_model_materials_20261023/SHA256SUMS",
+      "reason": "资源实物与数据元信息，另由对应材料目录管理"
+    },
+    {
+      "path": "resources/team_model_materials_20261023/archive_receipt.json",
+      "reason": "资源实物与数据元信息，另由对应材料目录管理"
+    },
+    {
+      "path": "resources/team_model_materials_20261023/manifest.json",
+      "reason": "资源实物与数据元信息，另由对应材料目录管理"
+    },
+    {
+      "path": "resources/team_model_materials_20261023/received_32311_verified.json",
+      "reason": "资源实物与数据元信息，另由对应材料目录管理"
+    },
+    {
+      "path": "baseline/test_index.json",
+      "reason": "历史测试索引，不随算法源码交付"
+    },
+    {
+      "path": "tools/configs/lb_history.json",
+      "reason": "线上结果账本，非算法配置"
+    },
+    {
+      "path": "tools/configs/S2_grid2d_F1_audited.json",
+      "reason": "实验产物审计及结果记录，非固定算法配置"
+    },
+    {
+      "path": "tools/configs/research_44_76.json",
+      "reason": "实验任务状态配置，非最终算法配置"
+    },
+    {
+      "path": "tools/configs/spatial_ab.json",
+      "reason": "历史A/B参数与线上结果混合记录，非最终固定配置"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/annotation/__init__.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/annotation/manual.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/action_motion.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/action_outer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/archives.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/audio_events.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/axis_crop.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/clock_assets.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/crop_sft.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/frame_clock.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/human_events.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/index.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/language_outer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/language_state.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/local.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/preference_validation.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/qv_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/qvhighlights.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/ranked_visual.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/source_weak.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/supervision_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/temporal_head.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/temporal_preferences.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/temporal_sft.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/timelens.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/training_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/video.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/data/visual_timeline.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/environment.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/focus_context.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/package.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/reproduce.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/reproduction_bundle.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/shared_bundle.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/deployment/team_baseline.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/action_motion.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/action_outer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/action_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/adapter_strength_formal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/adapter_strength_inputs.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/adapter_strength_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/adapter_strength.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/attention_concentration.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/attention_mass.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/attention_scale.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/axis_crop.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/beam_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/beam_search.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/clip_saliency.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/consensus_inputs.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/consensus_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/crop_choice.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/crop.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/dense_temporal_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/dense_temporal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/event_verification.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/face_preservation.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/files.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/focus_context_metrics.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/focus_context_quality.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/focus_context.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/focus.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/full_frame_inset.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/human_events.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/language_outer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/language_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/language_state.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/metrics.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/official_evaluate.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/preference_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/preference_temporal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/preference_validation_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/query_semantics.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/qv_human_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/qv_human.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/qv.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/review.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/routed.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/self_query.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/source_range_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/summary.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/temporal_agreement.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/temporal_constraint.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/temporal_sampling_inputs.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/temporal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/text_integrity.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/visual_contrastive_reference.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/visual_contrastive.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/evaluation/visual_timeline.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/action_focus.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/action_formal_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/action_formal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/action_time.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/attention_mass.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/axis_crop.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/crop_choice.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/crop_views.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/decoder_repair.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/event_verification.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/full_frame_inset.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/geometry.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/language_focus.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/language_formal_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/language_formal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/language_time.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/log_odds_pool.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/pipeline.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/released.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/runtime.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/source_weak.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/timeline.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/inference/windows.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/__init__.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/action_motion.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/action_time.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/adapter_strength.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/attention_mass.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/attention_scale.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/attention_temporal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/audio_events.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/axis_crop.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/beam_search.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/catalog.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/clip_saliency.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/composition_adapter.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/count_model_params.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/crop_choice.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/crop_inputs.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/crop_views.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/descent_head.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/download.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/event_verification.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/face_preservation.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/focus_context.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/frozen_temporal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/human_event_adapter.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/human_event_inputs.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/language_probe.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/language_state.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/preference_adapter.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/qlora.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/query_semantics.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/qwen_vl.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/ranked_visual.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/released.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/responses.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/routed_adapters.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/self_query.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/temporal_adapter.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/temporal_agreement.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/temporal_constraints.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/temporal_head.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/temporal_inputs.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/text_integrity.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/visual_contrastive.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/models/visual_timeline.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/paths.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/__init__.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/action_motion_probe.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/action_motion_qualification.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/action_motion.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/adapter_export.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/attention_scale.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/audio_events.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/axis_crop.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/clip_features.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/clip_saliency.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/crop_choice.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/crop_views.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/experiment.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/face_preservation.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/human_events.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/language_state.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/query_semantics.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/qv_human.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/ranked_visual.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/source_weak.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/state.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/temporal_head.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/temporal_preferences.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_cot_a480/aic/training/visual_timeline.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "historical/git_r43_c638/docs/r43_reproduction.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/.githooks/pre-commit",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/.gitignore",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/AGENTS.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/baseline/baseline_center.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/baseline/README.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/CLAUDE.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/contest_info/dataset.txt",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/contest_info/explain.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/contest_info/task.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/data/convert_timelens_to_verl.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/docs/ENV_SETUP.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/F1_FULL2D_REPRO.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/FINAL_TECHNICAL_REPORT.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/HANDOFF.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/NESTED_TEMPORAL.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/P1_SEMANTIC_REPRO.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/S2_GRID_REPRO.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/semifinal_experiments.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/SUBMIT_RULES.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/TEAM_STATUS.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/X1_COMPLIANCE_AUDIT.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/docs/X1_RETARGET_REPRO.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/highlight/io/__init__.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/highlight/io/index.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/highlight/io/video.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/highlight/metric/__init__.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/highlight/metric/evaluate.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/highlight/metric/validate.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/problem.txt",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/pyproject.toml",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/README.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/requirements.txt",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/resources/human_annotations_20261022/consumed_blind/README.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/resources/human_annotations_20261022/README.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/resources/team_model_materials_20261023/README.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/resources/team_model_materials_20261023/source_license_notices.json",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/scripts/eval/eval_timelens_bench.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/eval/eval_timelens_bench.sh",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/fix_vllm_ckpt.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/model_merger.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/plan_c/a_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/a_chain2.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/a0_run.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ark_check.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/b_mrhisum.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/b_test672.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/b_tlmrh.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/backup_liveyt.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/backup_liveyt.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/backup_motion_features.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/backup_motion_round2.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/backup_motion_round2.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/backup_quality_ranking.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/backup_quality.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/backup_spatial.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/box_sheet.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/build_tlhead_avg.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/c2_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/c2_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/c2_select.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/c3_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/c4_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/collect_liveyt.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/collect_motion_round2.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/collect_quality_backup.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/combo_kinds.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/copy_to_b.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_2d_apply.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_2d_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_2d_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_2d_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_2d_constant.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_2d_context.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_2d_density.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_2d.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_candidate_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_candidate_audit.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_quality_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_quality_audit.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_shots_apply.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_shots_prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_shots.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_space_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_space_audit.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop_variants.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/crop3_ft.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/d5_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/dl_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/dl_chain2.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/dl_models.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/doubao_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/doubao_probe.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/doubao_r1.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/doubao_r2.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/doubao_r3.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/early_x0.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/empty_stats.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/eval_round.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ext_dl.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ext_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ext_queue.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/frame_probe.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ft_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpt_spatial_prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpt_spatial_prepare.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/chain_c.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/mark_done.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/reorder.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/smoke.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/upload_par.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/x_heads.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/y_flip_check.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/gpu_1022/y896_heads.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ground_all.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ground_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ground_test.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/head_teacher_mix.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/inspect_ext.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/kind_combo.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/launch_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_2d.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_2d.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_capacity.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_capacity.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_context.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_context.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_decode_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_fit_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_manifest.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_prepare.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_quality_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_quality.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_retry_once.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_similarity_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_similarity_report.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/liveyt_similarity_verify.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/lowconf_check.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/make_submission.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/max38_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/max38_decode_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/max38_decode_eval.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/max38_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/max38_package_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/max38_prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/max38_queue.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/max38_train.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/mixsel.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_boundary_probe.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_boundary_probe.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_event_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_full_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_late_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_late_temporal.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_late.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_nomrh_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_nomrh_event.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_nomrh_l2_eval.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_nomrh.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_preprocess_gpu_check.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_preprocess_profile.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_round1.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_round2.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_standalone_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_standalone_eval.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/motion_summe.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/mrh_duration_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/mrh_duration_subset.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/mrh_more.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/mrhisum_prep.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/noise.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pause_qwen.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pc_extract.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pet_splice.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pilot_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pilot_dl.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pilot_labels.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pilot_pick.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pilot_run.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pilot_sim.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pkg_bound.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/pl2_prep.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/prepare_gaic.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qd_pc.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qh2_train.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_candidates_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_candidates.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_candidates.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_fit_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_fit_audit.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_full_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_full_fit.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_rank_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_ranking.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_ranking.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_source_heads.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/quality_source_prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvh_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvh_dl.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvh_extract.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvh_full_labels.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvh_labels.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvh_pick.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvh_subset_auc.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvh_val_check.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qvhh_heads.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/qwen_pipeline.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/rebalance.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/recover_autodl.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/regress.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_base.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_curve_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_curve.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_density_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_density.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_head_data.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_inputs.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_context_qa_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_curve_xdense_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_dedup.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_direct_temporal_f.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_download.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_exact_spatial.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_external_calibration.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_external_nested_parent.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_external_semantic_prefix.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_context_qa_extract.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_context_qa_lora_data.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_context_qa_lora_full167.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_context_qa_lora_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_context_qa_lora_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_context_qa_lora_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_context_qa_lora.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_context_qa.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full_frames_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_full9_maximum.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_binary_constrained.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_binary_data.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_binary_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_binary_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_binary.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_constrained.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_data.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_full_shadow_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_long_prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_long_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_longcurriculum_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_select.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_smoke.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_val_repeat3.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_windowed_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_windowed_engineering.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_windowed_prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_windowed_select.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve_windowed.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_curve.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_query_data.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_query_extract.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_query_head.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_query_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_query_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_global_query.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_gnmc_package_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_grid_crop_apply.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_grid_crop_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_grid_crop_public_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_grid_crop.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_human_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_human_residual.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_interval_compare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_interval_native.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_interval_sft.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_longcurriculum_baseline.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_longcurriculum_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_longcurriculum_bundle.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_longcurriculum_full167.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_longcurriculum_student.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_longonly_best_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_nested_frames_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_nested_parent_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_nested_platt_direct.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_nested_platt.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_nested_semantic_prefix.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_nested_stacking.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_nested_test_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_official_full_shadow.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_prefix_f_curve.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_qa_full_select.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_qa_pair_average_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_qa_pair_average.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_qvh_teacher_agreement.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_residual_predict.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_residual_report.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_residual_test_rows.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retarget_x_package_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_retarget_x_predict.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_review_baseline.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_review.html",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_review.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_sam2_geometry_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_sam2_geometry_extract.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_sam2_geometry_prepare.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_sam2_geometry_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_sam2_geometry_video.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_semantic_prefix_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip_temporal_extract.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip_temporal_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip_temporal_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip_temporal_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip_temporal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip9_temporal_extract.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip9_temporal_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip9_temporal_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_siglip9_temporal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_source_temporal_knn.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_spatial_calibration.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_target_image_qa_lora_infer.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_target_image_qa_lora_score.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_target_image_qa_lora_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_target_image_qa_lora.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_window33_m1_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_xdense_apply.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/research_xdense_metadata.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restart_motion_preprocess.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restart_queue.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_env.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_gnmc.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_liveyt.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_liveyt.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_models.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_mrhisum.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_sources.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_spatial.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/restore_summe.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/review_packages.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/rounds.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/rounds2.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/rounds3.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/rounds4.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/rounds5.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/rounds6.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/s9_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/s9_select.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/s9_train.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/sam2_geometry_public.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/sam2_geometry_video.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/scale_probe.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/seed_model.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/seed_run.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/select_sheet.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/setup_env.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/shift_probe.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/shiftcurve.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_ab_common.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_api_val.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_data.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_failure_cases.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_model.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_prompt_probe.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_prompt_probe.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_x_eval.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_y_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_y_eval.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/spatial_y_variants.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/stop_ydet.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/stop_yface.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/sub_C1.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/sub_C1b.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/sub_C1T.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/summe_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/summe_fetch_gt.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/summe_prepare.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/teacher_ens.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/teacher_heads.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/teacher_train_fast.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/teacher_train_step5.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/teachers_val.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/test_round.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_dl.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_features.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_finish.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_label.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_labels.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_rule_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_train.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tiktok_y_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/timelens_view.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tl_spatial.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/train_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tvsum_dl.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/tvsum_fill.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/v1_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/v1b_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/v2m_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/v2m_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/v3_select.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/val_check.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/verify_spatial_backup.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/view3_heads.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/view3.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/w_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/weak_source_audit.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/wf_chain.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/wf_ext_check.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/x_dense_test.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/x_spatial_diagnose.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/xiou_pair.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ybox_run.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ydiff_sheet.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yface_run.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yhead_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yhead_det_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yhead_det_data.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yhead_det_run.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yhead_det_train.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yhead_labels.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yhead_run.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yhead.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yiou_pair.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yolo11x_build.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yolo11x_build.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yolo11x_setup.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yp3_run.sh",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ypack.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/ypet_pick.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/plan_c/yselect_train.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/scripts/preprocess_videos.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/preprocess_videos.sh",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/restore_frozen_modules.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/timelens/format_prompt/timelens.jinja",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/timelens/timelens_grpo.yaml",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/timelens/timelens_reward.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/timelens/timelens_tempsamp.yaml",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/train/timelens_grpo.sh",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/scripts/train/timelens_tempsamp.sh",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/setup.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/tests/test_highlight_metric.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/build_ext_labels.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/build_train_clips.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/calibrate_probs.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/configs/final_AH.json",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/configs/final_BC.json",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/empty_rule.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/evaluate.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/fetch_sources.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/fill_det_cache.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/infer_temporal.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/infer_window_feats.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/lb_estimate.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/package_audited.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/parameter_inventory.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/README.md",
+      "reason": "团队内部文档、赛题材料或仓库配置，非算法代码"
+    },
+    {
+      "path": "src/tools/restore_sources.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/run_final.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/sam_refine.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/selfcheck.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/teacher_eval.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/test_validate_submission.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/tools/train_sft_qlora.py",
+      "reason": "未进入最终方案的实验、评估或运维脚本"
+    },
+    {
+      "path": "src/verl/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/models/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/models/monkey_patch.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/models/transformers/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/models/transformers/flash_attention_utils.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/models/transformers/qwen2_vl.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/models/transformers/qwen3_5.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/models/transformers/qwen3_vl.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/protocol.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/base/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/base/decorator.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/base/register_center/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/base/register_center/ray.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/base/worker_group.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/base/worker.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/ray/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/single_controller/ray/base.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/trainer/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/trainer/config.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/trainer/core_algos.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/trainer/data_loader.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/trainer/main.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/trainer/metrics.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/trainer/ray_trainer.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/checkpoint/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/checkpoint/checkpoint_manager.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/checkpoint/fsdp_checkpoint_manager.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/dataset.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/flops_counter.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/fsdp_utils.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/logger/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/logger/gen_logger.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/logger/logger.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/model_utils.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/multimodal_contract.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/prompt_template.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/py_functional.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/seqlen_balancing.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/tokenizer.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/torch_dtypes.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/torch_functional.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/utils/ulysses.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/actor/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/actor/base.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/actor/config.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/actor/dp_actor.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/config.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/critic/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/critic/base.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/critic/config.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/critic/dp_critic.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/fsdp_workers.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/reward/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/reward/config.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/reward/function.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/rollout/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/rollout/base.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/rollout/config.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/rollout/vllm_rollout_spmd.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/sharding_manager/__init__.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/sharding_manager/base.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/sharding_manager/fsdp_ulysses.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    },
+    {
+      "path": "src/verl/workers/sharding_manager/fsdp_vllm.py",
+      "reason": "上游 TempSamp-R1/verl 训练框架，最终方案未使用"
+    }
+  ],
+  "full_raw_end_to_end_reproduction_complete": false,
+  "selection": "仅保留最终方案推理与训练入口及其实际导入/调用的文件；git_sym8a18 生产快照完整保留"
+}

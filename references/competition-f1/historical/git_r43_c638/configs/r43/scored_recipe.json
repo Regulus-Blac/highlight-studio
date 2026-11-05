@@ -1,0 +1,141 @@
+{
+  "schema": "r43_scored_recipe_v1",
+  "name": "R43_crop_iou_full93",
+  "leaderboard": {
+    "score": 42.3,
+    "reported_on": "2026-10-21",
+    "source": "user_report",
+    "queried_by_agent": false
+  },
+  "sources": {
+    "sym_commit": "8a18db2ef5dd6bf0d8a2eb88a274341421479a43",
+    "cotsheep_commit": "a4809a1c908b99743acbea5b3a7ca8875777af01",
+    "runtime_sha256": {
+      "r43_crop_context.py": "9b2b8bcdc49ad82c3511bbbd53adaae64a3fb69db4e01549d3f4243a0ec77e34",
+      "r43_readers.py": "63f73cbbb3efafa151de911b8c20bc177b5c4c253ea162f76720e377704fb714",
+      "r43_predict.py": "e7ccf8107b01541f647a0388e738f9235eac4073893737c28b668ac1debc99b4",
+      "r43_hybrid.py": "31fd2601b0705e488b1833aa1bdb9b88488462b067299e810411c2ad87abc125"
+    },
+    "helper_sha256": {
+      "r42_yopt.py": "145540f65c281f3d8980ac32ed3c96a63ba2ac54ea8386bed5974c121c39785d"
+    }
+  },
+  "submission": {
+    "file": "trained_s93.zip",
+    "member": "submission.jsonl",
+    "zip_sha256": "623bf0ac1f1d1463da908e3b63bfb36bde0d661f07fdf9a0cba9ff3fb402a793",
+    "payload_sha256": "dff7c2e0943245176acfc70371d0da7ec3dd01a093f6cc49c86a02cd59a2d60d",
+    "videos": 426,
+    "predicted_frames": 148078
+  },
+  "training": {
+    "labels": "data/ybox_train_v3.jsonl",
+    "label_sha256": "1058b5a247f7eb40d43fac81ee44bb2c69b18dfbefecca0eb19b4764f3f7f2fd",
+    "geometry": "data/ybox_geometry.jsonl",
+    "geometry_sha256": "aeb2610ccba102968fdbd84905f19083ae0472c4a08853f1a2f9e9a6296de2dc",
+    "videos": 1516,
+    "source_groups": 1515,
+    "seconds": 21939,
+    "selected_arms": {
+      "448": "crop_iou",
+      "672": "crop_iou"
+    },
+    "resolutions": [
+      448,
+      672
+    ],
+    "feature_layer": 18,
+    "input_dimension": 4096,
+    "head_hidden_dimension": 256,
+    "encoder_layers": 2,
+    "attention_heads": 4,
+    "backbone_frozen": true,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0005,
+    "weight_decay": 0.05,
+    "batch_size": 128,
+    "epochs": 15,
+    "group_split_seed": 0,
+    "fold_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "final_seed": 99,
+    "loss": "1 - IoU(legal_crop(pred), legal_crop(target)) + 0.2 * abs(pred-target) / relative_crop_height",
+    "context_head_deployed": false
+  },
+  "weights": {
+    "448": {
+      "path": "outputs/experiments/sym43_crop_context/candidate_448/head.pt",
+      "sha256": "dc64570eae99f736a709981aa8f089f5af72b7f2091d1010092bbcba7505e732"
+    },
+    "672": {
+      "path": "outputs/experiments/sym43_crop_context/candidate_672/head.pt",
+      "sha256": "1f429547db1105e59adb6b84b0ff1364543d3208b2d608ea3120960621bf29bb"
+    }
+  },
+  "inference": {
+    "backbone": "TencentARC/TimeLens-8B",
+    "backbone_revision": "5557f14bfad6b17379d9cfd68b90aaabdbd7d1a9",
+    "processor_revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+    "shared_heads_repo": "aicsym/aic_weights",
+    "shared_heads_revision": "1f16f18",
+    "temporal_clip_seconds": 3,
+    "temporal_clip_fps": 2,
+    "temporal_max_side": 448,
+    "temporal_layer_indices": [
+      1,
+      2
+    ],
+    "temporal_physical_layers": [
+      19,
+      27
+    ],
+    "time_head_folds_per_layer": 5,
+    "time_channel": "mix",
+    "spatial_layers": [
+      18,
+      27
+    ],
+    "spatial_head_layer_index": 0,
+    "time_decode": "tools/configs/d3_decode.json",
+    "trim_config": "tools/configs/final_AM.json",
+    "full_logit_shift": 3,
+    "other_logit_shift": 0,
+    "detector": "yolo11s.pt",
+    "detector_imgsz": 640,
+    "detector_stride": 4,
+    "decoder_policy": "capability_check_then_strict_sequential_decord",
+    "decoder_fault_tolerance": 1e-12,
+    "full_scale": 0.93,
+    "scale_applies_to": "full_geometry_group_only",
+    "scale_reference": "original_maximum_legal_box",
+    "total_model_parameters": 8827283814
+  },
+  "validation": {
+    "metric": "source-group OOF macro teacher-center rendered-crop IoU",
+    "previously_used_corpus": true,
+    "new_blind_holdout": false,
+    "baseline": 0.7324288389511004,
+    "candidate": 0.7405212110722509,
+    "delta": 0.00809237212115054,
+    "adjusted_two_sided_99_375ci": [
+      0.0036275253197775395,
+      0.012300043014216189
+    ],
+    "comparisons_adjusted": 8,
+    "source_bootstrap_samples": 10000,
+    "bootstrap_seed": 43,
+    "cv_supported": true,
+    "full_format_validation_passed": true,
+    "zip_crc_passed": true
+  },
+  "limitations": {
+    "baseline_payload_matches_41_77": false,
+    "individual_change_score_ablation_completed": false,
+    "training_data_weights_features_or_predictions_in_git": false
+  }
+}
