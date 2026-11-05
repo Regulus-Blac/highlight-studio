@@ -1,6 +1,6 @@
 'use strict';
 const $ = (id) => document.getElementById(id);
-const STORE = 'highlight.studio.workspace.v1';
+let STORE = 'highlight.studio.workspace.v1';
 const EXECUTION_STORE='highlight.studio.execution.v1';
 let execution='cloud';
 try{const saved=localStorage.getItem(EXECUTION_STORE);if(['cloud','local','debug'].includes(saved))execution=saved;}catch{}
@@ -9,8 +9,11 @@ const names = {queued:'排队等待',running:'正在分析',succeeded:'分析完
 const state = {file:null, url:null, ratio:[9,16], model:null, ready:false, task:null, plan:null, record:null, exporting:null, dirty:false, busy:false, epoch:0, crop:false, cropMap:new Map(), records:[], pending:null};
 let taskTimer, exportTimer;
 const localHost = ['127.0.0.1','localhost','[::1]'].includes(location.hostname);
+let deployment = {location:'local'};
+const remoteService = () => deployment.location === 'remote';
 function canProcess(){
   if(!localHost||!state.ready||!state.model)return false;
+  if(remoteService())return execution==='debug'?state.model.mock===true:execution==='cloud'&&state.model.mock===false;
   return execution==='debug'?state.model.mock===true:execution==='local'&&state.model.mock===false;
 }
 function renderExecution(){
@@ -34,6 +37,18 @@ function renderExecution(){
   $('privacy-title').textContent=execution==='cloud'?'云端计算，轻装创作':'本机算力，自主处理';
   $('privacy-copy').textContent=execution==='cloud'?'视频提交到云端后处理；当前尚未连接云端服务。':'视频保留在本机；首次准备模型可能需要联网。';
   $('analysis-step-copy').textContent={cloud:'云端 GPU 分析与构图',local:'本机模型分析与构图',debug:'本机模拟任务流程'}[execution];
+  if(remoteService()){
+    $('cloud-availability').textContent=state.model?.mock?'当前为远程模拟':state.ready?'远程 F1 已就绪':'远程模型未就绪';
+    $('cloud-guide').textContent='当前页面通过 SSH 连接受控远程实例，视频上传后由该实例处理。连接窗口关闭后可重新连接并恢复任务。';
+    $('storage-guide').textContent='任务记录保存在当前浏览器，视频和结果保存在远程服务目录。SSH 密码仅用于本次连接，不存入网页。';
+    $('execution-detail').textContent=state.model?.mock?'已通过 SSH 连接远程模拟服务。视频上传到远程实例，使用合成高光验证剪辑流程。':'已通过 SSH 连接远程 F1 服务。视频在远程 GPU 分析，片段可编辑并导出；请保持连接窗口开启。';
+    $('local-availability').textContent='当前连接远程实例';
+    $('local-service-status').textContent='当前使用远程 SSH 服务';
+    $('privacy-title').textContent='远程处理，加密传输';
+    $('privacy-copy').textContent='素材经 SSH 加密传输到你连接的实例，浏览器不会保存服务器密码。';
+    $('debug-mode').textContent=execution==='debug'?'正在使用远程模拟联调':'进入远程模拟联调';
+    $('analysis-step-copy').textContent=execution==='debug'?'远程模拟任务流程':'远程 GPU 分析与构图';
+  }
 }
 function chooseExecution(mode){
   if(state.busy||state.task||state.pending)return;
@@ -92,6 +107,7 @@ function renderControls(){
   $('resume-task').disabled=state.busy;
   document.querySelectorAll('.history-card').forEach(b=>b.disabled=state.busy);
   $('start-analysis').textContent=execution==='cloud'?'云端服务待接入':execution==='debug'?'✦ 运行模拟任务':canProcess()?'✦ 使用本机模型分析':'本机模型待准备';
+  if(remoteService())$('start-analysis').textContent=execution==='debug'?'✦ 运行远程模拟任务':canProcess()?'✦ 开始远程 F1 分析':'远程模型未就绪';
   document.querySelectorAll('[data-ratio]').forEach(b=>{b.disabled=locked;const chosen=b.dataset.ratio===state.ratio.join(',');b.classList.toggle('selected',chosen);b.setAttribute('aria-pressed',String(chosen));});
   $('export-ratio').textContent=state.ratio.join(':');
   $('cancel-task').hidden=state.task?.status!=='queued';$('retry-task').hidden=!(state.task&&['failed','cancelled'].includes(state.task.status))&&!state.pending;
@@ -109,13 +125,19 @@ function renderControls(){
   document.querySelectorAll('.segment-row input').forEach(el=>el.disabled=state.busy||!!exportActive||pendingExport);
 }
 async function checkService(){
+  try { deployment=await api('/api/v1/deployment'); } catch { deployment={location:'local'}; }
   try{ const model=await api('/api/v1/model');const health=await api('/ready').catch(()=>({ready:false}));state.model=model;state.ready=!!model.available&&!!health.ready;
+    if(remoteService()&&!state.task&&!state.pending)execution=model.mock?'debug':'cloud';
     $('service-dot').className=`status-dot ${state.ready?'online':'offline'}`;$('service-label').textContent=state.ready?'本机服务已连接':'本机模型未就绪';
     $('mode-notice').textContent=model.mock?(model.engine==='synthetic-media-v1'?'模拟媒体模式 · 片段为合成测试结果，可用于验证剪辑流程，不代表真实模型识别。':'基础模拟模式 · 可以验证任务流程，不分析视频内容，也不生成高光成片。'):`本机处理 · ${model.engine} · 视频仅发送到当前本机服务。`;
     $('mode-explanation').textContent=model.mock
       ?(model.engine==='mock-v1'?'当前为基础模拟：可以导入素材、创建任务和恢复记录；系统不会调用 AI 模型，不产生高光片段或成片。媒体模拟模式可验证预览与导出，真实识别则需要配置模型。':'当前为媒体模拟：按固定规则生成测试片段，用于验证预览和导出。它没有调用 AI 模型识别精彩内容。')
       :'当前已配置推理适配器。任务使用这里显示的模型版本，实际处理结果以任务状态为准。';
     $('settings-engine').textContent=model.engine;$('settings-mode').textContent=model.mock?'模拟测试':'已配置模型';$('settings-ready').textContent=state.ready?'就绪':'未就绪';
+    if(remoteService()){
+      $('service-label').textContent=state.ready?'远程服务已连接':'远程模型未就绪';
+      $('mode-notice').textContent=model.mock?'远程模拟媒体模式 · 合成高光用于联调，可编辑并导出 MP4。':`远程 F1 · ${model.engine} · GPU 分析，支持片段编辑与成片下载。`;
+    }
   }catch(error){state.ready=false;$('service-dot').className='status-dot offline';$('service-label').textContent='本机服务未连接';$('mode-notice').textContent=describe(error);$('settings-ready').textContent='连接失败';$('mode-explanation').textContent='无法确认当前模式。请先检查本机服务是否运行，再重新检查连接。';}
   $('settings-origin').textContent=location.origin;renderControls();
 }
@@ -127,7 +149,7 @@ function selectFile(file){
 }
 function upload(file){return new Promise((resolve,reject)=>{
   const xhr=new XMLHttpRequest();xhr.open('POST',`/api/v1/uploads?filename=${encodeURIComponent(file.name)}`);xhr.setRequestHeader('Content-Type','application/octet-stream');xhr.timeout=600000;
-  xhr.upload.onprogress=e=>{if(e.lengthComputable){const pct=Math.round(e.loaded/e.total*100);$('upload-progress').value=pct;$('task-state').textContent=pct===100?'本机正在保存素材…':`正在导入本机 · ${pct}%`;}};
+  xhr.upload.onprogress=e=>{if(e.lengthComputable){const pct=Math.round(e.loaded/e.total*100);$('upload-progress').value=pct;$('task-state').textContent=pct===100?'正在上传并保存素材…':`正在${remoteService()?'上传远程':'导入本机'} · ${pct}%`;}};
   xhr.onload=()=>{let body;try{body=JSON.parse(xhr.responseText);}catch{reject(Object.assign(new Error('上传响应无效'),{code:'invalid_response'}));return;}if(xhr.status>=200&&xhr.status<300)resolve(body);else reject(Object.assign(new Error(body.error?.message),{code:body.error?.code}));};
   xhr.onerror=xhr.ontimeout=()=>reject(Object.assign(new Error('导入连接中断'),{code:'network_error'}));xhr.send(file);
 });}
@@ -212,7 +234,7 @@ async function restore(record){
   $('file-summary').textContent=record.fileName;$('task-state').textContent='正在恢复任务…';
   try{const task=await api(`/api/v1/tasks/${record.id}`);if(epoch!==state.epoch)return;handleTask(task);if(task.status==='succeeded')await loadPlan(epoch);else pollTask(epoch);
     if(record.exportId){try{const item=await api(`/api/v1/exports/${record.exportId}`);if(epoch!==state.epoch)return;handleExport(item);pollExport(epoch);}catch(error){message(describe(error));}}
-  }catch(error){if(epoch!==state.epoch)return;message(describe(error));$('task-state').textContent='任务恢复失败；请检查本机服务与运行目录。';$('resume-task').hidden=false;}
+  }catch(error){if(epoch!==state.epoch)return;message(describe(error));$('task-state').textContent='任务恢复失败；请检查服务连接与运行目录。';$('resume-task').hidden=false;}
   finally{if(epoch===state.epoch){state.busy=false;renderControls();}}
 }
 $('dismiss-message').onclick=clearMessage;
@@ -243,6 +265,7 @@ $('video').addEventListener('error',()=>{if($('video').getAttribute('src'))messa
 $('video').addEventListener('timeupdate',drawCrop);$('video').addEventListener('seeked',drawCrop);
 window.addEventListener('beforeunload',e=>{if(state.busy||state.dirty){e.preventDefault();e.returnValue='';}});
 async function init(){
+  try{deployment=await api('/api/v1/deployment');if(remoteService())STORE+=`.remote.${deployment.mode==='real'?'real':'mock'}`;}catch{}
   let saved=null;try{saved=JSON.parse(localStorage.getItem(STORE)||'null');if(saved&&Array.isArray(saved.records))state.records=saved.records.filter(r=>/^[a-f0-9]{32}$/.test(r.id)&&Array.isArray(r.ratio)&&typeof r.fileName==='string').slice(0,20);}catch{message('本地任务记录无法读取，将开启新的工作区。');}
   renderHistory();await checkService();const active=state.records.find(r=>r.id===saved?.activeId);
   if(saved?.pending){execution=saved.pending.execution||'debug';state.pending=saved.pending;state.ratio=saved.pending.ratio;$('file-summary').textContent=saved.pending.fileName;$('task-state').textContent='有待确认的创建请求，点击重试继续。';renderControls();}
