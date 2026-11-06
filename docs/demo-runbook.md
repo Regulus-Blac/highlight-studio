@@ -24,6 +24,8 @@ python scripts/connect_demo.py --host <SSH主机> --user <SSH用户名> --ssh-po
 
 无显卡时把 `--mode real` 改为 `--mode mock`，可以演示上传、任务、片段编辑、预览与下载，页面会明确标记模拟。真实模式缺少 GPU 时直接拒绝启动，不降级成模拟。
 
+直接 SSH 登录的 GPU 主机不需要 `--instance`。若系统未安装 `/usr/bin/python3`，用 `--remote-python` 指定已有解释器，例如 `--remote-python /root/miniconda3/bin/python`。可通过 `--port 18002` 与原服务器的本机演示端口区分。远程启动脚本仍需按该机器的推理环境、FFmpeg 和已验收配置部署。
+
 ## 验证顺序
 
 1. 页面确认引擎和远程状态，选一个有权使用的含音频 H.264 CFR MP4。

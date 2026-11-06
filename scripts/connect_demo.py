@@ -48,6 +48,7 @@ def main():
     parser.add_argument('--ssh-port', type=int, default=22)
     parser.add_argument('--instance', type=int, help='Instance index for the gateway menu')
     parser.add_argument('--remote-root', required=True)
+    parser.add_argument('--remote-python', default='/usr/bin/python3', help='Remote Python interpreter for the HTTP relay')
     parser.add_argument('--mode', choices=['mock','real'], default='real')
     parser.add_argument('--port', type=int, default=18000)
     parser.add_argument('--no-browser', action='store_true')
@@ -68,7 +69,7 @@ def main():
     root = shlex.quote(args.remote_root)
     remote_port = 8001 if args.mode == 'mock' else 8002
     command = (f'cd {root} && bash app/scripts/demo_service.sh {args.mode} && '
-               f'stty raw -echo && exec /usr/bin/python3 -u app/scripts/ssh_http_relay.py --port {remote_port}')
+               f'stty raw -echo && exec {shlex.quote(args.remote_python)} -u app/scripts/ssh_http_relay.py --port {remote_port}')
     channel.sendall(command+" || printf '\\nHIGHLIGHT_START_%s\\n' FAILED\n")
     try: wait_for(channel, b'HIGHLIGHT_RELAY_READY\n', timeout=240)
     except Exception:
