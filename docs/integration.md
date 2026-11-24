@@ -2,7 +2,7 @@
 
 当前 GPU 验收结果、远程停机时的本机开发方式和 D/E 分工见 [开发与 baseline 验收交接](de-baseline-handoff.md)。本文保留 v1 接口与早期联调说明。
 
-更新：2026-10-25。已提供上传、SQLite 持久预测任务、单 worker、幂等提交、排队取消、模型固定及可配置命令适配器。完整 F1 runner、GPU 效果与性能验收、渲染成片和对公网发布仍未完成。
+更新：2026-11-25。已实现上传、SQLite持久预测/导出任务、单worker、幂等、排队取消、网页编辑/预览与MP4/JSONL；真实F1四阶段runner已有11月5日/6日双画幅GPU验收，SSH演示入口也已提供。通用公网、账号隔离、服务端Project/EditRevision和本机模型安装器仍未交付；本轮仅按[四人计划](FINAL_IMPROVEMENTS_PLAN_20261125.md)收尾受控课程演示。
 
 ## D：不准备权重即可开发
 
@@ -70,7 +70,7 @@ finally:
     adapter.close()
 ```
 
-HTTP 对接则只需要任务服务地址，上传文件后创建任务并获取预测结果，不需要获得 SSH 或 HF 凭据。业务鉴权、用户隔离、视频渲染、访问受控的成片存储、分布式队列和独立 GPU 服务由 E 与 A/B 后续集成；当前参考服务未实现这些能力，应保持本机或受控开发网络使用。
+HTTP 对接则只需要任务服务地址，上传文件后创建任务并获取预测结果，不需要获得 SSH 或 HF 凭据。视频预览、原声MP4/JSONL与Range下载已经实现。当前仍无业务鉴权/用户隔离/分布式队列，保持本机或受控演示使用；本轮不要求这些商用扩展。E复用单机任务/媒体核心，B维护现有远端部署即可。
 
 为验证缺模型时的失败界面，可以运行：
 
@@ -99,7 +99,7 @@ python -m apps.backend.server --adapter command --adapter-config runtime/adapter
 
 命令使用参数数组执行，不经过 shell；支持 `{request}`、`{result}`、`{asset_root}`、`{manifest}`。每次执行的请求、结果和 runner.log 位于 runtime/inference 的独立目录，均不入 Git。runner 应等待其计算完成后再退出，并管理自己启动的子进程资源。
 
-当前缺少可用 GPU 主机、完整 F1 模型目录与实际 runner，本轮只验证了命令协议的 CPU 测试夹具，不能据此宣称真实 F1 已上线。D/E 可以先使用 Mock 服务完成接口开发。
+已有固定50项F1候选资产清单、f1_setup/f1_stage新视频runner和GPU样片验收记录；实际资产/环境与审核后的发布配置位于部署机器，不随Git分发。本次没有复验远端在线，不能保证任意新机已就绪。ABDE日常仍可用Mock媒体开发，真实演示按demo-runbook复用已有部署。
 
 ## 现有 HF 资产的管理尝试
 
@@ -121,13 +121,13 @@ python scripts/smoke.py
 python -m unittest discover -s tests -v
 ```
 
-CPU 检查覆盖兼容接口、持久任务、幂等并发、模型不可用、版本固定、中断恢复、排队取消、错误结果和命令超时。它不证明 F1 分数、GPU 可用性或可渲染成片。测试夹具的 runner 只验证文件协议，不是实际模型。
+CPU 检查覆盖兼容接口、持久任务、幂等并发、模型不可用、版本固定、中断恢复、排队取消、错误结果和命令超时。接口夹具本身不证明F1效果或当前GPU在线；完整媒体测试另核成片，真实模型证据另见f1-video-inference.md。测试夹具runner只验证文件协议，不是实际模型。
 
 
 ## 2026-10-27 CPU 预览/导出交接
 
-媒体核心与稳定联调路由已完成，具体启动命令、请求/响应与边界见 [A/B 无 GPU 前期开发与交接](ab-cpu-preparation.md)。原任务/预测 v1 与旧 Mock jobs 保持兼容；文中此前“无渲染”的记录由本节补充更新。
+媒体核心与稳定联调路由已完成，具体启动命令、请求/响应与边界见 [A/B 无 GPU 前期开发与交接](ab-cpu-preparation.md)。原任务/预测 v1 与旧 Mock jobs 保持兼容；媒体能力现为当前已实现状态，具体效果以代码和实际媒体/模型验收分别判断。
 
 D/E 安装 FFmpeg/FFprobe 6.1+ 与 `requirements-dev.txt` 后，可以运行 `python scripts/create_demo_video.py`，再以 `--adapter mock-media --allow-mock-media` 启动参考服务，完成上传、预测、预览、JSONL/MP4 导出和下载。合成结果始终 `mock=true`；无需 HF、SSH、GPU 或 torch。
 
-E 接入正式后端时复用 `services/media/` 规则与渲染函数，再建立项目、用户归属与不可变 EditRevision；需求中的业务 v2 仍待实现。A/B 用 `python -m services.model_adapter.f1_runner --check --asset-root <目录>` 查看全量缺口，不将旧 HF 两个小头的验证结果当作 F1 已就绪。
+E本轮继续复用services/media与现有SQLite，不重建Project/EditRevision或业务v2。默认f1_runner --check使用早期槽位审计，不能把它误当完整新视频发布验收；固定50项清单、实际部署校验与GPU记录见f1-video-inference.md。旧HF两个小头始终不能作为完整F1。

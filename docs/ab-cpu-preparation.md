@@ -1,6 +1,6 @@
 # A/B 无 GPU 前期开发与交接（2026-10-27）
 
-执行基线为 [baseline应用开发计划书](baseline应用开发计划书.md)。本次交付 M0/M1 的接口与 CPU 联调支持、M2 的资产/runner 准备、M3 的 CPU 渲染参考实现。真实模型端到端验收、正式网页、业务 v2、云端部署和 M4 发布仍待完成。合成视频和合成预测只证明产品处理链路，不证明 F1 效果。
+执行基线为 [baseline应用开发计划书](baseline应用开发计划书.md)。本次交付 M0/M1 的接口与 CPU 联调支持、M2 的资产/runner 准备、M3 的 CPU 渲染参考实现。截至2026-10-27，真实模型/正式网页当时待完成。2026-11-25更正：网页、固定50项F1资产、四阶段新视频runner、真实双画幅/成片和SSH入口随后已完成，见[当前状态](STATUS_20261125.md)及[F1验收](f1-video-inference.md)。业务v2/本机安装器仍无实现且本轮推迟；本页保留当时CPU开发证据，不能按旧缺项重复开发。合成媒体仍不证明AI效果。
 
 ## 已完成的七项工作
 
@@ -74,9 +74,9 @@ JSONL 是一行完整的 prediction v1 对象，包含启用范围的原帧号�
 
 参考服务在同一 worker 中轮流领取预测与导出任务，SQLite 原子领取、持久化快照和幂等键；重启将遗留 running 标为失败，不自动重跑。导出期间固定源 SHA、模型结果和剪辑方案，生成临时文件并检查后原子发布；任务终态不被迟到结果覆盖。同预测最多一个活跃导出。
 
-E 可直接复用 `probe()`、`make_plan()`、`render_mp4()` 与 `render_jsonl()`，在业务后端建立 Project、AnalysisResult、EditRevision 和鉴权存储。现有 `services/task_service`/`services/media/service.py` 是单机参考持久化，不替代业务域模型。
+E可复用probe/make_plan/render_mp4/render_jsonl和现有SQLite。按11月25日课程范围，本轮不再要求建立Project/EditRevision/鉴权域，任务恢复/安全离线清理见[四人计划](FINAL_IMPROVEMENTS_PLAN_20261125.md)。
 
-[需求 v2 草案](requirements/04-data-and-interfaces.md) 的项目、归属、编辑版本、删除生命周期和正式 v2 路由**尚未实现**。本次新增的是 v1 联调端点，不把草案标为已上线；E 后续用业务 v2 包装这些核心函数，D 保持 v1/v2 页面接入的明确区分。真实产品不直接公开当前无鉴权的参考服务。
+[历史v2扩展边界](requirements/04-data-and-interfaces.md#4-后续扩展边界) 的项目、归属、编辑版本、删除生命周期和正式 v2 路由**尚未实现**。本次新增的是 v1 联调端点，不把草案标为已上线；当前课程改进继续使用v1，完整v2留作后续，不要求D/E本轮包装。真实产品不直接公开当前无鉴权的参考服务。
 
 ## 固定媒体规则与限制
 
@@ -97,7 +97,7 @@ CPU 参考输入范围为：单视频流、方形像素、零旋转、视频/音
 - 上游 F1 文档明确尚未证明整套原视频起步的全神经流水线；167 条新框和其余继承行的验证不能等同于任意新视频推理。
 - 上游补充材料的 `missing_required_weights=[]` 只表示补充包完整。完整 F1 声明参数为 8,926,602,839，仍需父级全部主干、时间头、检测器、固定配置和环境。
 
-`manifests/f1-expected-assets.json` 保存已知 16 权重、7 配置的原 SHA/字节数；主干、父级全量账本和 recipe 等 10 个路径是拟定发布槽位，未知 SHA 明确为 null，`complete=false`。它覆盖需求与缺口，尚不是逐文件齐全的完整发布清单；取得父级原始账本后继续展开所有分片/继承组件，不能自行凑齐哈希或用近似模型代替。
+`manifests/f1-expected-assets.json` 保存已知 16 权重、7 配置的原 SHA/字节数；主干、父级全量账本和 recipe 等 10 个路径是拟定发布槽位，未知 SHA 明确为 null，`complete=false`。它是10月27日旧布局审计，不是现在新视频候选的完整清单；后续新增f1-downloaded-assets.json的50项清单，部署以该清单与真实验收为准。旧未知槽位不能用随意哈希填充。
 
 ```sh
 # 全量检查，不下载、不导入 torch；未就绪退出码为 2，并不是脚本异常。
@@ -108,9 +108,9 @@ python scripts/build_f1_inventory.py
 
 2026-10-27 本机对现有 `E:\aic_weights` 按上述发布布局检查，33 个 F1 槽位均缺失，ready=false。该结论只适用于固定布局，不等于扫描所有磁盘断言没有模型。既有 HF 仓库是更早的资产/特征归档，不能用它的旧 ybox3 小头充当 F1。之前 `E:\aic_weights_audit` 留存的审计记录与部分样本不纳入新发布包，也不上传 Git。
 
-实际 runner 按 `extract_features → select_frames → predict_crops → assemble_result` 调用显式命令数组，分别保存日志；只有完整发布 manifest（complete=true、提交匹配、全部 SHA 验证）才能进入执行。参数占位为 `{request}/{result}/{work}/{asset_root}/{manifest}`；末阶段输出原预测 v1，engine 必须等于发布版本且 mock=false。这个编排器不提供缺失的 F1 算法 recipe，CPU 测试只验证命令次序和接口。
+实际 runner 按 `extract_features → select_frames → predict_crops → assemble_result` 调用显式命令数组，分别保存日志；只有完整发布 manifest（complete=true、提交匹配、全部 SHA 验证）才能进入执行。参数占位为 `{request}/{result}/{work}/{asset_root}/{manifest}`；末阶段输出原预测 v1，engine 必须等于发布版本且 mock=false。当时编排测试只验证命令次序/接口；现在f1_setup和f1_stage已提供固定候选新视频recipe，详见F1说明。
 
-下一步 A/B 需要：取得全部原始 F1 运行资产及冻结参数账本；复原对新视频的采样、时间集成、解码与裁剪配方；固定 GPU 环境；在自有/授权视频验证真实端到端结果与耗时。对外软件发布还需处理上游已记录的组件用途/分发许可限制，不能因为资产可下载就认为可公开再分发。HF 是可选分发源，不提供默认 GPU 算力；资产下载/缓存/回滚与可选用户本地模式按基线另行交付。
+上述是10月27日的待办；11月5日/6日已补齐固定资产/配方/环境并有真实新视频样片证据。本轮A/B不再训练，改做产品媒体/启动与有限复验。对外软件发布还需处理上游已记录的组件用途/分发许可限制，不能因为资产可下载就认为可公开再分发。HF 是可选分发源，不提供默认 GPU 算力；资产下载/缓存/回滚与可选用户本地模式按基线另行交付。
 
 ## 验证命令
 

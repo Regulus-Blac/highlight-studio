@@ -1,6 +1,6 @@
 # 产品 v1 契约
 
-2026-10-25：新增稳定的上传与异步预测任务接口，保留原预测请求/响应及旧 Mock jobs 接口。D/E 以本目录 Schema 为边界；比赛导入及命令转换仅位于 `services/model_adapter/`。启动方式及端到端例子见 [联调交接](../docs/integration.md)。
+2026-11-25核对：上传、异步预测、媒体预览/导出及可选部署状态均已有v1契约；本次不修改Schema。保留原预测请求/响应及旧Mock jobs兼容API，现工作台使用uploads/tasks。D/E 以本目录 Schema 为边界；比赛导入及命令转换仅位于 `services/model_adapter/`。启动方式及端到端例子见 [联调交接](../docs/integration.md)。
 
 ## 预测接口（E 与 A/B）
 
@@ -51,7 +51,7 @@ Python 入口为 `ModelAdapter.predict(request) -> result`；HTTP 对接可创�
 
 参考实现使用 runtime 下的 SQLite 和文件目录，单 worker 顺序执行。排队任务、终态结果和幂等 key 会保留到重启后。启动 worker 时，把上次遗留的 running 任务标记为 failed/worker_interrupted，供调用方显式重试；不宣称可以从中断位置续算。每个 runtime 通过进程锁只允许一个 worker，避免误恢复其他运行中的任务。
 
-任务绑定创建时的模型配置和资产清单指纹。升级后旧模型不可用的排队任务返回 model_version_unavailable，不自动改用新模型。部署时应由业务层暂停新提交并排空旧任务，再切换版本。可用模型不等于完整 F1 效果已验证，仍须在 GPU 环境验收。
+任务绑定创建时的模型配置和资产清单指纹。升级后旧模型不可用的排队任务返回 model_version_unavailable，不自动改用新模型。部署时应由业务层暂停新提交并排空旧任务，再切换版本。可用模型不等于任意素材效果保证。已有F1短样片GPU证据见f1-video-inference.md；新的模型/环境仍须独立验收。
 
 ## 错误和兼容
 
@@ -59,7 +59,7 @@ HTTP 错误体统一为 `{"error":{"code":"...","message":"..."}}`。400 为非�
 
 主要执行错误码：`model_unavailable`、`model_version_unavailable`、`runner_unavailable`、`inference_failed`、`inference_timeout`、`inference_interrupted`、`invalid_prediction`、`worker_interrupted`。retryable=true 表示同一模型和输入可考虑重试，不表示服务会自动重试。
 
-旧 `POST /api/v1/jobs` 保留原 201/立即完成行为，`GET /api/v1/jobs/{job_id}` 保留进程内查询，仅用于 Mock 兼容页；配置真实模式时旧创建入口返回 410。新开发统一使用 tasks，不改写旧 jobs 的返回含义。不兼容改变新建 v2，模型变化由适配层吸收。
+旧 `POST /api/v1/jobs` 保留原 201/立即完成行为，`GET /api/v1/jobs/{job_id}` 保留进程内查询，仅用于Mock兼容API，现工作台不调用它；配置真实模式时旧创建入口返回410。新开发统一使用 tasks，不改写旧 jobs 的返回含义。不兼容改变新建 v2，模型变化由适配层吸收。
 
 
 ## CPU 媒体接口（2026-10-27）
@@ -72,4 +72,4 @@ HTTP 错误体统一为 `{"error":{"code":"...","message":"..."}}`。400 为非�
 
 JSONL 每行是完整 prediction v1 对象，以原帧号表达实际启用范围及对齐裁剪框。无高光可导出空 JSONL，MP4 无启用帧返回 422。Mock 默认禁止导出，显式开发选项才开放；对外页面仍须显示 engine/mock。
 
-HTTP 错误体保持原 `error.code/message`，执行错误使用 `code/message/retryable`。CPU 媒体限制与未来正式业务 v2 的归属/编辑版本要求分开记录；v2 仍是草案，不能将这些 v1 参考路由称为正式 v2 已实现。
+HTTP 错误体保持原 `error.code/message`，执行错误使用 `code/message/retryable`。CPU 媒体限制与未来正式业务 v2 的归属/编辑版本要求分开记录；v2仍是扩展草案，不能将这些v1路由称为v2已实现；大学生示例项目本轮继续使用v1，不要求实现整套v2。

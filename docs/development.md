@@ -1,49 +1,58 @@
 # 开发、同步与边界
 
-## v1.0 开发基线
+更新：2026-11-25。本轮按照[最终改进分工计划](FINAL_IMPROVEMENTS_PLAN_20261125.md)进行大学生示例项目收尾；[baseline计划](baseline应用开发计划书.md)记录媒体与接口基线。A/B不再训练模型，四人均开发产品。当前能力见[状态页](STATUS_20261125.md)，不能把历史初稿或尚未执行的计划当作实现。
 
-后续应用开发必须按照 [baseline应用开发计划书](baseline应用开发计划书.md) 的功能范围、M/L 阶段与验收标准推进：首先交付网页＋云端推理/渲染服务，用户明确要求时提供首次下载并缓存模型的可选本地模式。普通用户不以 CLI 或桌面客户端为主入口。
+## 普通克隆即可开发
 
-`需求分析文档-初步.md` 与 `软件设计文档-初步.md` 保留为需求/设计来源，其中与当前形态冲突的单机离线和 CLI 优先约束按计划书调整。实际请求/响应遵循 `contracts/`；新增功能先评审契约，不直接破坏已有 v1 接口。开发任务及 PR/交接说明应列出计划书中的阶段、需求、完成条件和验证证据；范围变化先更新计划书与关联文档。
-
-## 日常开发
-
-首次克隆后执行 `python scripts/bootstrap.py`。之后从 `main` 建立 `feat/<功能>` 分支，只改自己负责的产品目录，提交 PR。拉取别人合并的版本后执行：
+只做页面、上传/任务和CPU媒体联调，无需访问私有比赛仓库：
 
 ```sh
-git pull --ff-only
-git submodule update --init --recursive
-python scripts/bootstrap.py
+git clone https://github.com/Regulus-Blac/highlight-studio.git
+cd highlight-studio
+python -m pip install -r requirements-dev.txt
+# 将FFmpeg/FFprobe 6.1+安装到PATH后：
+python scripts/smoke.py
+python -m apps.backend.server --port 8001 --runtime runtime/local-demo --adapter mock-media --allow-mock-media
 ```
 
-ABDE 共同使用 `main` 作为开发基线，按任务分别创建功能分支，例如 A/B 的 `feat/f1-runtime`、D 的 `feat/web-editor`、E 的 `feat/business-api`。功能评审合并后继续从更新后的 main 开始下一项任务；不长期拆分为各自独立的 AB/DE 主线。2026-11-24 已停用比赛引用自动同步，产品使用固定 F1 源码快照；后续算法升级按需由 A/B 手动提交评审。
+网页为原生HTML/CSS/JS，无npm构建步骤。基础Mock只需Python标准库；完整媒体模拟还需要Pillow与FFmpeg，测试依赖见requirements-dev.txt。当前没有一键启动器，该项由B在本轮实现。
 
-普通拉取使用父仓库已经确认的固定版本。只有 A/B 或同步工作流执行 `model_ref.py update/switch` 来升级。不要在子模块里直接 `git pull`，也不要让 D/E 修改研究脚本。
+拉取代码后使用`git pull --ff-only`，从main创建`feat/<功能>`短分支，例如A的`feat/final-media-acceptance`、B的`feat/final-launcher`、D的`feat/final-workbench`、E的`feat/final-runtime-maintenance`。不维持长期AB/DE主线，不重新选择框架。
 
-D/E 无权重联调、上传与持久任务接口、命令适配器配置和资产校验见 [联调交接](integration.md)。新的客户端使用 uploads/tasks，旧 jobs 仅保留 Mock 兼容。完整 CPU 回归先安装 FFmpeg/FFprobe 6.1+ 与 `python -m pip install -r requirements-dev.txt`，再运行 `python -m unittest discover -s tests -v`；测试使用合成媒体，不下载模型，也不启动训练。CPU 媒体、F1 资产与 runner 交接见 [A/B 开发记录](ab-cpu-preparation.md)。
+## 可选的完整比赛子模块
 
-## 子模块防误操作
+需要核对完整比赛源码并具备读取权限时，再执行：
 
-bootstrap 为本克隆的子模块配置独立 hooksPath，禁止子模块提交和 push，并设置不可用的 push URL。它不会修改原比赛工作副本的配置。重新克隆后必须重新 bootstrap；这些都是本地防误操作措施，可以被绕过，不是远端权限。
+```sh
+git submodule update --init --recursive
+python scripts/bootstrap.py
+python scripts/check_repository.py
+```
 
-父仓库提交前检查子模块无未提交修改、锁文件与子模块 HEAD 一致、指针不是本地未发布提交。CI 同样检查。不要用忽略 dirty 的设置隐藏子模块改动。
+bootstrap对子模块配置本地禁止提交/push的防误操作钩子，不是远端权限；它不修改原比赛工作副本。父仓库固定gitlink、.gitmodules和model.lock.json。不要在子模块中直接git pull或编辑研究代码；没有权限不妨碍普通产品联调。完整子模块检查和CI仍需要比赛仓库读取权限，不能把这种权限当成普通用户使用前提。
 
-GitHub `CODEOWNERS` 当前由仓库所有者作为模型引用临时审核人，A/B 的真实账号确定后更新。CODEOWNERS 只指定审核人；强制审核还需仓库套餐支持的分支保护/规则集。此初始化不邀请未知成员，也不改变原比赛仓库权限。
+Windows创建的worktree可能在.git记录Windows绝对路径，WSL直接调用Git会失败。优先在创建它的Windows环境使用，或为WSL另建普通clone；不要为阅读/文档更新重置工作树或改子模块指针。
 
-## 自动升级
+## 固定源码与手动升级
 
-工作流每天 UTC 02:00 检查一次所选分支，或手动触发。先跑与 CI 相同的 CPU 检查，再创建升级 PR；不会自动合并。分支切换后从 `.gitmodules` 读取新分支，无需改工作流。
+**2026-11-24已移除Sync competition reference工作流；没有每日UTC 02:00自动检查或自动升级PR。** 当前产品使用references/competition-f1固定快照，完整比赛子模块保持锁定提交。
 
-已开启 Actions 创建 PR（Settings → Actions → General）。同步工作流仅获得父仓库内容写入及 PR 写入；比赛源码使用专用只读部署密钥，不持有比赛仓库写凭据。`GITHUB_TOKEN` 创建的 PR 通常不会再次触发其他工作流，所以同步任务在创建 PR 前已执行两项检查；仍须人工真实推理验收。
+仅有明确算法升级任务时，由A/B使用`python scripts/model_ref.py update`或`switch <branch>`，审核子模块指针、.gitmodules、model.lock.json以及真实资产/环境兼容性，一起提交评审。本轮不执行这些命令。切换源码不等于切换权重或线上模型，不自动合并模型升级PR。
 
-原比赛仓库目前是私有的，已添加名为 `highlight-studio CI read-only` 的只读 deploy key，其私钥加密保存在父仓库的 Actions Secret `COMPETITION_READ_KEY`。`scripts/ci_submodule.py` 仅将私钥临时写到 Runner 临时目录，以 HTTPS 获取 GitHub 已公布主机公钥并强制 SSH 主机校验，仅在子模块配置 HTTPS→SSH 读取映射。父仓库的默认 token 不具备跨仓库读取权限；没有复制个人 token 到 CI。
+普通Product checks CI通过COMPETITION_READ_KEY只读部署密钥读取私有比赛子模块，随后做引用、CPU接口和媒体检查。密钥只在Runner临时目录使用，不分发给个人；不要把旧自动同步工作流的写PR权限说明混到当前CI。CODEOWNERS只指定审核人，不等于已经强制分支保护或分配目录写权限。
 
-D/E 本地若没有比赛仓库读取权限，可先普通克隆父仓库，直接运行 mock 服务和 `smoke.py`，完整子模块初始化需由有权限的成员执行；完整源码交付与可独立递归克隆要求团队另行授予比赛仓库读取权限。此任务未邀请成员或改变成员写权限。部署密钥只供 CI 使用，不应分发给个人。
+## 按改动验证
 
-## 切换、回滚和离线交付
+- 文档：检查事实、文件/相对链接、命令与当前代码一致；不为文档变更启动GPU或下载模型。
+- 页面/接口：`python scripts/smoke.py`、相关现有unittest；JS改动增加`node --check apps/frontend/app.js`。
+- 媒体：准备FFmpeg/FFprobe和requirements-dev.txt后运行相关媒体测试；完整回归为`python -m unittest discover -s tests -v`。
+- 完整引用：有子模块权限的环境运行`python scripts/check_repository.py`。
+- 真实推理：复用已验收部署，按[f1说明](f1-video-inference.md)和[演示手册](demo-runbook.md)有限复验；记录真实环境和结果，不以Mock代替。
 
-`python scripts/model_ref.py switch zyb` 会拉取远端 zyb、切换 detached HEAD、改 `.gitmodules` 分支并刷新锁文件。脚本拒绝覆盖子模块未提交改动。提交这三个路径后，其他成员按固定版本更新即可。
+本地检查与远端Actions状态分别记录，不因本地通过声称CI通过。功能PR包含问题、最终改动与真实验证，精确暂存自己的文件；权重、视频、特征、运行结果和凭据不进Git。
 
-回滚已合并的升级时，对升级提交使用 `git revert <提交号>`，然后 `git submodule update --init --recursive`。这样同时恢复分支、锁文件和指针。不要只编辑锁文件。
+## 单机演示与后续边界
 
-GitHub 下载 ZIP 不含子模块。需要离线代码交付时，在已递归克隆的工作目录另行打包，排除 `.git`、`.env`、视频、权重和缓存，并核对上游许可证。部署 GPU 端时单独安装所选比赛版本的环境。
+服务保持回环或受控演示访问，使用SQLite/单worker与本地文件；不新增分布式队列或商用账号体系。协议仍为contracts v1，业务v2是扩展草案。新增API先评审，不能为界面方便更改严格Schema。
+
+新机器的GPU环境、权重和远端服务脚本需要单独部署，不会随Git自动出现；日常开发不运行训练、不自动下载模型。模型回滚需恢复匹配的代码、配置与资产；只改model.lock.json不能完成模型回滚。Git ZIP不包含子模块或模型；固定参考源码可直接阅读，但模型部署资源仍另行准备。

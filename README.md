@@ -1,83 +1,85 @@
-# Highlight Studio · 视频高光剪辑软件工程项目
+# Highlight Studio · 视频高光剪辑课程项目
 
-ABDE 维护产品；ABC 在原比赛仓库训练、改进算法。本仓库通过 Git Submodule 引用完整比赛源码，当前跟踪分支及精确版本见 `model.lock.json`。
+更新：2026-11-25。ABDE共同维护大学生示例项目，A/B本阶段不再训练模型。当前使用固定F1新视频推理配方；重点完善启动、网页使用和演示，不建设商用多用户平台。
 
-## 首次使用
+[当前能力/限制](docs/STATUS_20261125.md) · [ABDE最终改进分工计划](docs/FINAL_IMPROVEMENTS_PLAN_20261125.md) · [真实演示启动](docs/demo-runbook.md) · [文档更正清单](docs/DOCS_RECONCILIATION_20261125.md)
 
-需要 Git 和 Python 3.11+。D/E 可按 [开发与 baseline 验收交接](docs/de-baseline-handoff.md) 普通克隆并在本机做 CPU 媒体联调。下面的完整初始化流程适用于需要检出比赛子模块且有读取权限的成员。
+## 普通电脑启动：完整流程模拟
+
+Python 3.11+，FFmpeg/FFprobe 6.1+在PATH中。普通克隆即可，无需私有比赛仓库权限、GPU或模型权重：
 
 ```sh
-git clone --recurse-submodules https://github.com/Regulus-Blac/highlight-studio.git
+git clone https://github.com/Regulus-Blac/highlight-studio.git
 cd highlight-studio
+python -m pip install -r requirements-dev.txt
+python -m apps.backend.server --port 8001 --runtime runtime/local-demo --adapter mock-media --allow-mock-media
+```
+
+打开http://127.0.0.1:8001，运行设置选择“本机模拟联调”。页面可上传视频、选择16:9/9:16、查看任务、编辑片段、预览、导出原声MP4或JSONL。模拟选段为固定规则，持续标记mock=true，不能作为AI效果。
+
+`python scripts/create_demo_video.py`可生成runtime/demo/source.mp4合成样片。前端使用原生HTML/CSS/JavaScript，不需要npm构建。仅运行`python -m apps.backend.server`默认是空Mock：可以检查接口，但没有高光成片。
+
+## 真实F1演示：连接已有GPU部署
+
+在平台启动已部署的GPU实例，再在本机项目目录运行：
+
+```sh
+python -m pip install -r requirements-demo.txt
+python scripts/connect_demo.py --host <SSH主机> --user <SSH用户名> --ssh-port 2020 --instance 0 --remote-root /root/sj-fs/highlight-studio/f1/candidate-v0 --mode real
+```
+
+按提示认证，保持终端开启，浏览器打开http://127.0.0.1:18000。连接器会启动已有远程服务；主机参数/路径按部署修改，直接SSH主机省略--instance，缺系统Python时加--remote-python。它不自动开通GPU，也不负责空服务器的环境/权重安装。
+
+真实f1-derived-video-v0已在4090/4090D完成新12秒样片的双画幅分析、网页编辑及原声MP4/JSONL验收。独立预测71～87秒、显存采样约19.2GB，仅适用于记录条件。详细证据、固定50项资产、环境和新机部署步骤见[F1说明](docs/f1-video-inference.md)。本次文档更新没有开启GPU或复验远端在线状态。
+
+## 当前边界
+
+- 适合单个受信任操作者/课堂演示；服务默认回环监听，没有通用公网入口、账号注册或多用户隔离。
+- 单runtime一个worker，预测/导出串行，排队预测可取消；运行中取消尚未实现。
+- SQLite保存任务/导出；浏览器保存最近任务与已应用编辑。没有服务端Project/EditRevision或业务v2。
+- 媒体检查要求CFR、无旋转、音视频零起始、单视频流；默认上限512 MiB、10分钟、4K像素、120fps/72000帧。上限不等于性能保证，演示优先10～30秒H.264短片。
+- 真正的本机F1需手动准备完整资产/CUDA环境；模型下载器、设备检测、缓存管理尚未交付，本轮推迟。
+- 本次只更新文档和计划；统一启动器、维护清理等改进仍待按分工实现。
+
+## 开发结构
+
+| 路径 | 职责 |
+|---|---|
+| apps/frontend | 上传、模式、任务、片段编辑、预览和下载 |
+| apps/backend | HTTP API、上传与业务入口 |
+| services/task_service | SQLite持久任务、单worker与恢复 |
+| services/media | 媒体校验、片段/裁剪规则、MP4/JSONL导出 |
+| services/model_adapter | 唯一模型接入点，资产校验和四阶段F1 runner |
+| contracts | 已实现v1接口契约与示例 |
+| references/competition-f1 | 129项固定F1源码/配置，新视频runner验证后使用 |
+| vendor/competition | 完整比赛源码子模块，只读引用 |
+| scripts、docs | 开发/演示工具、部署说明、当前状态与分工 |
+
+## 初始化与验证
+
+普通产品检查：
+
+```sh
+python scripts/smoke.py
+python -m unittest discover -s tests -v
+```
+
+完整媒体回归需要FFmpeg/FFprobe、Pillow与jsonschema；CPU夹具不证明AI质量。需要完整比赛源码且有读取权限的成员另行执行：
+
+```sh
+git submodule update --init --recursive
 python scripts/bootstrap.py
 python scripts/check_repository.py
-python scripts/smoke.py
-python -m pip install -r requirements-dev.txt
-# 完整媒体测试还需在 PATH 中安装 FFmpeg/FFprobe 6.1+
-python -m unittest discover -s tests -v
-python -m apps.backend.server
 ```
 
-当前提供网页工作台、视频上传、SQLite 持久任务、片段预览、JSONL/MP4 导出和 Range 播放。默认启动返回明确标记的 Mock 结果。完整模拟成片请用 `mock-media`。真实 F1 候选已在 RTX 4090 验证 16:9 和 9:16 的新视频推理与成片。预测和导出分别查询任务状态。[接口交接](docs/integration.md) · [F1 验收记录](docs/f1-video-inference.md)
+完整Product checks CI也需要比赛仓库只读密钥，普通页面/CPU联调不需要。开发流程、引用升级/回滚与边界见[开发说明](docs/development.md)。
 
-```sh
-python scripts/demo_task.py /path/to/owned-video.mp4 --ratio 9:16
-```
+## 固定模型与资料导航
 
-该命令在另一个终端运行，连接已经启动的服务。产品联调只需要 Python 标准库；参考服务默认仅监听本机。
+2026-11-24已移除Sync competition reference定时同步。产品固定F1配方，不自动跟随sym/zyb，不自动吸收半决赛Z4等更新。未来有独立算法升级任务时才由A/B使用model_ref.py update/switch，连同子模块指针、.gitmodules、model.lock.json评审；本轮不升级模型。
 
-## 需求文档（初稿）
+权重、视频、特征、预测、成片、凭据不进入Git，实物在仓库外或忽略的runtime。Git只保存源码和非敏感版本清单；已有源码不等于已有运行环境与资产。比赛历史分数不作为新上传视频效果保证。
 
-[需求说明书与阅读导航](docs/requirements/README.md)集中说明首版产品范围、用户场景、功能与交互、UML 图、数据与接口草案，以及需求对应的验收计划。文档区分现有能力和拟实现功能，尚待确定的限制与排期标为建议值。
+[baseline计划](docs/baseline应用开发计划书.md) · [架构](docs/architecture.md) · [接口联调](docs/integration.md) · [需求导航](docs/requirements/README.md) · [团队分工](docs/team.md)。历史初稿/评审保留为来源，当前事实以状态页、代码与验收记录为准；本轮P0范围以最终改进计划为准。
 
-## 固定开发结构
-
-| 路径 | 职责 | 建议负责 |
-|---|---|---|
-| `apps/frontend/` | 上传、比例选择、任务进度、预览和下载页面 | D |
-| `apps/backend/` | 文件、用户、任务、存储及业务 API | E |
-| `contracts/` | 产品 v1 请求/响应契约；前后端共同依据 | ABDE |
-| `services/model_adapter/` | 唯一模型接入点；隔离比赛实现差异 | A/B |
-| `services/media/` | 元数据、片段/裁剪规则、CPU 渲染与参考导出队列 | A/B 提供核心，E 业务化 |
-| `vendor/competition/` | 原比赛仓库完整源码子模块 | ABC 在原仓库维护 |
-| `scripts/` | 初始化、模型引用更新/切换、验证 | A/B |
-| `docs/` | 架构、分工、开发流程与验收计划 | ABDE |
-| `.github/workflows/` | 产品 CI 检查 | A/B |
-
-分工是建议，可在 `docs/team.md` 填入真实成员。产品仓库保存固定 F1 源码快照和完整比赛仓库的子模块引用。需要完整比赛源码时使用 `--recurse-submodules`，并确认有比赛仓库权限。权重和数据保存在仓库外。
-
-## 后续发布方向
-
-后续 v1.0 开发以 [baseline应用开发计划书](docs/baseline应用开发计划书.md) 为执行基线，详见 [开发说明](docs/development.md)。当前可用参考工作台验证上传、预测和导出。正式云端入口、用户与文件归属、业务存储和对外部署由 D/E 后续接入。前端依赖产品契约，模型升级由适配层与部署配置处理。
-
-权重通过私有模型资产库（可选 Hugging Face）归档和分发，在服务器部署或更新时下载固定版本并校验，视频任务复用服务器本地模型。Git 只保存代码、源码引用及不含凭据的版本清单。用户明确要求本地处理时，按计划书单独交付本机服务与首次下载/导入、持久缓存的模型包，仍使用网页交互；该可选模式当前尚未实现。
-
-详细职责、接口兼容、版本回退和验收方向见 [架构与发布设计](docs/architecture.md)。
-
-## 更新与切换比赛分支
-
-```sh
-git switch -c chore/model-upgrade
-python scripts/model_ref.py update
-# 或切换到成果更好的分支：
-python scripts/model_ref.py switch zyb
-python scripts/check_repository.py
-python scripts/smoke.py
-git add .gitmodules model.lock.json vendor/competition
-git commit -m "chore: update competition model reference"
-git push -u origin HEAD
-```
-
-命令不会向比赛仓库提交或推送，也不会自动创建父仓库提交。可手动切换到 `zyb`，或用同一命令切回 `sym`。分支接口不一致时由 A/B 修改适配层。切换不等于自动转换权重、训练环境或推理命令。
-
-2026-11-24 已停用并移除 **Sync competition reference** 自动同步工作流。产品使用仓库内 `references/competition-f1` 的固定源码快照，后续有算法升级需求时由 A/B 手动更新并验收。完整比赛子模块仍固定在 `model.lock.json` 指定的提交；产品 CI 与本地递归克隆需要比赛仓库读取权限，见开发文档。
-
-## 为什么采用这种方式
-
-源码管理采用固定 F1 源码快照、固定提交的比赛子模块及模型适配层，升级由 A/B 手动审核。产品运行采用独立 GPU worker 或模型服务，与源码组织分别管理；部署与模型发布体系按设计文档逐步实现。
-
-子模块本身可写，固定的是提交而非实时镜像。本项目通过本地禁止提交/推送、独立克隆和版本一致性检查防止误操作；真正的访问控制仍由 GitHub 仓库权限决定。A/B 在原仓库仍保有写权限，但产品开发只在本仓库进行。C 无需进入产品仓库。
-
-详见 [架构决策](docs/architecture.md)、[开发与同步说明](docs/development.md)、[接口契约](contracts/README.md)、[模型接入](services/model_adapter/README.md) 和 [分工与验收](docs/team.md)。
-
-Git 行为参考：[官方子模块文档](https://git-scm.com/docs/git-submodule)。上游许可证保留在 `vendor/competition/LICENSE`；产品代码的开源许可证尚未指定。
+上游源码许可保留在vendor/competition/LICENSE；产品代码的开源许可证尚未指定。

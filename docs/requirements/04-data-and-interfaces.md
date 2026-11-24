@@ -1,178 +1,76 @@
-# 04 数据与接口需求（初稿）
+# 04 数据、媒体规则与已实现v1接口
 
-[返回需求文档导航](README.md) · [上一篇：系统模型](03-system-models.md) · [下一篇：质量与验收](05-quality-and-acceptance.md)
+更新：2026-11-25。[需求导航](README.md) · [Schema与完整路由](../../contracts/README.md)。本轮沿用当前v1与SQLite，不实现旧草案的Project/EditRevision/v2业务域。
 
-## 1. 领域词汇
+## 1. 当前数据对象
 
-| 名词 | 本产品中的含义 |
+| 对象 | 实际位置/语义 |
 |---|---|
-| 项目 Project | 一次剪辑工作的容器，绑定一个源视频，包含任务、方案和导出记录 |
-| 源视频 SourceVideo | 用户成功上传并通过校验的视频；后续帧号与坐标都以它为准 |
-| 分析任务 Job(kind=analysis) | 将源视频送入固定模型并验证结果的一次执行 |
-| 高光预测 AnalysisResult | 模型给出的逐原帧选择与裁剪框；不可变，允许合法空列表 |
-| 建议片段 | 对连续被选中原帧的分组，是编辑的起点 |
-| 剪辑方案 EditRevision | 用户保存的某一版本，绑定分析结果，包含启用状态、片段范围及裁剪模式 |
-| 裁剪框 Crop | 源视频中的保留区域；与播放器显示区域不同 |
-| 导出任务 Job(kind=export) | 依据指定剪辑版本和输出配置进行渲染的一次执行 |
-| 成片 Export | 一次导出的记录，成功时关联最终可下载的视频文件 |
+| Upload | 服务生成32位小写十六进制upload_id，保存原文件、SHA、文件名/大小/时间 |
+| Prediction Task | SQLite中保存请求、状态、结果/错误、固定适配器身份与幂等键；video_id=upload_id |
+| Prediction Result | v1原帧号与[x,y,w]，含api_version、video_id、target_ratio、engine、mock、predictions |
+| Plan | 服务端由固定预测与segments算出的预览/导出方案，含rules_version/plan_id；不覆盖原预测 |
+| Export | SQLite持久记录、不可变source/result/plan快照，成功后artifact含下载URL、SHA、大小、尺寸与时长 |
+| 浏览器恢复记录 | 当前浏览器最近20个任务摘要/已应用编辑/导出ID；不是服务端Project/EditRevision |
 
-“分析成功”不等于“存在高光”，也不等于“已经导出”。模型、用户编辑和成片是三种不同对象。
+上传成功只确认字节保存，不能等同于已通过媒体解码。浏览器提交upload_id，服务端生成video_path；不能提交任意服务器路径。实际文件/模型实物不入Git。
 
-## 2. 数据对象与约束
+## 2. 核心业务规则
 
-以下为逻辑数据字典，不是已经实现的数据库建表脚本。标识建议使用服务端生成的 UUID；时间戳以 UTC 保存，按用户时区展示。文件以内部存储键关联，不向浏览器暴露机器绝对路径。
+### BR-01 源帧与坐标
 
-| 对象 | 核心字段 | 不变量 |
-|---|---|---|
-| Project | `id, name, workspace_id, lifecycle, current_edit_revision_id, created_at, updated_at` | `lifecycle=active/deleting/deleted` 只表示项目存续，不复用任务状态；单项目最多一份有效源视频 |
-| SourceVideo | `id, project_id, storage_key, sha256, original_name, bytes, width, height, fps_num, fps_den, frame_count, duration, has_audio, rotation, validation_profile` | 摘要与媒体元数据在入库后不可变；帧号从 0 开始 |
-| Job | `id, project_id, kind, status, stage, progress, retry_of, idempotency_key, created_at, started_at, finished_at, error` | 终态不可回到执行态；`progress` 可为空；一个项目同类活跃任务至多一个 |
-| AnalysisResult | `id, analysis_job_id, source_id, source_sha256, target_ratio, engine, mock, prediction_storage_key, model_manifest_id` | 只在完整校验成功后发布；绑定源视频与模型版本；不被用户编辑覆盖 |
-| EditRevision | `id, project_id, revision, analysis_result_id, source_id, target_ratio, segments, created_at` | 每次成功保存创建新版本；版本内内容不可变；项目指针指向当前版本 |
-| Segment | `id, suggestion_id, start_frame, end_frame_exclusive, enabled, crop_mode, fixed_crop` | 源帧半开区间；P0 为 `crop_mode=auto`；`fixed_crop` 属于 P1 |
-| Export | `id, project_id, job_id, edit_revision_id, output_profile, storage_key, bytes, sha256, duration, width, height` | 必须绑定固定编辑版本；只有检查成功后才填写可下载文件；重试新建记录 |
-| ModelManifest | `id, competition_commit, model_asset_hashes, adapter_version, environment_id, effective_config` | 描述实际运行资产；不把权重本身、凭据或机器私有路径放进公开响应 |
+frame从0开始，基于上传原视频显示帧；框为源像素[x,y,w]，h=w×目标高/目标宽。当前只接受CFR、零旋转/起始、方形像素与单视频流。VFR/旋转规范化需另定源身份、时钟和坐标映射，本轮推迟。
 
-分析结果的大型逐帧列表可以保存为文件，由数据库记录其位置与摘要；不能让数据库记录指向尚未完整写入的结果。运行产物不提交 Git。
+### BR-02 校验与真实状态
 
-## 3. 业务规则
+帧号唯一递增、数值有限、框和帧在视频范围内，标识/比例/engine/mock与请求和发布匹配，源SHA不变。非法结果失败，合法空结果成功但无高光。默认禁止Mock导出，仅显式开发allow-mock-media允许带mock=true的合成成片。
 
-### BR-01 原视频是唯一的帧与坐标基准
+### BR-03 连续帧到片段
 
-`frame` 指向源视频的第 0 至第 `frame_count-1` 帧。原图像像素是裁剪坐标系。缩略图、低清预览和浏览器画面可以缩放，但必须能够映回这一坐标系。
+consecutive-inward-v1只合并连续选帧。30fps下30…59与90…119成为[30,60)、[90,120)，共2秒，不填空隙或丢单帧。用户输入秒数对齐最近帧边界，恰半帧向较大帧号取整，越界/重叠/空区间拒绝。
 
-本初稿的 P0 仅接受恒定帧率且无旋转元数据的输入。若后续增加变帧率或旋转规范化，必须明确规范化视频身份与时间/坐标映射，再修改契约和测试；禁止让模型分析一个版本，却在另一个版本上直接套用帧号。
+### BR-04 实际整数裁剪
 
-### BR-02 预测校验完整且不掩盖失败
+合法浮点框向内取整，在框内取满足精确比例、偶数宽高的最大合法编码尺寸，不修补原本非法的预测。所有启用帧取公共输出尺寸，逐帧裁剪后缩小；预览使用相同实际框，不添加未确认平滑。
 
-检查 `video_id` 与本任务一致、比例一致、帧号为有效整数且严格递增、无重复、裁剪字段有限且合法、源摘要未变化。`mock=true` 只用于开发演示，不允许进入真实成片流程。
+### BR-05 编辑扩展
 
-合法空数组是成功但无建议；模型异常、结果解析错误、越界、NaN 或源不匹配属于失败。模型日志中的“完成”不能替代结果校验。
+每个suggestion_id最多一次，按源顺序非重叠；省略segments采用原建议，提供数组表示整份方案。扩展区间只继承该建议自己的首/末框，不借其他片段。当前不支持从空建议任意新增片段。
 
-### BR-03 从逐帧预测生成片段
+### BR-06 原声同步
 
-将相邻帧号合并成最大连续段；不填补未选中帧。例如选中 `30…59` 和 `90…119`，得到 `[30,60)`、`[90,120)`，不能合并为 `[30,120)`。
+视频/音频按同一源半开区间剪切、重置时间戳后拼接。有音轨保留原声，无音轨才输出无声。MP4使用H.264/AAC；当前不导出其他音轨或字幕。
 
-对恒定帧率 `fps=fps_num/fps_den`，区间 `[s,e)` 对应 `[s/fps,e/fps)` 秒。30 fps 时，以上两段为 `[1,2)`、`[3,4)` 秒，总长 2 秒。仅选中第 30 帧时为 `[30,31)`，时长 `1/30` 秒，不丢弃。
+### BR-07 编辑与导出快照
 
-输入秒数转换为最近合法帧边界，恰在半帧时向较大帧号取整，然后向用户显示实际对齐结果。越界、零长度或重叠应拒绝，不能静默更改用户意图。输出始终按源时间排序。
+编辑不改变模型结果。当前已应用方案由浏览器保存供本浏览器恢复；导出将source/result/plan固定到SQLite快照，不读取变化中的草稿。没有服务端edit_revision/base_revision API，也没有跨浏览器版本冲突控制，本轮不新增。
 
-### BR-04 裁剪框与编码尺寸
+### BR-08 幂等与恢复
 
-现有模型格式为 `[x,y,w]`；目标比例为 `[rw,rh]`，高度 `h=w×rh/rw`。约束为 `x,y≥0`、`w,h>0`、`x+w≤源宽`、`y+h≤源高`。
+同Idempotency-Key/同请求返回同任务，异请求冲突；失败重试用新key创建新任务，现有请求无retry_of字段。同预测最多一个活跃导出。单runtime一个worker串行执行；重启遗留running变失败，排队项继续处理，不自动续算。排队预测可cancel，运行中或导出取消尚无。
 
-播放器叠加框须包含画面缩放和留白偏移；保存的仍是源像素。渲染器应确定并记录统一的整数/像素格式对齐规则，输出尺寸保持目标比例；预览复用同一规则。合法模型浮点框可以按明确规则向内对齐，不能为了通过校验而修复本来就越界的模型结果。
+### BR-09 文件生命周期
 
-首版建议输出尺寸取所有启用帧裁剪区域都能容纳的最大公共尺寸，并满足目标比例及编码对齐要求。以约分后的比例 `(a,b)` 表示，输出为 `(k×a,k×b)`，选择同时不超过所有有效裁剪宽高的最大正整数 `k`，且输出宽高为偶数；若无合法尺寸则报告导出失败。这样不会隐式放大低分辨率裁剪。实际尺寸写入导出记录，若偏小可在导出前提示用户。
+通过受控ID读取文件；当前是单一受信任工作区，没有用户/项目授权域，不直接匿名公网发布。本轮拟新增的离线清理命令必须默认dry-run、活跃服务拒绝、确认后只处理指定runtime；尚未实现，不能宣称已有DELETE项目路由。
 
-模型逐帧框宽度变化时，各帧先按对应框裁剪再缩放至公共尺寸。不额外加入未经确认的平滑、补帧或高光筛选规则。
+## 3. 当前HTTP边界
 
-### BR-05 用户扩展片段时的裁剪来源
-
-每个初始片段绑定一个 `suggestion_id` 和其原始连续帧范围。用户缩短时使用保留帧的原预测；向前或向后扩展时，新增帧采用原建议首帧或末帧的框。如果编辑范围整体位于原建议一侧，也使用最近的该原建议边界框，不借用其他片段的框。
-
-该规则只解决编辑后的画面定义，不声称模型对新增内容作出高光判断。P1 固定裁剪模式覆盖整段，必须通过相同边界检查。P0 不支持从无建议结果直接新增片段。
-
-### BR-06 原声与时间一致
-
-视频和音频按同一源时间区间裁剪，移除片段间未选中的部分，再重置各段时间戳并按顺序拼接。不得只抽取画面、压缩画面时间后仍保留整条原声。
-
-无音轨时输出无声视频。正常音轨存在时，不得因音频处理失败静默输出无声文件。端点舍入按帧边界与音频采样约束处理，验收容差见 NFR-01。
-
-### BR-07 版本与导出快照
-
-模型结果不可变，保存编辑创建新版本。导出只能引用一个已保存版本，不能读取正在变化的“当前编辑对象”。任务启动后用户保存新版本，旧导出仍对应旧版本，并在界面明确标记。
-
-再次分析不覆盖旧结果与方案；采用新结果应创建新的编辑版本。目标比例改变必须重新分析。已生成的旧成片在项目删除前保留。
-
-### BR-08 幂等、并发与失败恢复
-
-提交分析和导出使用幂等键。同工作区、同操作、同键且请求内容相同，应返回原任务；同键不同内容返回冲突。同一项目的同类任务另有活跃项时，新的不同请求也返回冲突。
-
-创建任务与登记占用应是一个原子操作。只允许一个执行者领取任务；终态只有一次有效写入，迟到的旧执行结果不能覆盖失败/重试结果。重试产生新 `job_id`，以 `retry_of` 关联原任务。
-
-### BR-09 文件归属与生命周期
-
-项目元数据、素材、结果、方案和成片通过内部编号关联；用户输入的名称不能拼接成可遍历任意目录的路径。源文件、成功结果和成片以原子发布方式对外可见。
-
-删除项目先阻止新任务与读取，再清理归属该项目的文件；失败时保留可重试的删除记录。模型权重、共享环境、其他项目与比赛子模块不属于可删除范围。
-
-## 4. 保持现有模型 v1 契约
-
-现有 [请求 Schema](../../contracts/prediction-request.schema.json) 与 [结果 Schema](../../contracts/prediction-result.schema.json) 为已存在的接入边界，本需求不直接改动它们。
-
-| 项目 | 已有 v1 内容 | 产品集成时的处理 |
-|---|---|---|
-| 请求 | `api_version, video_id, video_path, target_ratio` | `video_path` 仅由后端解析，前端只提交文件/编号 |
-| 响应 | `api_version, video_id, target_ratio, engine, mock, predictions` | 适配器转换比赛格式，后端校验并保存不可变分析结果 |
-| 每帧 | `frame, bboxes:[x,y,w]` | 保留原帧与源坐标，产品另建片段视图和编辑方案 |
-| 模型版本 | `engine` | 更完整的资产版本在运行记录中关联，不向 v1 强塞额外字段 |
-
-当前 `POST /api/v1/jobs` 是接受模拟请求并立即完成的联调入口。真实文件上传和异步响应与其语义不同，**不得原地换成不兼容行为仍称同一版本**。
-
-## 5. 产品业务 API v2 草案
-
-以下端点是开发建议，尚未实现。实现时应在 `contracts/` 增加对应的 v2 OpenAPI/Schema，并由前后端共同确认；内部模型接口继续使用 v1。产品正式页面只调用 v2，模拟联调入口应在正式部署中关闭或隔离。
-
-| 方法与路径 | 输入要点 | 成功结果 |
-|---|---|---|
-| `GET /api/v2/capabilities` | 无 | 200：媒体限制、支持比例、模型可用状态；不含私有路径 |
-| `POST /api/v2/projects` | `name` | 201：项目编号与元数据 |
-| `GET /api/v2/projects` | 分页参数 | 200：项目摘要列表 |
-| `GET /api/v2/projects/{id}` | 项目编号 | 200：素材、当前方案、任务及导出摘要 |
-| `POST /api/v2/projects/{id}/source` | multipart 文件 | 201：校验通过的素材编号与元数据；失败不入库 |
-| `POST /api/v2/projects/{id}/analysis-jobs` | `source_id, target_ratio`；幂等键 | 202：任务编号；相同键重放返回 200 与已有任务 |
-| `GET /api/v2/jobs/{id}` | 任务编号 | 200：状态、阶段、可选进度、错误或结果编号 |
-| `GET /api/v2/projects/{id}/analyses/{result_id}` | 项目及结果编号 | 200：分析摘要和建议片段；逐帧数据可分页/单独取资源 |
-| `GET /api/v2/projects/{id}/edit` | 项目编号 | 200：当前保存版本；尚未初始化时明确为空 |
-| `PUT /api/v2/projects/{id}/edit` | `base_revision, analysis_result_id, segments` | 200：新版本；首次保存用 `base_revision=0` |
-| `POST /api/v2/projects/{id}/exports` | `edit_revision_id, output_profile`；幂等键 | 202：导出/任务编号；相同键重放返回 200 |
-| `GET /api/v2/exports/{id}` | 导出编号 | 200：任务状态、对应编辑版本和可下载状态 |
-| `GET /api/v2/exports/{id}/file` | 导出编号，可带 Range | 200/206：完整或分段媒体内容；未成功时拒绝 |
-| `GET /api/v2/media/{source_id}` | 内部素材编号，可带 Range | 200/206：本工作区内有效源媒体，用于预览 |
-| `DELETE /api/v2/projects/{id}` | 项目编号 | 202：进入删除处理；通过项目详情查询完成状态 |
-
-`GET project` 在删除处理中返回 `lifecycle=deleting`，完成后短期保留 `deleted` 墓碑供确认；列表不展示已删除项目。重复删除已删除/删除中的同一项目返回当前删除状态，不重新扩展清理范围。
-
-分析/导出重试沿用对应创建端点，使用新的幂等键和可选 `retry_of`；服务端检查原任务同项目、同类型且为失败终态，输入保持原任务快照。普通新请求不填写 `retry_of`。
-
-### 5.1 错误结构与状态码
-
-建议结构：`error.code`（稳定码）、`error.message`（用户可读）、`error.retryable`、`request_id`。失败任务内同样记录稳定错误码。
-
-| HTTP 状态 | 用途 | 示例错误码 |
-|---|---|---|
-| 400 | 请求结构或参数无法解析 | `INVALID_REQUEST` |
-| 404 | 本工作区内找不到指定资源 | `RESOURCE_NOT_FOUND` |
-| 409 | 活跃任务、版本、幂等键或生命周期冲突 | `JOB_ACTIVE`、`REVISION_CONFLICT`、`IDEMPOTENCY_CONFLICT`、`PROJECT_DELETING` |
-| 413 | 上传体超过限制 | `UPLOAD_TOO_LARGE` |
-| 415 | 不支持的容器/编码 | `UNSUPPORTED_MEDIA` |
-| 422 | 内容不合法或不符合媒体/编辑约束 | `MEDIA_OUT_OF_POLICY`、`INVALID_SEGMENTS`、`NO_ENABLED_SEGMENTS` |
-| 503 | 模型、执行资源或存储暂不可用 | `MODEL_UNAVAILABLE`、`STORAGE_UNAVAILABLE` |
-| 500 | 未预期内部异常 | `INTERNAL_ERROR`，用户信息不带堆栈 |
-
-异步阶段的模型失败、超时、非法预测、渲染失败通过任务 `failed` 与错误字段表达；查询任务本身仍返回 200，不把“查询成功”误写为“任务成功”。
-
-### 5.2 建议测试样例
-
-| 输入 | 预期 |
+| 入口 | 当前行为 |
 |---|---|
-| 30 fps，预测帧 30～59、90～119 | 两段 `[30,60)`、`[90,120)`，预计 2 秒 |
-| `predictions=[]` 且 `mock=false` | 成功且无建议；不可导出 |
-| `frame=-1`、重复帧、NaN 或越界框 | 分析失败，不生成可编辑成功结果 |
-| 保存版本 2 时，服务器已是版本 3 | 409，保留版本 3 |
-| 版本 3 导出中，保存版本 4 | 版本 3 导出内容不变；版本 4 可后续另行导出 |
-| 相同幂等键重复提交导出 | 同一任务，不重复生成文件 |
-| 用户构造目录穿越路径或跨项目编号 | 拒绝非法访问，不读取范围外文件 |
+| POST uploads?filename=... | 原始字节+Content-Length；201返回Upload，非multipart |
+| POST tasks | 严格api_version/upload_id/target_ratio；202，新任务幂等重放200 |
+| GET tasks/{id}、/result、POST /cancel | 持久状态/成功预测/仅排队预测取消 |
+| GET uploads/{id}/metadata | 媒体检查，不改变原上传响应 |
+| GET/POST tasks/{id}/preview | 原方案或整份编辑方案的实际plan |
+| POST exports，GET exports/{id}、/{id}/file | 独立持久导出、查询和成功下载/Range |
+| GET tasks/{id}/source | 源视频Range播放 |
+| GET model、/health、/ready | 模型/Mock、HTTP存活、worker/适配器就绪 |
+| 可选GET deployment | 仅SSH连接器提供remote/mode/transport；普通服务404是正常边界 |
 
-## 6. 模块责任建议
+除health/ready外路径前缀/api/v1；表中model/deployment也使用该前缀。正式字段/状态/error以contracts Schema和代码为准；这里不是新增路由说明。running.percent=null，不伪造真实进度。
 
-| 模块 | 对外职责 | 隔离的复杂性 |
-|---|---|---|
-| 素材管理 | 接收文件、返回可靠元数据与受控编号 | 媒体识别、边界检查、临时文件、磁盘路径 |
-| 任务管理 | 提交、查询、重试，持久化状态 | 执行领取、资源并发、超时和恢复 |
-| 模型适配 | v1 请求 → v1 预测 | 比赛入口、权重、独立环境、JSONL 转换 |
-| 剪辑方案 | 建立建议、验证和保存编辑版本 | 帧/秒转换、重叠检查、边界扩展与版本冲突 |
-| 渲染导出 | 固定方案 → 已验证成片 | 裁剪轨迹、编码尺寸、音频同步、原子发布 |
+JSONL导出一行完整prediction v1，保留engine/mock与实际启用原帧/对齐框；它不等同于旧比赛双字段JSONL。无高光可下载空predictions JSONL，MP4无启用帧报no_enabled_segments。
 
-前端展示产品对象，不依赖比赛脚本名称。技术栈可采用现有讨论中的 Vue/React、Python 后端、SQLite 和 FFmpeg，最终选择服从团队熟悉程度；技术栈选择不替代上述用户行为和数据要求。
+## 4. 后续扩展边界
+
+旧Project、SourceVideo、EditRevision、完整业务v2、版本冲突与项目级删除是10月27日概念设计，当前未实现且不列本轮P0。相关历史概念图保留供追溯；不能按其伪API调用当前服务。将来确有任务再定义兼容性/Schema与实现，不为了文档完整把课程项目扩大为商用系统。
