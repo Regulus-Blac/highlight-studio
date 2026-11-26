@@ -33,7 +33,9 @@ python -m apps.backend.server --port 8001 --runtime runtime/frontend-media --ada
 - 高光时间轴显示随播放移动的竖线指针，可用鼠标/触控拖动定位；方向键逐帧移动，Home/End 跳到两端。
 - 裁剪预览在每段已选高光结束时自动暂停，并保留最后一帧；再次播放进入下一段，最后一段后回到第一段。原始画面保持连续播放。
 - 片段选择、起止时间调整。前端验证顺序与范围，提交完整方案，服务端返回的计划作为预览与导出依据。
-- MP4 / JSONL 异步导出、状态查询与下载；无已选帧时禁用 MP4；编辑后隐藏旧下载入口，防止误用旧方案。
+- 每段旁的「单独导出」始终生成该段 MP4，不受勾选状态和右侧格式选项影响；不会更改拼接选择。
+- 勾选多个片段后点击「拼接导出已选片段」，自动应用当前调整，按原视频顺序拼接。右侧仍可选择 JSONL；空选择禁用拼接 MP4，但不影响单段导出。
+- 文件生成后自动下载，并保留带片段范围说明的下载按钮；刷新恢复只展示下载入口，不重复触发自动下载。创建响应丢失后使用「重试上次导出」复用原请求和幂等键。
 - 任务记录、运行设置、窄屏布局、键盘焦点、状态提示和减少动画偏好。
 - 分析失败或取消后可直接重新选择视频、调整画幅；旧任务仍保留在记录中。不支持的素材会说明原因，不再锁住编辑器或反复重试同一文件。
 
@@ -46,6 +48,8 @@ python -m apps.backend.server --port 8001 --runtime runtime/frontend-media --ada
 失败恢复回归：`node tests/frontend-recovery.cjs`，覆盖失败/取消后的刷新恢复、更换素材、重新分析入口和历史保留，不调用真实模型。
 
 播放回归：`node tests/frontend-playback.cjs`，使用实际录制的视频检查指针拖动/键盘定位、分离和相邻片段的逐段暂停、单帧高光、取消选择的片段、原片连续播放及窄屏布局。设置 `NO_VIDEO_FRAME_CALLBACK=1` 可验证兼容播放回调缺失的浏览器。
+
+片段导出回归：`node tests/frontend-segment-export.cjs`，自建本机 HTTP 夹具，无需先启动服务。覆盖未勾选片段独立 MP4、非相邻片段拼接及调整自动应用、自动下载、串行控制、响应丢失后的刷新和幂等重试、失败恢复及窄屏布局。该脚本下载的是请求回执，不冒充真实成片；实际 MP4 帧数、画面和音轨由 `tests.test_media.MediaTests.test_individual_and_combined_exports_keep_distinct_video_audio_snapshots` 检查。
 
 ```powershell
 node --check apps/frontend/app.js
