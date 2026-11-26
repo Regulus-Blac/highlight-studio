@@ -129,7 +129,7 @@ const planTemplate = JSON.parse(fs.readFileSync('contracts/examples/preview.json
     await expect(p.locator('#apply-edits')).toBeEnabled();
     await expect(p.locator('[aria-label="片段 1 起点 / 秒"]')).toHaveValue('0');
     await p.locator('[aria-label="选择片段 2"]').uncheck();
-    await expect(p.locator('#export-button')).toBeDisabled();await p.locator('#apply-edits').click();await expect(p.locator('#export-count')).toHaveText('1 段');
+    await expect(p.locator('#export-button')).toBeEnabled();await p.locator('#apply-edits').click();await expect(p.locator('#export-count')).toHaveText('1 段');
     assert.equal(latestSegments[1].enabled,false);assert.equal(latestSegments[0].start_frame,0);
     await p.evaluate(()=>scrollTo(0,0));await p.screenshot({path:'runtime/frontend-media-desktop.png',fullPage:true});
     await p.locator('#export-format').selectOption('jsonl');await p.locator('#export-button').click();

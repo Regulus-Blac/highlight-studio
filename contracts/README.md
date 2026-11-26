@@ -72,6 +72,8 @@ HTTP 错误体统一为 `{"error":{"code":"...","message":"..."}}`。400 为非�
 
 导出请求可选 `segments`；省略采用原建议，提供则使用整份方案，不是增量补丁。每段 `suggestion_id,start_frame,end_frame_exclusive,enabled`，严格连续默认规则为 `consecutive-inward-v1`。导出新建返回 202，同 Idempotency-Key/同请求返回 200，不同请求返回 409；同预测另有 queued/running 导出时返回 export_active。成功任务包含 artifact，失败包含 error，其余为 null。
 
+单段独立导出复用上述 v1 请求：只提供目标片段且 `enabled=true`，`format=mp4`。多个已选片段仍按源视频顺序提交完整方案，未选片段 `enabled=false`；服务端在同一 MP4 中拼接启用范围、丢弃中间未选区间并剪接对应原声。导出请求的范围独立于页面上的其他预览请求，不修改模型预测；不增加新的路由或 Schema 字段。
+
 JSONL 每行是完整 prediction v1 对象，以原帧号表达实际启用范围及对齐裁剪框。无高光可导出空 JSONL，MP4 无启用帧返回 422。Mock 默认禁止导出，显式开发选项才开放；对外页面仍须显示 engine/mock。
 
 HTTP 错误体保持原 `error.code/message`，执行错误使用 `code/message/retryable`。CPU 媒体限制与未来正式业务 v2 的归属/编辑版本要求分开记录；v2仍是扩展草案，不能将这些v1路由称为v2已实现；大学生示例项目本轮继续使用v1，不要求实现整套v2。

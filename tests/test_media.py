@@ -250,6 +250,49 @@ class MediaTests(unittest.TestCase):
         self.assertEqual(media.get(second["export_id"])["error"]["code"], "source_changed")
         self.assertEqual(media.create(payload, "same-export")[0], complete)
 
+    def test_individual_and_combined_exports_keep_distinct_video_audio_snapshots(self):
+        store, media, task_id, source = self.seed()
+        original = store.get_task(task_id)["result"]
+        suggestions = media.preview(task_id)["segments"]
+        # A preview selection does not restrict a later explicit single-clip request.
+        edited = [{**suggestions[0], "end_frame_exclusive": 6}, {**suggestions[1], "enabled": False}]
+        self.assertEqual(len(media.preview(task_id, edited)["frame_crops"]), 4)
+        outputs = []
+        for key, segments, frames in [
+            ("only-second", [suggestions[1]], 5),
+            ("combine-first-and-second", suggestions, 10),
+        ]:
+            payload = {"api_version": "1", "task_id": task_id, "format": "mp4", "segments": segments}
+            validate_contract("export-request", payload)
+            item, created = media.create(payload, key)
+            self.assertTrue(created)
+            self.assertTrue(media.run_once())
+            completed = media.get(item["export_id"])
+            self.assertEqual(completed["status"], "succeeded", completed)
+            path, _ = media.artifact_path(item["export_id"])
+            metadata = probe(path)
+            self.assertEqual(metadata["frame_count"], frames)
+            self.assertAlmostEqual(completed["artifact"]["duration_seconds"], frames / 10)
+            self.assertTrue(metadata["has_audio"])
+            self.assertEqual((metadata["width"], metadata["height"]), (64, 36))
+            pixels = subprocess.check_output([binary("ffmpeg"), "-v", "error", "-i", str(path), "-an", "-pix_fmt", "rgb24", "-f", "rawvideo", "pipe:1"])
+            stride = 64 * 36 * 3
+            for index in range(frames):
+                frame = pixels[index * stride:(index + 1) * stride]
+                red, blue = sum(frame[0::3]) / (64 * 36), sum(frame[2::3]) / (64 * 36)
+                expect_red = frames == 10 and index < 5
+                self.assertGreater(red - blue if expect_red else blue - red, 180)
+            samples = array.array("f", subprocess.check_output([binary("ffmpeg"), "-v", "error", "-i", str(path), "-vn", "-ac", "1", "-ar", "48000", "-f", "f32le", "pipe:1"]))
+            for start, end, frequency in ([(.1, .4, 440), (.6, .9, 880)] if frames == 10 else [(.1, .4, 880)]):
+                chunk = samples[int(start * 48000):int(end * 48000)]
+                observed = sum(a < 0 <= b for a, b in zip(chunk, chunk[1:])) / (end - start)
+                self.assertAlmostEqual(observed, frequency, delta=15)
+            outputs.append(completed)
+        self.assertNotEqual(outputs[0]["export_id"], outputs[1]["export_id"])
+        self.assertNotEqual(outputs[0]["plan_id"], outputs[1]["plan_id"])
+        self.assertEqual(store.get_task(task_id)["result"], original)
+        self.assertEqual(digest_file(source), digest_file(self.source))
+
     def test_mock_export_gate_and_recovery(self):
         store, media, task_id, _ = self.seed(allow_mock=False)
         payload = {"api_version": "1", "task_id": task_id, "format": "mp4"}

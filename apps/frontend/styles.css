@@ -20,3 +20,11 @@
 .timeline-playhead::before{content:'';position:absolute;top:0;left:6px;width:12px;height:9px;background:#6240b3;clip-path:polygon(0 0,100% 0,100% 45%,50% 100%,0 45%)}
 .timeline-playhead::after{content:'';position:absolute;top:7px;bottom:0;left:11px;width:2px;background:#6240b3;box-shadow:0 0 0 1px #ffffffb3}
 .timeline-playhead:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:3px;background:#7755d91a}
+
+.segment-help{margin:0 20px 10px;font-size:10px;line-height:1.8;color:#93879f}
+.segment-row{grid-template-columns:20px minmax(45px,1fr) 86px 86px 98px;gap:8px}
+.segment-actions{display:flex;align-items:center;justify-content:flex-end;gap:4px}
+.segment-export{border:1px solid #e2d9f1;border-radius:5px;background:#f8f5ff;color:var(--accent);font-size:10px;white-space:nowrap;padding:7px}
+@media(max-width:1150px){.segment-row{grid-template-columns:18px minmax(45px,1fr) 75px 75px 98px;gap:6px}}
+@media(max-width:900px){.segment-row{grid-template-columns:18px minmax(45px,1fr) 75px 75px}.segment-actions{grid-column:2/-1;justify-content:flex-end}.segment-export{padding:8px 12px}}
+@media(max-width:480px){.segment-row{grid-template-columns:18px minmax(45px,1fr) 77px 77px}}
