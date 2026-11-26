@@ -9,13 +9,15 @@
 | 项目 | 内容 |
 |---|---|
 | 仓库 | [Regulus-Blac/highlight-studio](https://github.com/Regulus-Blac/highlight-studio) |
+| Pull Request | [#6 改进视频预览与导入体验，保存演示连接配置](https://github.com/Regulus-Blac/highlight-studio/pull/6) |
 | 目标分支 | `main` |
 | 功能分支 | `codex/video-preview-and-media-compatibility` |
 | 同步时主分支 | `e0e6cdb`，保留 11 月 25 日的范围、分工与文档更新 |
 | 功能提交 | `4652eba`，`feat: improve video preview, media admission and saved demo startup` |
+| 技术文档提交 | `37d46d9`，`docs: retain implementation notes and OS lab PR submission record` |
 | 改动范围 | 播放指针与逐段暂停、导入兼容、预览布局、失败恢复、保存演示连接与技术文档 |
 
-PR 链接和最终提交摘要在创建后补充到本页。PR 的创建、CI 通过、代码审查和合并是不同状态；本任务以创建可供评审的 PR 为交付，不自动合并。
+PR #6 已于 2026-11-26 创建，为公开可访问的非草稿 PR，目标为 `main`，当前保留供评审。创建时的分支头为 `37d46d934738084eee01c57b03e466a9a288b219`，随后补充本页的 PR 链接；最终提交列表见 [Commits](https://github.com/Regulus-Blac/highlight-studio/pull/6/commits)。PR 的创建、CI 通过、代码审查和合并是不同状态；本任务不自动合并。
 
 ## 2. 实际提交过程
 
@@ -58,3 +60,10 @@ git status --short
 本地引用检查、Smoke、JavaScript 语法、33 项定向 Python 测试、6 项媒体 Schema/片段规则测试，以及播放/兼容回调、失败恢复、横竖方形视频布局和主流程浏览器回归均通过。浏览器中的合成视频和 API 夹具只验证交互，不作为模型识别效果证据。
 
 全量 CPU 媒体回归以 GitHub Actions 实际结果为准；本次没有执行模型训练、下载权重或重新跑 GPU 分析。既有 11 月 6 日媒体检查记录与本次复验分开列在技术说明中。
+
+## 6. 线上取证入口
+
+- [PR 对话与说明](https://github.com/Regulus-Blac/highlight-studio/pull/6)：查看发起人、源/目标分支和评审状态。
+- [代码与文档差异](https://github.com/Regulus-Blac/highlight-studio/pull/6/files)：确认实现、测试和本技术文档均随 PR 保存。
+- [提交列表](https://github.com/Regulus-Blac/highlight-studio/pull/6/commits)：查看功能提交、技术文档及提交记录。
+- [Checks](https://github.com/Regulus-Blac/highlight-studio/pull/6/checks)：核对当前最新提交的真实检查结果，提交材料时以当时页面为准。
