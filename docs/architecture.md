@@ -43,7 +43,7 @@ flowchart LR
 | apps/frontend | 中文单视频工作台、模式说明、上传/状态、片段编辑、裁剪预览、下载 |
 | apps/backend | 标准库HTTP服务、静态资源白名单、上传/任务/预览/导出端点 |
 | services/task_service | SQLite、单worker领取/恢复、幂等、模型身份绑定、排队取消 |
-| services/media | CFR/源SHA与边界检查、片段与实际整数框、MP4/JSONL导出、Range |
+| services/media | CFR/VFR 元数据与源SHA、边界检查、片段与实际整数框、MP4/JSONL导出、Range；VFR 精确时间映射暂缓 |
 | services/model_adapter | 唯一比赛接入边界，完整资产校验、命令runner、四阶段F1新视频推理 |
 | contracts | 已实现的v1请求/响应、预览、导出和部署状态契约 |
 | scripts | 初始化/检查、按需引用更新、演示连接器和SSH传输；本轮拟补启动/维护工具 |

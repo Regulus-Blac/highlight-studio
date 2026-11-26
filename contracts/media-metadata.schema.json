@@ -46,7 +46,7 @@
       "const": 0
     },
     "validation_profile": {
-      "const": "cpu-cfr-v1"
+      "enum": ["cpu-cfr-v1", "cpu-vfr-v1"]
     }
   }
 }

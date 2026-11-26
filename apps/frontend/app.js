@@ -6,52 +6,50 @@ let execution='cloud';
 try{const saved=localStorage.getItem(EXECUTION_STORE);if(['cloud','local','debug'].includes(saved))execution=saved;}catch{}
 const ACTIVE = new Set(['queued', 'running']);
 const names = {queued:'排队等待',running:'正在分析',succeeded:'分析完成',failed:'分析失败',cancelled:'已取消'};
-const state = {file:null, url:null, ratio:[9,16], model:null, ready:false, task:null, plan:null, record:null, exporting:null, dirty:false, busy:false, epoch:0, crop:false, cropMap:new Map(), records:[], pending:null};
-let taskTimer, exportTimer;
+const state = {file:null, url:null, ratio:[9,16], model:null, ready:false, task:null, plan:null, record:null, exporting:null, dirty:false, busy:false, epoch:0, crop:false, cropMap:new Map(), previewSegment:null, previewEnded:false, records:[], pending:null};
+let taskTimer, exportTimer, playbackAnimation, timelinePointerId=null;
 const localHost = ['127.0.0.1','localhost','[::1]'].includes(location.hostname);
 let deployment = {location:'local'};
 const remoteService = () => deployment.location === 'remote';
+const canRestartTask = () => ['failed','cancelled'].includes(state.task?.status);
+const needsNewSource = () => state.task?.status==='failed'&&['invalid_media','unsupported_media','unsupported_media_profile','source_changed'].includes(state.task.error?.code);
+const inputsLocked = () => state.busy||!!state.pending||!!state.task&&!canRestartTask();
 function canProcess(){
   if(!localHost||!state.ready||!state.model)return false;
   if(remoteService())return execution==='debug'?state.model.mock===true:execution==='cloud'&&state.model.mock===false;
   return execution==='debug'?state.model.mock===true:execution==='local'&&state.model.mock===false;
 }
 function renderExecution(){
-  const locked=state.busy||!!state.task||!!state.pending;
+  const locked=inputsLocked();
   document.querySelectorAll('[data-execution]').forEach(button=>{
     const selected=button.dataset.execution===execution;
     button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));button.disabled=locked;
   });
   $('debug-mode').disabled=locked||!state.model?.mock;
+  $('debug-mode').hidden=!state.model?.mock;
   $('debug-mode').setAttribute('aria-pressed',String(execution==='debug'));
-  $('debug-mode').textContent=execution==='debug'?'正在使用本机模拟联调':'进入本机模拟联调';
-  $('execution-badge').textContent={cloud:'CLOUD',local:'LOCAL',debug:'MOCK'}[execution];
-  $('execution-detail').textContent=execution==='cloud'
-    ?'云端处理：视频会上传到产品服务并交由远程 GPU 计算，结果返回后再预览和下载。当前云端服务尚未接入，可先选择素材进行本地预览。'
-    :execution==='local'
-      ?'本机处理：首次准备运行环境、模型与权重，校验后缓存；后续使用本机算力，素材不上传云端。当前下载入口和设备检测尚未接入，只有本机真实模型服务就绪后才能开始。'
-      :'开发联调：素材仅提交到当前本机服务，使用明确标记的模拟结果验证流程，不代表云端 GPU 或真实模型已接通。';
-  const configured=localHost&&state.model?.mock===false&&state.ready;
-  $('local-availability').textContent=configured?'本机模型服务就绪':'真实模型待准备';
-  $('local-service-status').textContent=!state.model?'未连接':state.model.mock?'已连接，仅模拟模式':configured?'真实模型服务就绪':'真实模型未就绪';
-  $('privacy-title').textContent=execution==='cloud'?'云端计算，轻装创作':'本机算力，自主处理';
-  $('privacy-copy').textContent=execution==='cloud'?'视频提交到云端后处理；当前尚未连接云端服务。':'视频保留在本机；首次准备模型可能需要联网。';
-  $('analysis-step-copy').textContent={cloud:'云端 GPU 分析与构图',local:'本机模型分析与构图',debug:'本机模拟任务流程'}[execution];
-  if(remoteService()){
-    $('cloud-availability').textContent=state.model?.mock?'当前为远程模拟':state.ready?'远程 F1 已就绪':'远程模型未就绪';
-    $('cloud-guide').textContent='当前页面通过 SSH 连接受控远程实例，视频上传后由该实例处理。连接窗口关闭后可重新连接并恢复任务。';
-    $('storage-guide').textContent='任务记录保存在当前浏览器，视频和结果保存在远程服务目录。SSH 密码仅用于本次连接，不存入网页。';
-    $('execution-detail').textContent=state.model?.mock?'已通过 SSH 连接远程模拟服务。视频上传到远程实例，使用合成高光验证剪辑流程。':'已通过 SSH 连接远程 F1 服务。视频在远程 GPU 分析，片段可编辑并导出；请保持连接窗口开启。';
-    $('local-availability').textContent='当前连接远程实例';
-    $('local-service-status').textContent='当前使用远程 SSH 服务';
-    $('privacy-title').textContent='远程处理，加密传输';
-    $('privacy-copy').textContent='素材经 SSH 加密传输到你连接的实例，浏览器不会保存服务器密码。';
-    $('debug-mode').textContent=execution==='debug'?'正在使用远程模拟联调':'进入远程模拟联调';
-    $('analysis-step-copy').textContent=execution==='debug'?'远程模拟任务流程':'远程 GPU 分析与构图';
-  }
+  $('debug-mode').textContent=execution==='debug'?'正在体验演示模式':'体验演示模式';
+  $('execution-badge').textContent={cloud:'云端',local:'本机',debug:'演示'}[execution];
+  const configured=!remoteService()&&localHost&&state.model?.mock===false&&state.ready;
+  const cloudReady=remoteService()&&state.ready;
+  $('cloud-availability').textContent=cloudReady?'可以使用':'暂不可用';
+  $('cloud-status').textContent=cloudReady?'可以使用':'暂不可用';
+  $('local-availability').textContent=configured?'可以使用':'暂未开放';
+  $('local-service-status').textContent=configured?'可以使用':'暂未开放';
+  $('execution-detail').textContent=execution==='debug'
+    ?'演示模式仅供体验操作流程，生成的片段不代表真实分析结果。'
+    :execution==='local'?'使用这台电脑处理视频，素材保留在本机。'
+    :cloudReady?'服务已配置。选择视频和画幅，即可开始分析。':'云端服务暂不可用，可以先选择视频预览。';
+  $('privacy-title').textContent=execution==='cloud'?'安心创作':'本机处理';
+  $('privacy-copy').textContent=execution==='cloud'?'素材加密传输，专注每一段精彩。':'视频在这台电脑上处理。';
+  $('analysis-step-copy').textContent=execution==='debug'?'体验片段生成流程':'分析片段与推荐构图';
+  $('mode-notice').parentElement.hidden=!state.model?.mock;
+  $('cloud-guide').textContent=cloudReady?'服务已配置，直接选择视频开始即可。':'云端服务暂不可用，请稍后重试。';
+  $('storage-guide').textContent='任务记录保存在当前浏览器，可随时返回继续编辑。';
 }
+
 function chooseExecution(mode){
-  if(state.busy||state.task||state.pending)return;
+  if(inputsLocked())return;
   execution=mode;try{localStorage.setItem(EXECUTION_STORE,mode);}catch{}
   clearMessage();renderControls();
 }
@@ -70,8 +68,8 @@ function connectSource(path){
 function size(value){ return value>=1048576?`${(value/1048576).toFixed(1)} MiB`:`${(value/1024).toFixed(1)} KiB`; }
 function message(text){ $('message-text').textContent=text; $('global-message').hidden=false; }
 function clearMessage(){ $('global-message').hidden=true; }
-const errors = {network_error:'本机服务连接中断，请检查服务是否运行后重试。',model_unavailable:'模型尚未配置，请在运行设置中检查模型状态。',runner_unavailable:'推理程序尚未就绪，请检查本机模型配置。',media_tools_unavailable:'本机缺少 FFmpeg 或 FFprobe。安装媒体工具后可预览和导出。',mock_media_disabled:'当前为基础模拟模式，不生成预览或成片。媒体联调需启动 mock-media 模式并允许模拟导出。',mock_export_disabled:'当前服务禁止模拟结果导出，请使用明确启用的媒体联调模式。',unsupported_media:'此媒体测试版本支持不超过 10 分钟、4K、120 fps 的单视频流素材。',unsupported_media_profile:'当前媒体服务要求固定帧率、无旋转标记、音视频从零开始的素材。',invalid_media:'视频无法解码，请选择可正常播放的 MP4 视频。',request_too_large:'视频超过服务允许的文件大小，请选择较小文件。',inference_failed:'分析失败，请检查视频和模型配置后重试。',worker_interrupted:'上次处理被中断，可重新创建任务。',no_enabled_segments:'没有选中的高光帧，可改为导出 JSONL。',export_active:'当前已有导出任务，请等待完成后重试。',invalid_segments:'片段时间必须在视频范围内，按原视频顺序排列且不能重叠。'};
-function describe(error){ const code=error.code||'network_error'; return `${errors[code]||error.message||'操作未完成，请重试。'}（${code}）`; }
+const errors = {network_error:'服务连接中断，请检查网络后重试。',model_unavailable:'分析服务尚未就绪，请稍后重试。',runner_unavailable:'分析服务暂不可用，请稍后重试。',media_tools_unavailable:'预览与导出服务暂不可用，请稍后重试。',mock_media_disabled:'当前演示模式不生成高光或成片。',mock_export_disabled:'当前演示模式不提供文件导出。',unsupported_media:'此媒体测试版本支持不超过 10 分钟、4K、120 fps 的单视频流素材。',unsupported_media_profile:'这段视频的旋转信息、像素比例或音轨起点暂不受支持。请重新选择视频，或重新导出后再导入。',invalid_media:'视频文件无法读取，可能不完整或已损坏。请确认原视频能正常播放后重新选择。',request_too_large:'视频超过服务允许的文件大小，请选择较小文件。',inference_failed:'视频分析失败，请稍后重试或更换视频。',worker_interrupted:'上次处理被中断，可重新创建任务。',no_enabled_segments:'没有选中的高光帧，可改为导出 JSONL。',export_active:'当前已有导出任务，请等待完成后重试。',invalid_segments:'片段时间必须在视频范围内，按原视频顺序排列且不能重叠。'};
+function describe(error){ const code=error.code||'network_error'; return errors[code]||'操作未完成，请稍后重试。'; }
 function safePath(path){ const url=new URL(path,location.origin); if(url.origin!==location.origin||!url.pathname.startsWith('/api/v1/')) throw new Error('服务返回了非本机资源地址'); return url.href; }
 async function api(path, options={}){
   if(!localHost) throw Object.assign(new Error('此开发页面仅允许连接本机服务。'),{code:'local_only'});
@@ -87,30 +85,30 @@ function persist(){
   catch{message('浏览器无法保存任务记录，刷新前请保留当前页面。');}
 }
 function saveRecord(){if(state.record){ const index=state.records.findIndex(r=>r.id===state.record.id); if(index>=0)state.records[index]={...state.record};else state.records.unshift({...state.record}); state.records=state.records.slice(0,20); }persist();renderHistory();}
-function view(name){for(const el of document.querySelectorAll('.view')) el.hidden=el.id!==`${name}-view`;for(const el of document.querySelectorAll('[data-view]')){el.classList.toggle('active',el.dataset.view===name);el.setAttribute('aria-current',el.dataset.view===name?'page':'false');}$('page-name').textContent={editor:'剪辑工作台',history:'任务记录',settings:'运行设置'}[name];}
+function view(name){for(const el of document.querySelectorAll('.view')) el.hidden=el.id!==`${name}-view`;for(const el of document.querySelectorAll('[data-view]')){el.classList.toggle('active',el.dataset.view===name);el.setAttribute('aria-current',el.dataset.view===name?'page':'false');}$('page-name').textContent={editor:'剪辑工作台',history:'任务记录',settings:'使用设置'}[name];}
 function renderHistory(){
   $('history-count').textContent=String(state.records.length); const list=$('history-list');list.replaceChildren();
   if(!state.records.length){const empty=document.createElement('div');empty.className='panel empty-list';empty.textContent='还没有任务。导入第一段视频，开始创作。';list.append(empty);return;}
-  for(const r of state.records){const b=document.createElement('button');b.className='history-card';const info=document.createElement('div'),title=document.createElement('strong'),sub=document.createElement('small'),badge=document.createElement('span');title.textContent=r.fileName;sub.textContent=`${r.ratio.join(':')} · ${new Date(r.created).toLocaleString('zh-CN')} · ${r.id.slice(0,8)}`;badge.textContent=names[r.status]||'继续查看';info.append(title,sub);b.append(info,badge);b.disabled=state.busy;b.onclick=()=>{if(state.dirty&&!confirm('切换任务会舍弃尚未应用的片段调整，是否继续？'))return;restore(r);};list.append(b);}
+  for(const r of state.records){const b=document.createElement('button');b.className='history-card';const info=document.createElement('div'),title=document.createElement('strong'),sub=document.createElement('small'),badge=document.createElement('span');title.textContent=r.fileName;sub.textContent=`${r.ratio.join(':')} · ${new Date(r.created).toLocaleString('zh-CN')}`;badge.textContent=names[r.status]||'继续查看';info.append(title,sub);b.append(info,badge);b.disabled=state.busy;b.onclick=()=>{if(state.dirty&&!confirm('切换任务会舍弃尚未应用的片段调整，是否继续？'))return;restore(r);};list.append(b);}
 }
 function reset(){
   ++state.epoch;clearTimeout(taskTimer);clearTimeout(exportTimer);$('video').pause();if(state.url)URL.revokeObjectURL(state.url);$('video').removeAttribute('src');$('video').load();
-  Object.assign(state,{file:null,url:null,task:null,plan:null,record:null,exporting:null,dirty:false,busy:false,crop:false,cropMap:new Map(),pending:null,ratio:[9,16]});
+  Object.assign(state,{file:null,url:null,task:null,plan:null,record:null,exporting:null,dirty:false,busy:false,crop:false,cropMap:new Map(),previewSegment:null,previewEnded:false,pending:null,ratio:[9,16]});
   $('video').hidden=true;$('empty-state').hidden=false;$('video-caption').hidden=true;$('crop-canvas').hidden=true;$('crop-placeholder').hidden=true;$('file-input').value='';$('video-meta').textContent='尚未导入素材';$('file-summary').textContent='选择视频后即可开始';$('task-state').textContent='等待导入视频';$('task-state').classList.remove('busy');$('export-state').textContent='';$('export-state').classList.remove('busy');$('download').hidden=true;$('upload-progress').hidden=true;$('playhead').textContent='00:00.00';$('resume-task').hidden=true;$('source-view').classList.add('selected');$('crop-view').classList.remove('selected');$('source-view').setAttribute('aria-pressed','true');$('crop-view').setAttribute('aria-pressed','false');clearMessage();renderPlan();renderControls();persist();view('editor');
 }
 function renderControls(){
   renderExecution();
-  const locked=state.busy||!!state.task||!!state.pending;
-  $('start-analysis').disabled=!state.file||locked||!canProcess();
+  const locked=inputsLocked();
+  $('start-analysis').disabled=!state.file||locked||needsNewSource()||!canProcess();
   $('choose-file').disabled=locked; $('new-project').disabled=state.busy;
-  $('replace-file').hidden=!state.file;$('replace-file').disabled=locked;
+  $('choose-file').textContent=canRestartTask()?'＋ 重新选择视频':'＋ 选择视频';
+  $('replace-file').hidden=!state.file&&!canRestartTask();$('replace-file').disabled=locked;
   $('resume-task').disabled=state.busy;
   document.querySelectorAll('.history-card').forEach(b=>b.disabled=state.busy);
-  $('start-analysis').textContent=execution==='cloud'?'云端服务待接入':execution==='debug'?'✦ 运行模拟任务':canProcess()?'✦ 使用本机模型分析':'本机模型待准备';
-  if(remoteService())$('start-analysis').textContent=execution==='debug'?'✦ 运行远程模拟任务':canProcess()?'✦ 开始远程 F1 分析':'远程模型未就绪';
+  $('start-analysis').textContent=needsNewSource()?'请重新选择视频':execution==='debug'?'✦ 体验分析':canProcess()?'✦ 开始分析':'服务暂不可用';
   document.querySelectorAll('[data-ratio]').forEach(b=>{b.disabled=locked;const chosen=b.dataset.ratio===state.ratio.join(',');b.classList.toggle('selected',chosen);b.setAttribute('aria-pressed',String(chosen));});
   $('export-ratio').textContent=state.ratio.join(':');
-  $('cancel-task').hidden=state.task?.status!=='queued';$('retry-task').hidden=!(state.task&&['failed','cancelled'].includes(state.task.status))&&!state.pending;
+  $('cancel-task').hidden=state.task?.status!=='queued';$('retry-task').hidden=needsNewSource()||!canRestartTask()&&!state.pending;
   $('retry-task').disabled=state.busy||!canProcess();$('crop-view').disabled=!state.plan?.frame_crops.length;
   $('prev-frame').disabled=$('next-frame').disabled=!state.plan;
   $('play-toggle').disabled=$('seek-video').disabled=!$('video').getAttribute('src');
@@ -119,32 +117,40 @@ function renderControls(){
   $('export-format').disabled=!!exportActive||state.busy||pendingExport;
   const empty=!state.plan?.frame_crops.length;
   $('export-button').disabled=!state.plan||state.dirty||state.busy||!!exportActive||($('export-format').value==='mp4'&&empty);
-  $('export-hint').textContent=basicMock()?'基础模拟模式已完成流程验证；真实高光与导出需配置模型及媒体工具。':state.dirty?'请先应用片段调整，再生成导出文件。':!state.plan?'完成分析和预览后即可导出。':empty?'未选中高光帧，可以导出空 JSONL。':'导出使用已应用的片段方案；音频保留原声。';
+  $('export-hint').textContent=basicMock()?'当前演示不生成高光或成片。':state.dirty?'请先应用片段调整，再生成导出文件。':!state.plan?'完成分析和预览后即可导出。':empty?'未选中高光帧，可以导出空 JSONL。':'导出使用已应用的片段方案；音频保留原声。';
   for(const [id,on] of [['step-import',!state.task],['step-analyze',!!state.task&&state.task.status!=='succeeded'],['step-export',state.task?.status==='succeeded']])$(id).classList.toggle('current',on);
   $('reset-segments').disabled=!state.plan||state.busy||!!exportActive||pendingExport;$('apply-edits').disabled=!state.dirty||state.busy||!!exportActive||pendingExport;
   document.querySelectorAll('.segment-row input').forEach(el=>el.disabled=state.busy||!!exportActive||pendingExport);
 }
 async function checkService(){
   try { deployment=await api('/api/v1/deployment'); } catch { deployment={location:'local'}; }
-  try{ const model=await api('/api/v1/model');const health=await api('/ready').catch(()=>({ready:false}));state.model=model;state.ready=!!model.available&&!!health.ready;
+  try{
+    const model=await api('/api/v1/model');
+    const health=await api('/ready').catch(()=>({ready:false}));
+    state.model=model;state.ready=!!model.available&&!!health.ready;
     if(remoteService()&&!state.task&&!state.pending)execution=model.mock?'debug':'cloud';
-    $('service-dot').className=`status-dot ${state.ready?'online':'offline'}`;$('service-label').textContent=state.ready?'本机服务已连接':'本机模型未就绪';
-    $('mode-notice').textContent=model.mock?(model.engine==='synthetic-media-v1'?'模拟媒体模式 · 片段为合成测试结果，可用于验证剪辑流程，不代表真实模型识别。':'基础模拟模式 · 可以验证任务流程，不分析视频内容，也不生成高光成片。'):`本机处理 · ${model.engine} · 视频仅发送到当前本机服务。`;
+    $('service-dot').className=`status-dot ${state.ready?'online':'offline'}`;
+    $('service-label').textContent=state.ready?'服务已连接':'服务暂不可用';
+    $('mode-notice').textContent=model.mock?'演示模式：仅供体验操作流程，不进行真实内容分析。':'';
     $('mode-explanation').textContent=model.mock
-      ?(model.engine==='mock-v1'?'当前为基础模拟：可以导入素材、创建任务和恢复记录；系统不会调用 AI 模型，不产生高光片段或成片。媒体模拟模式可验证预览与导出，真实识别则需要配置模型。':'当前为媒体模拟：按固定规则生成测试片段，用于验证预览和导出。它没有调用 AI 模型识别精彩内容。')
-      :'当前已配置推理适配器。任务使用这里显示的模型版本，实际处理结果以任务状态为准。';
-    $('settings-engine').textContent=model.engine;$('settings-mode').textContent=model.mock?'模拟测试':'已配置模型';$('settings-ready').textContent=state.ready?'就绪':'未就绪';
-    if(remoteService()){
-      $('service-label').textContent=state.ready?'远程服务已连接':'远程模型未就绪';
-      $('mode-notice').textContent=model.mock?'远程模拟媒体模式 · 合成高光用于联调，可编辑并导出 MP4。':`远程 F1 · ${model.engine} · GPU 分析，支持片段编辑与成片下载。`;
-    }
-  }catch(error){state.ready=false;$('service-dot').className='status-dot offline';$('service-label').textContent='本机服务未连接';$('mode-notice').textContent=describe(error);$('settings-ready').textContent='连接失败';$('mode-explanation').textContent='无法确认当前模式。请先检查本机服务是否运行，再重新检查连接。';}
-  $('settings-origin').textContent=location.origin;renderControls();
+      ?'演示模式可以体验导入、任务与编辑操作；不会调用 AI 分析视频内容。'
+      :'自动发现高光，支持片段调整、裁剪预览与成片下载。';
+    $('settings-engine').textContent=model.mock?'演示分析':'智能分析';
+    $('settings-mode').textContent=model.mock?'演示':remoteService()?'云端处理':'本机处理';
+    $('settings-ready').textContent=state.ready?'可以使用':'暂不可用';
+  }catch(error){
+    state.ready=false;$('service-dot').className='status-dot offline';$('service-label').textContent='连接已中断';
+    $('mode-notice').textContent=describe(error);$('settings-ready').textContent='连接失败';
+    $('mode-explanation').textContent='暂时无法连接服务，请重新检查连接。';
+  }
+  renderControls();
 }
+
 function selectFile(file){
-  if(!file||state.busy||state.task||state.pending)return;
+  if(!file||inputsLocked())return;
   if(!/\.(mp4|mov|mkv|webm|avi)$/i.test(file.name)){message('请选择 MP4、MOV、MKV、WEBM 或 AVI 视频文件。');return;}
   if(!file.size||file.size>512*1024*1024){message('视频不能为空，且大小不能超过 512 MiB。');return;}
+  if(canRestartTask()||state.record&&!state.task){const ratio=[...state.ratio];reset();state.ratio=ratio;}
   clearMessage();if(state.url)URL.revokeObjectURL(state.url);state.file=file;state.url=URL.createObjectURL(file);$('video').src=state.url;$('video').hidden=false;$('empty-state').hidden=true;$('video-caption').hidden=false;$('video-name').textContent=file.name;$('file-summary').textContent=`${file.name} · ${size(file.size)}`;$('video-meta').textContent='正在读取视频信息…';$('task-state').textContent='素材已就绪，选择画幅后开始分析';renderControls();
 }
 function upload(file){return new Promise((resolve,reject)=>{
@@ -154,7 +160,7 @@ function upload(file){return new Promise((resolve,reject)=>{
   xhr.onerror=xhr.ontimeout=()=>reject(Object.assign(new Error('导入连接中断'),{code:'network_error'}));xhr.send(file);
 });}
 async function start(){
-  if(state.busy||!canProcess())return;state.busy=true;clearMessage();renderControls();renderHistory();
+  if(state.busy||needsNewSource()||!canProcess())return;state.busy=true;clearMessage();renderControls();renderHistory();
   try{
     if(!state.pending){let uploadId=state.record?.uploadId;if(!uploadId){if(!state.file)throw new Error('请先选择视频');$('upload-progress').hidden=false;const result=await upload(state.file);uploadId=result.upload_id;}
       state.pending={execution,uploadId,ratio:[...state.ratio],fileName:state.file?.name||state.record.fileName,key:uid()};persist();}
@@ -166,7 +172,7 @@ async function start(){
 }
 function handleTask(task){state.task=task;state.record.status=task.status;saveRecord();$('task-state').classList.toggle('busy',ACTIVE.has(task.status));$('task-state').textContent=names[task.status]||task.status;
   if(task.status==='running')$('task-state').textContent='正在分析视频，请稍候…';
-  if(task.status==='succeeded'){$('task-state').textContent=task.result?.mock?'模拟分析完成 · 未执行 AI 分析':task.result?.predictions.length?'高光分析完成':'分析完成 · 未检测到高光';}
+  if(task.status==='succeeded'){$('task-state').textContent=task.result?.mock?'演示已完成 · 未进行真实分析':task.result?.predictions.length?'高光分析完成':'分析完成 · 未检测到高光';}
   if(task.status==='failed'){$('task-state').textContent=describe(task.error);}
   renderControls();
 }
@@ -186,12 +192,13 @@ async function loadPlan(epoch){
   }catch(error){if(epoch!==state.epoch)return;message(describe(error));$('timeline-summary').textContent='预览暂不可用';$('resume-task').hidden=false;}
 }
 function renderPlan(){
-  const plan=state.plan,list=$('segment-list'),timeline=$('timeline');list.replaceChildren();timeline.replaceChildren();
+  const plan=state.plan,list=$('segment-list'),timeline=$('timeline-blocks');list.replaceChildren();timeline.replaceChildren();
+  if(state.crop)$('video').pause();state.previewSegment=null;state.previewEnded=false;updatePlayhead();
   $('edit-actions').hidden=!plan?.segments.length;$('segment-count').textContent=String(plan?.suggestions.length||0);
   $('timeline-middle').textContent=plan?time(plan.metadata.duration_seconds/2):'—';$('timeline-end').textContent=plan?time(plan.metadata.duration_seconds):'—';
   $('export-count').textContent=plan?`${plan.segments.filter(s=>s.enabled).length} 段`:'—';$('export-duration').textContent=plan?`${plan.duration_seconds.toFixed(2)} 秒`:'—';$('export-resolution').textContent=plan?.output?`${plan.output.width} × ${plan.output.height}`:'—';
-  $('timeline-summary').textContent=basicMock()?'模拟流程已完成':plan?`已选 ${plan.segments.filter(s=>s.enabled).length} 段 · ${plan.duration_seconds.toFixed(2)} 秒`:'等待分析';
-  if(!plan?.segments.length){const empty=document.createElement('div');empty.className='empty-list';empty.textContent=basicMock()?'模拟任务已完成，当前模式不生成高光片段。可在运行设置查看下一步。':plan?'未检测到高光。可导出空 JSONL，或换一段素材重试。':'完成分析后，可以选择片段并微调起止时间。';list.append(empty);const note=document.createElement('div');note.className='timeline-empty';note.textContent=basicMock()?'当前为基础模拟模式，不生成高光时间轴':plan?'当前没有高光片段':'分析完成后，高光片段将在这里呈现';timeline.append(note);return;}
+  $('timeline-summary').textContent=basicMock()?'演示已完成':plan?`已选 ${plan.segments.filter(s=>s.enabled).length} 段 · ${plan.duration_seconds.toFixed(2)} 秒`:'等待分析';
+  if(!plan?.segments.length){const empty=document.createElement('div');empty.className='empty-list';empty.textContent=basicMock()?'演示已完成。当前模式不生成高光片段。':plan?'未发现高光片段，可以换一段视频重试。':'完成分析后，可以选择片段并微调起止时间。';list.append(empty);const note=document.createElement('div');note.className='timeline-empty';note.textContent=basicMock()?'演示模式不生成高光时间轴':plan?'当前没有高光片段':'分析完成后，高光片段将在这里呈现';timeline.append(note);return;}
   const fps=plan.metadata.fps_num/plan.metadata.fps_den;
   for(const [index,segment] of plan.segments.entries()){
     const row=document.createElement('div');row.className='segment-row';row.dataset.sid=segment.suggestion_id;
@@ -199,7 +206,7 @@ function renderPlan(){
     const title=document.createElement('div');title.className='segment-title';title.textContent=`高光 ${String(index+1).padStart(2,'0')}`;const duration=document.createElement('small');duration.textContent=`${((segment.end_frame_exclusive-segment.start_frame)/fps).toFixed(2)} 秒`;title.append(duration);
     row.append(check,title);
     for(const [field,label] of [['start_frame','起点 / 秒'],['end_frame_exclusive','终点 / 秒']]){const wrap=document.createElement('label');wrap.textContent=label;const input=document.createElement('input');input.type='number';input.min='0';input.max=String(plan.metadata.duration_seconds);input.step='any';input.value=String(Number((segment[field]/fps).toFixed(6)));input.dataset.field=field;input.setAttribute('aria-label',`片段 ${index+1} ${label}`);wrap.append(input);row.append(wrap);}
-    const seek=document.createElement('button');seek.className='icon-button';seek.textContent='▷';seek.setAttribute('aria-label',`预览片段 ${index+1}`);seek.onclick=()=>{$('video').currentTime=segment.start_frame/fps;};row.append(seek);
+    const seek=document.createElement('button');seek.className='icon-button';seek.textContent='▷';seek.setAttribute('aria-label',`预览片段 ${index+1}`);seek.onclick=()=>{if(!state.crop||segment.enabled)seekVideo(segment.start_frame/fps);};row.append(seek);
     row.addEventListener('input',()=>{state.dirty=true;$('download').hidden=true;renderControls();});list.append(row);
     const block=document.createElement('button');block.className=`timeline-block${segment.enabled?'':' off'}`;block.style.left=`${segment.start_frame/plan.metadata.frame_count*100}%`;block.style.width=`${(segment.end_frame_exclusive-segment.start_frame)/plan.metadata.frame_count*100}%`;block.textContent=String(index+1).padStart(2,'0');block.setAttribute('aria-label',`跳转高光 ${index+1}，${time(segment.start_frame/fps)}`);block.onclick=seek.onclick;timeline.append(block);
   }
@@ -211,13 +218,46 @@ function readEdits(){
     return {suggestion_id:row.dataset.sid,start_frame:from,end_frame_exclusive:to,enabled:row.querySelector('.segment-enabled').checked};});
 }
 async function applyEdits(resetToSuggested=false){if(!state.plan||state.busy)return;const epoch=state.epoch;try{const edits=resetToSuggested?state.plan.suggestions.map(s=>({...s})):readEdits();state.busy=true;renderControls();clearMessage();const plan=await post(`/api/v1/tasks/${state.task.task_id}/preview`,{api_version:'1',segments:edits});if(epoch!==state.epoch)return;state.plan=plan;state.record.edits=edits;state.record.exportId=null;state.exporting=null;$('download').hidden=true;$('export-state').textContent='';state.cropMap=new Map(plan.frame_crops.map(f=>[f.frame,f.crop]));state.dirty=false;saveRecord();renderPlan();drawCrop();}catch(error){message(describe(error));}finally{state.busy=false;renderControls();}}
+function timelineDuration(){return state.plan?.metadata.duration_seconds||(Number.isFinite($('video').duration)?$('video').duration:0);}
+function updatePlayhead(){
+  const video=$('video'),duration=timelineDuration(),current=Math.max(0,Math.min(duration,video.currentTime||0)),pointer=$('timeline-playhead');
+  $('playhead').textContent=time(video.currentTime);$('seek-video').value=String(video.currentTime);
+  pointer.hidden=!state.plan?.segments?.length||!video.getAttribute('src');
+  pointer.style.left=`${duration?current/duration*100:0}%`;pointer.setAttribute('aria-valuemax',String(duration));pointer.setAttribute('aria-valuenow',String(Number(current.toFixed(3))));pointer.setAttribute('aria-valuetext',`${time(current)} / ${time(duration)}`);
+}
+function seekVideo(seconds){
+  const video=$('video');video.pause();state.previewSegment=null;state.previewEnded=false;
+  video.currentTime=Math.max(0,Math.min(timelineDuration(),seconds));drawCrop();
+}
+function prepareCropPlayback(){
+  if(!state.crop||!state.plan)return true;
+  const video=$('video'),fps=state.plan.metadata.fps_num/state.plan.metadata.fps_den,segments=state.plan.segments.filter(s=>s.enabled);
+  if(!segments.length){video.pause();return false;}
+  const frame=Math.floor(video.currentTime*fps+0.0001);
+  let segment;
+  if(state.previewEnded&&state.previewSegment){
+    const index=segments.findIndex(s=>s.suggestion_id===state.previewSegment.suggestion_id);segment=segments[(index+1)%segments.length];
+    video.currentTime=segment.start_frame/fps;
+  }else{
+    segment=segments.find(s=>s.start_frame<=frame&&frame<s.end_frame_exclusive);
+    if(!segment){segment=segments.find(s=>s.start_frame>frame)||segments[0];video.currentTime=segment.start_frame/fps;}
+  }
+  state.previewSegment=segment;state.previewEnded=false;return true;
+}
 function drawCrop(){
-  const video=$('video');$('playhead').textContent=time(video.currentTime);$('seek-video').value=String(video.currentTime); if(!state.crop||!state.plan)return;
-  const fps=state.plan.metadata.fps_num/state.plan.metadata.fps_den;const frame=Math.min(state.plan.metadata.frame_count-1,Math.floor(video.currentTime*fps+0.0001));const box=state.cropMap.get(frame);
-  $('crop-placeholder').hidden=!!box;$('crop-canvas').hidden=!box;if(!box||video.readyState<2)return;
+  const video=$('video');updatePlayhead();if(!state.crop||!state.plan)return;
+  const fps=state.plan.metadata.fps_num/state.plan.metadata.fps_den,clock=video.currentTime;
+  const segment=state.previewSegment;
+  if(segment&&(!video.paused||video.ended)&&clock*fps+0.0001>=segment.end_frame_exclusive){
+    // End is exclusive. Keep the last cropped frame visible instead of entering the gap.
+    video.pause();state.previewEnded=true;video.currentTime=(segment.end_frame_exclusive-1)/fps;updatePlayhead();return;
+  }
+  const frame=Math.min(state.plan.metadata.frame_count-1,Math.floor(clock*fps+0.0001)),box=state.cropMap.get(frame);
+  $('crop-placeholder').hidden=!!box;$('crop-canvas').hidden=!box;if(!box||video.readyState<2||video.seeking)return;
   const canvas=$('crop-canvas');if(canvas.width!==box[2])canvas.width=box[2];if(canvas.height!==box[3])canvas.height=box[3];canvas.getContext('2d').drawImage(video,...box,0,0,canvas.width,canvas.height);
 }
-function videoFrame(){drawCrop();if('requestVideoFrameCallback'in $('video'))$('video').requestVideoFrameCallback(videoFrame);}
+function videoFrame(){drawCrop();$('video').requestVideoFrameCallback(videoFrame);}
+function playbackTick(){drawCrop();if(!$('video').paused)playbackAnimation=requestAnimationFrame(playbackTick);}
 async function createExport(){
   if(!state.plan||state.dirty||state.busy)return;state.busy=true;renderControls();clearMessage();
   try{const pending=state.record.pendingExport||{key:uid(),request:{api_version:'1',task_id:state.task.task_id,format:$('export-format').value,segments:state.plan.segments}};state.record.pendingExport=pending;saveRecord();const item=await post('/api/v1/exports',pending.request,pending.key);state.record.pendingExport=null;state.record.exportId=item.export_id;saveRecord();handleExport(item);pollExport(state.epoch);}
@@ -243,8 +283,8 @@ $('refresh-service').onclick=$('settings-refresh').onclick=checkService;
 $('mode-help').onclick=$('execution-guide').onclick=()=>view('settings');
 for(const button of document.querySelectorAll('[data-execution]'))button.onclick=()=>chooseExecution(button.dataset.execution);
 $('debug-mode').onclick=()=>chooseExecution('debug');
-$('choose-file').onclick=$('replace-file').onclick=()=>$('file-input').click();$('file-input').onchange=e=>selectFile(e.target.files[0]);
-$('dropzone').ondragover=e=>{e.preventDefault();if(!state.task&&!state.busy)$('dropzone').classList.add('dragover');};
+$('choose-file').onclick=$('replace-file').onclick=()=>{$('file-input').value='';$('file-input').click();};$('file-input').onchange=e=>selectFile(e.target.files[0]);
+$('dropzone').ondragover=e=>{e.preventDefault();if(!inputsLocked())$('dropzone').classList.add('dragover');};
 $('dropzone').ondragleave=()=>$('dropzone').classList.remove('dragover');$('dropzone').ondrop=e=>{e.preventDefault();$('dropzone').classList.remove('dragover');if(e.dataTransfer.files.length!==1){message('请一次选择一个视频，每段视频建立独立任务。');return;}selectFile(e.dataTransfer.files[0]);};
 for(const b of document.querySelectorAll('[data-ratio]'))b.onclick=()=>{state.ratio=b.dataset.ratio.split(',').map(Number);renderControls();};
 $('start-analysis').onclick=$('retry-task').onclick=start;
@@ -253,15 +293,27 @@ $('new-dialog').addEventListener('close',()=>{if($('new-dialog').returnValue==='
 $('cancel-task').onclick=async()=>{const epoch=state.epoch;try{const task=await post(`/api/v1/tasks/${state.task.task_id}/cancel`,{});if(epoch!==state.epoch)return;handleTask(task);}catch(error){message(describe(error));}};
 $('resume-task').onclick=()=>{if(state.busy)return;if(state.dirty&&!confirm('重新连接会舍弃尚未应用的片段调整，是否继续？'))return;if(state.record)restore({...state.record});else if(state.pending)start();};
 $('apply-edits').onclick=()=>applyEdits();$('reset-segments').onclick=()=>applyEdits(true);$('export-button').onclick=createExport;$('export-format').onchange=renderControls;
-$('source-view').onclick=()=>{state.crop=false;$('crop-canvas').hidden=true;$('crop-placeholder').hidden=true;$('source-view').classList.add('selected');$('crop-view').classList.remove('selected');$('source-view').setAttribute('aria-pressed','true');$('crop-view').setAttribute('aria-pressed','false');};
-$('crop-view').onclick=()=>{state.crop=true;$('crop-view').classList.add('selected');$('source-view').classList.remove('selected');$('crop-view').setAttribute('aria-pressed','true');$('source-view').setAttribute('aria-pressed','false');drawCrop();};
-for(const [id,direction] of [['prev-frame',-1],['next-frame',1]])$(id).onclick=()=>{const v=$('video');v.pause();const fps=state.plan.metadata.fps_num/state.plan.metadata.fps_den;v.currentTime=Math.max(0,Math.min((state.plan.metadata.frame_count-1)/fps,(Math.floor(v.currentTime*fps+0.0001)+direction)/fps));};
+$('source-view').onclick=()=>{state.crop=false;state.previewSegment=null;state.previewEnded=false;$('crop-canvas').hidden=true;$('crop-placeholder').hidden=true;$('source-view').classList.add('selected');$('crop-view').classList.remove('selected');$('source-view').setAttribute('aria-pressed','true');$('crop-view').setAttribute('aria-pressed','false');};
+$('crop-view').onclick=()=>{state.crop=true;seekVideo($('video').currentTime);prepareCropPlayback();$('crop-view').classList.add('selected');$('source-view').classList.remove('selected');$('crop-view').setAttribute('aria-pressed','true');$('source-view').setAttribute('aria-pressed','false');drawCrop();};
+for(const [id,direction] of [['prev-frame',-1],['next-frame',1]])$(id).onclick=()=>{const v=$('video'),fps=state.plan.metadata.fps_num/state.plan.metadata.fps_den;seekVideo(Math.min((state.plan.metadata.frame_count-1)/fps,(Math.floor(v.currentTime*fps+0.0001)+direction)/fps));};
 $('play-toggle').onclick=async()=>{try{if($('video').paused)await $('video').play();else $('video').pause();}catch{message('视频暂时无法播放，请检查文件编码。');}};
-$('video').addEventListener('play',()=>{$('play-toggle').textContent='Ⅱ';$('play-toggle').setAttribute('aria-label','暂停视频');});
-$('video').addEventListener('pause',()=>{$('play-toggle').textContent='▷';$('play-toggle').setAttribute('aria-label','播放视频');});
-$('seek-video').oninput=e=>{$('video').currentTime=Number(e.target.value);};
+$('video').addEventListener('play',()=>{if(!prepareCropPlayback())return;$('play-toggle').textContent='Ⅱ';$('play-toggle').setAttribute('aria-label','暂停视频');if(!('requestVideoFrameCallback'in $('video')))playbackAnimation=requestAnimationFrame(playbackTick);});
+$('video').addEventListener('pause',()=>{cancelAnimationFrame(playbackAnimation);$('play-toggle').textContent='▷';$('play-toggle').setAttribute('aria-label','播放视频');});
+$('seek-video').oninput=e=>seekVideo(Number(e.target.value));
+function seekTimeline(clientX){const rect=$('timeline').getBoundingClientRect();seekVideo((clientX-rect.left)/rect.width*timelineDuration());}
+$('timeline').addEventListener('pointerdown',event=>{
+  if(event.button!==0||!state.plan?.segments?.length||!$('video').getAttribute('src')||event.target.closest('.timeline-block'))return;
+  event.preventDefault();timelinePointerId=event.pointerId;$('timeline').setPointerCapture(event.pointerId);$('timeline-playhead').focus({preventScroll:true});seekTimeline(event.clientX);
+});
+$('timeline').addEventListener('pointermove',event=>{if(event.pointerId===timelinePointerId)seekTimeline(event.clientX);});
+for(const name of ['pointerup','pointercancel','lostpointercapture'])$('timeline').addEventListener(name,event=>{if(event.pointerId===timelinePointerId)timelinePointerId=null;});
+$('timeline-playhead').addEventListener('keydown',event=>{
+  const fps=state.plan?.metadata.fps_num/state.plan?.metadata.fps_den,step=Number.isFinite(fps)?(event.shiftKey?10:1)/fps:.1;
+  const moves={ArrowLeft:$('video').currentTime-step,ArrowRight:$('video').currentTime+step,Home:0,End:timelineDuration()};
+  if(Object.hasOwn(moves,event.key)){event.preventDefault();seekVideo(moves[event.key]);}
+});
 $('video').addEventListener('loadedmetadata',()=>{$('seek-video').max=String($('video').duration);renderControls();if(!state.plan)$('video-meta').textContent=`${$('video').videoWidth} × ${$('video').videoHeight} · ${time($('video').duration)}`;drawCrop();});
-$('video').addEventListener('error',()=>{if($('video').getAttribute('src'))message('浏览器无法播放此视频格式。可尝试 H.264 编码的 MP4；导入分析仍可由本机服务检查。');});
+$('video').addEventListener('error',()=>{if($('video').getAttribute('src'))message('浏览器暂时无法预览此视频，可能是编码不兼容或文件不完整。可以尝试提交分析，或重新选择视频。');});
 $('video').addEventListener('timeupdate',drawCrop);$('video').addEventListener('seeked',drawCrop);
 window.addEventListener('beforeunload',e=>{if(state.busy||state.dirty){e.preventDefault();e.returnValue='';}});
 async function init(){
