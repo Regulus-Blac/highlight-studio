@@ -1,4 +1,4 @@
-"""Read actual decoded timestamps; do not infer CFR from container averages."""
+"""Inspect decoded frames; accept irregular timestamps without resampling sources."""
 
 from fractions import Fraction
 import hashlib
@@ -73,8 +73,16 @@ def probe(path):
     except (KeyError, ValueError):
         cfr = False
     if not cfr:
-        raise MediaError("unsupported_media_profile", "Variable or discontinuous frame timestamps are unsupported; source frame identity must be preserved")
+        # Match the average clock used by the competition decoder. This does not
+        # resample frames or implement timestamp-accurate preview/audio mapping.
+        try:
+            average = Fraction(stream.get("avg_frame_rate", "0/1"))
+        except (ValueError, ZeroDivisionError):
+            average = Fraction(0)
+        fps = average if average > 0 else Fraction(len(frames)) / Fraction(str(duration))
+        if fps > 120:
+            raise MediaError("unsupported_media", "Average video frame rate exceeds 120 fps")
     return {"width": width, "height": height, "fps_num": fps.numerator, "fps_den": fps.denominator,
             "frame_count": len(frames), "duration_seconds": len(frames) / float(fps),
             "has_audio": any(s.get("codec_type") == "audio" for s in data["streams"]),
-            "rotation": 0, "validation_profile": "cpu-cfr-v1"}
+            "rotation": 0, "validation_profile": "cpu-cfr-v1" if cfr else "cpu-vfr-v1"}

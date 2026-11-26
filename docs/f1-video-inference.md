@@ -6,12 +6,12 @@
 
 | 阶段 | 输入与处理 | 产物 |
 | --- | --- | --- |
-| `extract_features` | FFprobe 校验 CFR 与原帧时钟；固定 TimeLens 和 processor 提取单视频特征 | `video.json`、`raw.jsonl`、`temporal/upload.npz` |
+| `extract_features` | FFprobe 检查解码帧与元数据，CFR/VFR 均准入；固定 TimeLens 和 processor 提取单视频特征 | `video.json`、`raw.jsonl`、`temporal/upload.npz` |
 | `select_frames` | 原四组时间头及融合树；普通横/纵裁剪使用 base pair 与 YOLO11s AM，近等比例使用 full pair 和固定 shift3 | `selected.json` 原视频帧号 |
 | `predict_crops` | 448/672 双路特征；x 使用 RetargetVid，y 使用 G1 的 4 fps 读出，近等比例 16:9 使用 F1 二维头；近等比例 9:16 尚无相应二维头，使用最大合法居中框 | `crops.json` |
 | `assemble_result` | 验证选帧、裁剪边界和 v1 契约 | `result.json`，标记实际 engine 与 `mock: false` |
 
-只接收 16:9 和 9:16，视频需满足现有 CPU/CFR 媒体规范。当前配方不执行历史 full92 规则，也不依赖历史检测缓存。失败或缺失概率显式报错，不能降级为全选或伪造成功。真实选帧为空是合法结果，不会导出 MP4。
+只接收 16:9 和 9:16，视频需满足现有 CPU 媒体规范。2026-11-06 按产品要求移除 CFR 硬性准入限制；VFR 使用平均帧率时钟，不修改原视频和帧号，暂不处理逐帧时间映射与音画同步。允许进入推理不等于任意视频已通过模型效果验收。当前配方不执行历史 full92 规则，也不依赖历史检测缓存。失败或缺失概率显式报错，不能降级为全选或伪造成功。真实选帧为空是合法结果，不会导出 MP4。
 
 ## A/B：部署准备与候选验收
 

@@ -210,7 +210,7 @@ class MediaTests(unittest.TestCase):
                 render_mp4(self.source, plan, self.root / "blocked.mp4", **settings)
             self.assertEqual(error.exception.code, expected)
 
-    def test_invalid_video_rotation_and_vfr_are_explicit(self):
+    def test_invalid_video_and_rotation_rejected_but_vfr_accepted(self):
         broken = self.root / "bad.mp4"
         broken.write_bytes(b"not playable")
         with self.assertRaises(MediaError):
@@ -221,8 +221,10 @@ class MediaTests(unittest.TestCase):
             probe(rotated)
         vfr = self.root / "vfr.mp4"
         subprocess.run([binary("ffmpeg"), "-v", "error", "-i", str(self.silent), "-vf", "setpts=if(lt(N\\,10)\\,N\\,(N+2))/(10*TB)", "-fps_mode", "vfr", "-c:v", "libx264", "-threads", "1", str(vfr)], check=True)
-        with self.assertRaisesRegex(MediaError, "Variable"):
-            probe(vfr)
+        metadata = probe(vfr)
+        self.assertEqual(metadata["validation_profile"], "cpu-vfr-v1")
+        self.assertEqual(metadata["frame_count"], 30)
+        validate_contract("media-metadata", metadata)
 
     def test_export_snapshot_idempotency_persistence_and_source_tamper(self):
         store, media, task_id, source = self.seed()

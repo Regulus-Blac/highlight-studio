@@ -66,6 +66,8 @@ HTTP 错误体统一为 `{"error":{"code":"...","message":"..."}}`。400 为非�
 
 新增 `media-metadata.schema.json`、`segment.schema.json`、`preview-request.schema.json`、`preview.schema.json`、`export-request.schema.json` 和 `export.schema.json`。逐字段语义、全部路由、错误码与 HTTP 示例以 [A/B CPU 开发交接](../docs/ab-cpu-preparation.md) 为准；`examples/` 的媒体响应为合成示例。
 
+2026-11-06：按产品要求移除固定帧率准入限制。`validation_profile` 在保留 `cpu-cfr-v1` 的基础上新增 `cpu-vfr-v1`；后者使用容器平均帧率（缺失时使用解码帧数/时长）表达现有帧时钟，保留原文件和解码帧号。它不表示已实现逐帧真实时间戳映射或变帧率音画同步。
+
 上传后可 GET `/api/v1/uploads/{id}/metadata` 检查媒体；预测成功后 GET `/api/v1/tasks/{id}/preview`，或 POST 同一路径预览完整编辑方案。POST `/api/v1/exports` 创建导出快照，GET `/api/v1/exports/{id}` 查询，成功后 GET `/api/v1/exports/{id}/file` 下载。预览的 source_url 与成片 URL 均支持单区间 Range。编辑不修改原预测；导出以 plan_id 绑定规则、帧、框与剪辑快照，artifact 另记录源 SHA 绑定后的实际文件摘要。
 
 导出请求可选 `segments`；省略采用原建议，提供则使用整份方案，不是增量补丁。每段 `suggestion_id,start_frame,end_frame_exclusive,enabled`，严格连续默认规则为 `consecutive-inward-v1`。导出新建返回 202，同 Idempotency-Key/同请求返回 200，不同请求返回 409；同预测另有 queued/running 导出时返回 export_active。成功任务包含 artifact，失败包含 error，其余为 null。

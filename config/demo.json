@@ -1,0 +1,10 @@
+{
+  "host": "connect.westb.seetacloud.com",
+  "user": "root",
+  "ssh_port": 28612,
+  "ssh_alias": "highlight-studio-gpu",
+  "remote_root": "/root/autodl-tmp/highlight-studio/f1/demo-20261106",
+  "remote_python": "/root/miniconda3/bin/python",
+  "remote_port": 8002,
+  "local_port": 18000
+}
