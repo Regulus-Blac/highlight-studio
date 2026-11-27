@@ -8,3 +8,5 @@
 - 不自动合并模型升级 PR。检查通过后由 A/B 确认算法与模型资产兼容。
 - 权重、视频、特征、运行结果和凭据不入 Git；使用仓库外路径或被忽略的 `runtime/`。
 - 普通产品联调无需比赛子模块：`python scripts/smoke.py`；媒体检查需 FFmpeg/FFprobe 和 requirements-dev.txt。完整子模块初始化后再运行 `python scripts/check_repository.py`；不要为无权限成员强制初始化私有源码。不要在本项目启动训练或自动下载模型。
+
+- 后续修改直接在 `main` 分支提交并推送，不创建 PR；仅在用户再次明确要求时使用 PR。
