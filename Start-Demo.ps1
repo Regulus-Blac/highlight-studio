@@ -8,9 +8,11 @@ $demoPort = [int]$demoProfile.local_port
 $demoAddress = 'http://127.0.0.1:' + $demoPort
 $demoRuntime = Join-Path $demoRoot 'runtime\gpu-demo'
 New-Item -ItemType Directory -Path $demoRuntime -Force | Out-Null
-$demoListener = Get-NetTCPConnection -LocalPort $demoPort -State Listen -ErrorAction SilentlyContinue
+$demoSocket = New-Object System.Net.Sockets.TcpClient
+try { $demoListener = $demoSocket.ConnectAsync('127.0.0.1', $demoPort).Wait(500) -and $demoSocket.Connected } catch { $demoListener = $false } finally { $demoSocket.Dispose() }
 if (!$demoListener) {
-    $demoProcess = Start-Process -FilePath $demoPython -ArgumentList @('-u', (Join-Path $demoRoot 'scripts\start_demo.py'), '--no-browser') -WorkingDirectory $demoRoot -WindowStyle Hidden -RedirectStandardOutput (Join-Path $demoRuntime 'launcher.stdout.log') -RedirectStandardError (Join-Path $demoRuntime 'launcher.stderr.log') -PassThru
+    $demoScript = '"' + (Join-Path $demoRoot 'scripts\start_demo.py') + '"'
+    $demoProcess = Start-Process -FilePath $demoPython -ArgumentList @('-u', $demoScript, '--no-browser') -WorkingDirectory $demoRoot -WindowStyle Hidden -RedirectStandardOutput (Join-Path $demoRuntime 'launcher.stdout.log') -RedirectStandardError (Join-Path $demoRuntime 'launcher.stderr.log') -PassThru
     [System.IO.File]::WriteAllText((Join-Path $demoRuntime 'launcher.pid'), [string]$demoProcess.Id)
 }
 $demoDeadline = [DateTime]::UtcNow.AddSeconds(45)
@@ -18,12 +20,15 @@ $demoReady = $false
 while ([DateTime]::UtcNow -lt $demoDeadline) {
     try {
         $demoDeployment = Invoke-RestMethod -Uri ($demoAddress + '/api/v1/deployment') -TimeoutSec 2
-        $demoStatus = Invoke-RestMethod -Uri ($demoAddress + '/ready') -TimeoutSec 2
-        if ($demoDeployment.location -eq 'remote' -and $demoDeployment.mode -eq 'real' -and $demoStatus.ready -and $demoStatus.mock -eq $false) { $demoReady = $true; break }
+        $demoStatus = Invoke-RestMethod -Uri ($demoAddress + '/health') -TimeoutSec 2
+        if ($demoDeployment.transport -eq 'ssh' -and $demoDeployment.local_demo -and $demoStatus.status -eq 'ok') { $demoReady = $true; break }
     } catch { }
-    if ($demoProcess -and $demoProcess.HasExited) { throw 'The connection ended. See runtime/gpu-demo/launcher.stderr.log.' }
+    if ($demoProcess -and $demoProcess.HasExited) { throw 'The local page could not start. See runtime/gpu-demo/launcher.stderr.log.' }
     Start-Sleep -Milliseconds 500
 }
-if (!$demoReady) { throw 'The service is unavailable. Check the connection log and GPU server.' }
+if (!$demoReady) { throw 'The local page is unavailable. Check the local port and runtime/gpu-demo/launcher.stderr.log.' }
+if ($demoListener) {
+    try { Invoke-RestMethod -Uri ($demoAddress + '/api/v1/deployment') -Method Post -ContentType 'application/json' -Body '{}' -TimeoutSec 2 | Out-Null } catch { }
+}
 Write-Output ('Ready: ' + $demoAddress)
 if (!$NoBrowser) { Start-Process -FilePath $demoAddress }

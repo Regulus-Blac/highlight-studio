@@ -11,9 +11,12 @@
 | 本机手工配置command | model.mock=false、available=true且ready=true | 本机真实模型分析；不代表网页已检测显卡或自动装好模型 |
 | connect_demo.py --mode real | 可选deployment声明remote/real，model与ready匹配 | 本机网页连接已有远程F1，上传后由远端处理 |
 | connect_demo.py --mode mock | remote/mock，与合成引擎匹配 | 远程模拟流程，不能冒充真实分析 |
+| Start-Demo / start_demo.py | remote/real 描述目标；connection 描述连接；local_demo=true | 远程失败仍打开本机网页，云端置灰，本机模拟使用独立数据与 `/demo/` 同源通道 |
 | 普通本机服务的云端选项 | 没有对应远程部署信息 | 仍禁用，不能说已提供通用云产品 |
 
 任务创建后锁定执行位置，模拟与真实远程记录分开存储，刷新恢复向原服务查询。预测请求不增加host、SSH参数或execution_mode等未声明字段；主机凭据只由本机连接器交互获取，不进入浏览器。
+
+2026-11-27：保存配置的统一启动器在空工作区、远程未就绪时默认进入有明确标记的本机演示；已有真实任务继续保留原执行位置并报告断线，不静默替换结果。远端恢复后可在新工作区选择云端，本机演示仍可选择。重连按钮重新读取本机保存配置，不接受网页提交主机或凭据。完整机制与验证见[离线启动初稿](changes/2026-11-27-offline-startup.md)。
 
 ## 当前仍缺的能力
 

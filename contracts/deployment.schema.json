@@ -7,6 +7,8 @@
   "properties": {
     "location": {"const": "remote"},
     "mode": {"enum": ["mock", "real"]},
-    "transport": {"const": "ssh"}
+    "transport": {"const": "ssh"},
+    "connection": {"enum": ["connecting", "connected", "unavailable"]},
+    "local_demo": {"type": "boolean"}
   }
 }

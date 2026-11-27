@@ -1,7 +1,6 @@
-"""Start the saved GPU connection using OpenSSH; no model downloads or passwords in files."""
+"""Start the local test page immediately; connect the saved remote in the background."""
 import argparse
 import base64
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
 from pathlib import Path
@@ -10,8 +9,17 @@ import re
 import shlex
 import shutil
 import subprocess
+import sys
 import threading
 import webbrowser
+
+if not __package__:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from apps.backend.server import make_server as make_local_server
+from services.model_adapter.adapter import MockAdapter
+from services.media.probe import MediaError, binary
+from services.task_service.store import TaskError
 
 try:
     from .ssh_http_relay import drain_response
@@ -75,32 +83,162 @@ def remote_command(profile):
             f"exec {shlex.quote(profile['remote_python'])} -u app/scripts/ssh_http_relay.py --port {profile['remote_port']}")
 
 
-def make_server(profile, process):
-    lock = threading.Lock()
-    class Handler(BaseHTTPRequestHandler):
+def stop_process(process):
+    if process is None:
+        return
+    if process.poll() is None:
+        process.terminate()
+    try:
+        process.wait(timeout=3)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait()
+    for stream in (process.stdin, process.stdout):
+        if stream:
+            stream.close()
+
+
+class RemoteConnection:
+    def __init__(self, profile, *, config_path=None, process=None, startup_timeout=240, local_demo=True):
+        self.profile, self.config_path = profile, config_path
+        self.process, self.startup_timeout = process, startup_timeout
+        self.local_demo = local_demo
+        self.lock, self.transfer_lock = threading.Lock(), threading.Lock()
+        self.closed, self.thread = threading.Event(), None
+        self._status = 'connected' if process else 'unavailable'
+
+    def status(self):
+        with self.lock:
+            if self._status == 'connected' and (not self.process or self.process.poll() is not None):
+                self._status = 'unavailable'
+            return self._status
+
+    def descriptor(self):
+        result = {'location': 'remote', 'mode': 'real', 'transport': 'ssh'}
+        if self.local_demo:
+            result.update(connection=self.status(), local_demo=True)
+        return result
+
+    def connect(self):
+        if self.status() == 'connected':
+            return
+        with self.lock:
+            if self.closed.is_set() or self.thread and self.thread.is_alive():
+                return
+            previous, self.process = self.process, None
+            stop_process(previous)
+            self._status = 'connecting'
+            self.thread = threading.Thread(target=self._connect, name='demo-remote-connect', daemon=True)
+            self.thread.start()
+
+    def _start_process(self):
+        profile = load_profile(self.config_path) if self.config_path else self.profile
+        ssh = find_ssh()
+        command = [ssh, '-T', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=8',
+                   '-o', 'ServerAliveInterval=20', '-o', 'ServerAliveCountMax=3',
+                   *ssh_target(profile, ssh), remote_command(profile)]
+        return subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+
+    def _connect(self):
+        process, connected = None, False
+        try:
+            process = self._start_process()
+            with self.lock:
+                if self.closed.is_set():
+                    return
+                self.process = process
+            ready = queue.Queue()
+            reader = threading.Thread(target=lambda: ready.put(process.stdout.readline(65537)), daemon=True)
+            reader.start()
+            marker = ready.get(timeout=self.startup_timeout).strip()
+            if marker != b'HIGHLIGHT_RELAY_READY' or process.poll() is not None:
+                raise RuntimeError('SSH relay did not become ready')
+            with self.lock:
+                if not self.closed.is_set():
+                    self._status, connected = 'connected', True
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError, queue.Empty) as error:
+            detail = 'Timed out waiting for remote service' if isinstance(error, queue.Empty) else str(error)
+            print(f'Remote connection unavailable ({type(error).__name__}): {detail}. Local test page remains available.', file=sys.stderr, flush=True)
+        finally:
+            if not connected:
+                with self.lock:
+                    if self.process is process:
+                        self.process = None
+                    self._status = 'unavailable'
+                stop_process(process)
+
+    def invalidate(self, process):
+        with self.lock:
+            if self.process is process:
+                self.process = None
+                self._status = 'unavailable'
+        stop_process(process)
+
+    def close(self):
+        self.closed.set()
+        with self.lock:
+            process, self.process = self.process, None
+            self._status = 'unavailable'
+        stop_process(process)
+        if self.thread:
+            self.thread.join(timeout=5)
+
+
+def demo_adapter():
+    # Media simulation is optional; missing CPU tools must not block the page.
+    try:
+        from PIL import Image  # noqa: F401
+        from services.model_adapter.development import SyntheticMediaAdapter
+        binary('ffmpeg'); binary('ffprobe')
+        return SyntheticMediaAdapter()
+    except (ImportError, OSError, MediaError):
+        return MockAdapter()
+
+
+def make_server(profile, process, *, runtime=None, adapter=None):
+    connection = process if isinstance(process, RemoteConnection) else RemoteConnection(profile, process=process, local_demo=False)
+    server = make_local_server(port=profile['local_port'], runtime=runtime or ROOT/'runtime/gpu-demo/local',
+                               adapter=adapter or MockAdapter(), allow_mock_media=True)
+    base = server.RequestHandlerClass
+
+    class Handler(base):
         def handle_request(self):
             origin = f'http://127.0.0.1:{self.server.server_port}'
             if self.headers.get('Host') != origin.removeprefix('http://') or self.headers.get('Origin', origin) != origin:
-                self.send_error(403)
+                self.error(403, 'origin_not_allowed', 'Only same-origin requests are allowed')
                 return
-            if self.command == 'GET' and self.path in ASSETS:
-                filename, content_type = ASSETS[self.path]
-                body = (ROOT / 'apps' / 'frontend' / filename).read_bytes()
-                self.send_response(200)
-                self.send_header('Content-Type', content_type)
-                self.send_header('Cache-Control', 'no-cache')
-                self.send_header('X-Content-Type-Options', 'nosniff')
-                self.send_header('Content-Length', str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
+            if self.path.startswith('/demo/') and connection.local_demo:
+                self.path = self.path[len('/demo'):]
+                method = getattr(super(), 'do_'+self.command, None)
+                if method:
+                    method()
+                else:
+                    self.error(405, 'method_not_allowed', 'Method is unavailable')
+                return
+            if self.command == 'GET' and (self.path in ASSETS or self.path == '/health'):
+                super().do_GET()
                 return
             if self.command == 'GET' and self.path == '/api/v1/deployment':
-                body = json.dumps({'location': 'remote', 'mode': 'real', 'transport': 'ssh'}).encode()
-                self.send_response(200)
-                self.send_header('Content-Type', 'application/json')
-                self.send_header('Content-Length', str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
+                self.respond(200, connection.descriptor())
+                return
+            if self.command == 'POST' and self.path == '/api/v1/deployment' and connection.local_demo:
+                try:
+                    if self.read_json() != {}:
+                        raise ValueError('Reconnect accepts an empty object only')
+                except (ValueError, TaskError):
+                    self.error(400, 'invalid_request', 'Reconnect accepts an empty JSON object')
+                    return
+                connection.connect()
+                self.respond(200, connection.descriptor())
+                return
+            if connection.status() != 'connected':
+                if self.command == 'GET' and self.path == '/api/v1/model':
+                    self.respond(200, {'api_version': '1', 'engine': 'remote-unavailable', 'mock': False,
+                                       'available': False, 'prediction_api_version': '1'})
+                elif self.command == 'GET' and self.path == '/ready':
+                    self.respond(503, {'ready': False, 'engine': 'remote-unavailable', 'mock': False})
+                else:
+                    self.error(503, 'remote_unavailable', 'Remote server is not connected; local demo remains available')
                 return
             try:
                 length = int(self.headers.get('Content-Length', '0'))
@@ -110,10 +248,12 @@ def make_server(profile, process):
             if not 0 <= length <= 512 * 1024 * 1024:
                 self.send_error(413)
                 return
-            with lock:
+            with connection.transfer_lock:
+                process = connection.process
+                responded = False
                 try:
-                    if process.poll() is not None:
-                        self.send_error(502, 'The connection ended; restart the demo')
+                    if process is None or process.poll() is not None:
+                        self.error(503, 'remote_unavailable', 'Remote server is not connected')
                         return
                     head = {'method': self.command, 'path': self.path, 'headers': dict(self.headers), 'length': length}
                     process.stdin.write((json.dumps(head) + '\n').encode())
@@ -132,42 +272,35 @@ def make_server(profile, process):
                         for key, value in response['headers'].items():
                             self.send_header(key, value)
                         self.end_headers()
+                        responded = True
                     except OSError:
                         disconnected = True
                     drain_response(process.stdout, None if disconnected else self.wfile, response['length'])
                 except Exception as error:
-                    if process.poll() is None:
-                        process.terminate()
+                    connection.invalidate(process)
+                    if not responded:
+                        self.error(503, 'remote_unavailable', 'Remote connection ended; local demo remains available')
                     self.close_connection = True
-                    print(f'Connection interrupted ({type(error).__name__}); restart the demo.', flush=True)
+                    print(f'Remote connection interrupted ({type(error).__name__}). Local page remains available.', flush=True)
 
         do_GET = do_POST = do_PUT = do_DELETE = do_OPTIONS = handle_request
 
-    return ThreadingHTTPServer(('127.0.0.1', profile['local_port']), Handler)
+    server.RequestHandlerClass = Handler
+    return server
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, default=DEFAULT_CONFIG)
     parser.add_argument('--no-browser', action='store_true')
+    parser.add_argument('--runtime', type=Path, default=ROOT/'runtime/gpu-demo/local', help='Separate local demonstration data')
     args = parser.parse_args()
     profile = load_profile(args.config)
-    ssh = find_ssh()
-    command = [ssh, '-T', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15',
-               '-o', 'ServerAliveInterval=20', '-o', 'ServerAliveCountMax=3',
-               *ssh_target(profile, ssh), remote_command(profile)]
-    process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    connection = RemoteConnection(profile, config_path=args.config)
     server = None
     try:
-        ready = queue.Queue()
-        threading.Thread(target=lambda: ready.put(process.stdout.readline(65537)), daemon=True).start()
-        try:
-            marker = ready.get(timeout=240).strip()
-        except queue.Empty as error:
-            raise RuntimeError('The remote service did not start within four minutes') from error
-        if marker != b'HIGHLIGHT_RELAY_READY':
-            raise RuntimeError('Cannot connect. Check the saved SSH login and remote service.')
-        server = make_server(profile, process)
+        server = make_server(profile, connection, runtime=args.runtime, adapter=demo_adapter())
+        connection.connect()
         address = f"http://127.0.0.1:{profile['local_port']}"
         print('Ready: ' + address, flush=True)
         if not args.no_browser:
@@ -178,15 +311,7 @@ def main():
     finally:
         if server:
             server.server_close()
-        if process.poll() is None:
-            process.terminate()
-        try:
-            process.wait(timeout=5)
-        except subprocess.TimeoutExpired:
-            process.kill()
-            process.wait()
-        process.stdin.close()
-        process.stdout.close()
+        connection.close()
 
 
 if __name__ == '__main__':

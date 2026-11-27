@@ -1,6 +1,6 @@
 # 产品 v1 契约
 
-2026-11-25核对：上传、异步预测、媒体预览/导出及可选部署状态均已有v1契约；本次不修改Schema。保留原预测请求/响应及旧Mock jobs兼容API，现工作台使用uploads/tasks。D/E 以本目录 Schema 为边界；比赛导入及命令转换仅位于 `services/model_adapter/`。启动方式及端到端例子见 [联调交接](../docs/integration.md)。
+2026-11-25核对：上传、异步预测、媒体预览/导出及可选部署状态均已有v1契约；2026-11-27为可选部署描述增加连接状态与本机演示能力字段，业务请求不变。保留原预测请求/响应及旧Mock jobs兼容API，现工作台使用uploads/tasks。D/E 以本目录 Schema 为边界；比赛导入及命令转换仅位于 `services/model_adapter/`。启动方式及端到端例子见 [联调交接](../docs/integration.md)。
 
 ## 预测接口（E 与 A/B）
 
@@ -77,3 +77,13 @@ HTTP 错误体统一为 `{"error":{"code":"...","message":"..."}}`。400 为非�
 JSONL 每行是完整 prediction v1 对象，以原帧号表达实际启用范围及对齐裁剪框。无高光可导出空 JSONL，MP4 无启用帧返回 422。Mock 默认禁止导出，显式开发选项才开放；对外页面仍须显示 engine/mock。
 
 HTTP 错误体保持原 `error.code/message`，执行错误使用 `code/message/retryable`。CPU 媒体限制与未来正式业务 v2 的归属/编辑版本要求分开记录；v2仍是扩展草案，不能将这些v1路由称为v2已实现；大学生示例项目本轮继续使用v1，不要求实现整套v2。
+
+## 保存配置的启动器：可选传输能力（2026-11-27）
+
+`GET /api/v1/deployment` 沿用 `deployment.schema.json`，保留原必填的 `location/mode/transport`，新增可选 `connection`（`connecting/connected/unavailable`）和 `local_demo`（boolean）。旧连接器仍可只返回原三字段。`remote/real` 表示配置的远程目标，不能单凭该描述认定连接或模型就绪；前端同时检查 `/api/v1/model` 与 `/ready`。
+
+仅保存配置的 `start_demo.py` 网关提供 `POST /api/v1/deployment`，请求体必须为 `{}`。它异步重连本机保存的目标并返回同一部署描述，不接受主机、路径或认证字段；已有可用连接直接复用。普通后端与旧连接器不必实现此控制路由。
+
+该网关在同一回环地址上，以 `/demo/` 前缀将请求路由到独立本机模拟服务（例如 `/demo/api/v1/tasks`、`/demo/ready`），移除前缀后使用现有 v1 路由及完全相同的业务请求/响应。响应里的 `source_url` 和 artifact URL 仍是 v1 地址，前端根据任务的演示模式为原生媒体、Range 与下载请求加上前缀。这是本机网关的传输选路，不增加任务字段或模型能力。任务恢复时沿用记录的执行位置，不因远程连接状态改变选路。
+
+网关 `/health` 检查本机页面服务；未加前缀的 `/ready` 检查远程处理。远程未连接时，未加前缀的 model 返回 `available=false,mock=false`，ready 返回 503，业务请求返回 `503 remote_unavailable`；不会自动交给本机 Mock。`/demo/` 下始终保留真实的模拟标记和自己的任务库。

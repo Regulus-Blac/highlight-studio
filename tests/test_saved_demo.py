@@ -73,7 +73,8 @@ def relay_service():
     upstream_thread.start()
     process = subprocess.Popen([sys.executable, str(ROOT/'scripts/ssh_http_relay.py'), '--port', str(upstream.server_port)], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     assert process.stdout.readline() == b'HIGHLIGHT_RELAY_READY\n'
-    proxy = make_server({**load_profile(), 'local_port': 0}, process)
+    runtime = tempfile.TemporaryDirectory()
+    proxy = make_server({**load_profile(), 'local_port': 0}, process, runtime=Path(runtime.name))
     thread = threading.Thread(target=proxy.serve_forever, daemon=True)
     thread.start()
     try:
@@ -82,6 +83,7 @@ def relay_service():
         proxy.shutdown();proxy.server_close();thread.join(5)
         process.stdin.close();process.wait(timeout=5);process.stdout.close();process.stderr.close()
         upstream.shutdown();upstream.server_close();upstream_thread.join(5)
+        runtime.cleanup()
 
 
 class SavedDemoHTTPTests(unittest.TestCase):

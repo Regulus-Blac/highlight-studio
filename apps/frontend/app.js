@@ -10,7 +10,22 @@ const state = {file:null, url:null, ratio:[9,16], model:null, ready:false, task:
 let taskTimer, exportTimer, playbackAnimation, timelinePointerId=null;
 const localHost = ['127.0.0.1','localhost','[::1]'].includes(location.hostname);
 let deployment = {location:'local'};
+let serviceInfo={remote:null,demo:null},serviceTimer,checkingService=false;
 const remoteService = () => deployment.location === 'remote';
+const localDemo = () => deployment.local_demo===true&&execution==='debug';
+const cloudReady = () => deployment.local_demo===true?!!serviceInfo.remote?.ready:remoteService()&&state.ready;
+function servicePath(path,backend=null){return deployment.local_demo===true&&path!=='/api/v1/deployment'&&(backend==='demo'||backend===null&&localDemo())?'/demo'+path:path;}
+function useActiveService(){if(deployment.local_demo===true){const info=localDemo()?serviceInfo.demo:serviceInfo.remote;state.model=info?.model||null;state.ready=!!info?.ready;}}
+function renderService(){
+  useActiveService();const model=state.model;
+  $('service-dot').className=`status-dot ${state.ready?'online':'offline'}`;
+  $('service-label').textContent=state.ready?(localDemo()?'本机测试已就绪':'服务已连接'):'服务暂不可用';
+  $('mode-notice').textContent=model?.mock?'演示模式：仅供体验操作流程，不进行真实内容分析。':'';
+  $('mode-explanation').textContent=model?.mock?'演示模式可以体验导入、任务与编辑操作；不会调用 AI 分析视频内容。':'自动发现高光，支持片段调整、裁剪预览与成片下载。';
+  $('settings-engine').textContent=model?.mock?'演示分析':'智能分析';
+  $('settings-mode').textContent=localDemo()?'本机演示':model?.mock?'演示':remoteService()?'云端处理':'本机处理';
+  $('settings-ready').textContent=state.ready?'可以使用':'暂不可用';
+}
 const canRestartTask = () => ['failed','cancelled'].includes(state.task?.status);
 const needsNewSource = () => state.task?.status==='failed'&&['invalid_media','unsupported_media','unsupported_media_profile','source_changed'].includes(state.task.error?.code);
 const inputsLocked = () => state.busy||!!state.pending||!!state.task&&!canRestartTask();
@@ -23,33 +38,35 @@ function renderExecution(){
   const locked=inputsLocked();
   document.querySelectorAll('[data-execution]').forEach(button=>{
     const selected=button.dataset.execution===execution;
-    button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));button.disabled=locked;
+    button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));button.disabled=locked||(button.dataset.execution==='cloud'&&!cloudReady());
   });
-  $('debug-mode').disabled=locked||!state.model?.mock;
-  $('debug-mode').hidden=!state.model?.mock;
+  const demoAvailable=deployment.local_demo===true?!!serviceInfo.demo?.ready:!!state.model?.mock;
+  $('debug-mode').disabled=locked||!demoAvailable;
+  $('debug-mode').hidden=!demoAvailable;
   $('debug-mode').setAttribute('aria-pressed',String(execution==='debug'));
   $('debug-mode').textContent=execution==='debug'?'正在体验演示模式':'体验演示模式';
   $('execution-badge').textContent={cloud:'云端',local:'本机',debug:'演示'}[execution];
   const configured=!remoteService()&&localHost&&state.model?.mock===false&&state.ready;
-  const cloudReady=remoteService()&&state.ready;
-  $('cloud-availability').textContent=cloudReady?'可以使用':'暂不可用';
-  $('cloud-status').textContent=cloudReady?'可以使用':'暂不可用';
+  const remoteReady=cloudReady(),remoteStatus=deployment.connection==='connecting'?'连接中':'未连接';
+  $('cloud-availability').textContent=remoteReady?'可以使用':deployment.local_demo===true?remoteStatus:'暂不可用';
+  $('cloud-status').textContent=$('cloud-availability').textContent;
   $('local-availability').textContent=configured?'可以使用':'暂未开放';
   $('local-service-status').textContent=configured?'可以使用':'暂未开放';
   $('execution-detail').textContent=execution==='debug'
-    ?'演示模式仅供体验操作流程，生成的片段不代表真实分析结果。'
+    ?localDemo()?'本机演示模式：素材保存在本机，使用模拟结果体验操作，不调用远程模型。':'演示模式仅供体验操作流程，生成的片段不代表真实分析结果。'
     :execution==='local'?'使用这台电脑处理视频，素材保留在本机。'
-    :cloudReady?'服务已配置。选择视频和画幅，即可开始分析。':'云端服务暂不可用，可以先选择视频预览。';
+    :remoteReady?'服务已配置。选择视频和画幅，即可开始分析。':'远程服务器未连接，仍可预览素材或使用本机演示模式。';
   $('privacy-title').textContent=execution==='cloud'?'安心创作':'本机处理';
   $('privacy-copy').textContent=execution==='cloud'?'素材加密传输，专注每一段精彩。':'视频在这台电脑上处理。';
   $('analysis-step-copy').textContent=execution==='debug'?'体验片段生成流程':'分析片段与推荐构图';
   $('mode-notice').parentElement.hidden=!state.model?.mock;
-  $('cloud-guide').textContent=cloudReady?'服务已配置，直接选择视频开始即可。':'云端服务暂不可用，请稍后重试。';
+  $('cloud-guide').textContent=remoteReady?'服务已配置，直接选择视频开始即可。':'远程服务器未连接。更新保存的服务器配置后，可点击重新检查连接。';
   $('storage-guide').textContent='任务记录保存在当前浏览器，可随时返回继续编辑。';
 }
 
 function chooseExecution(mode){
-  if(inputsLocked())return;
+  if(inputsLocked()||mode==='cloud'&&!cloudReady())return;
+  if(mode!==execution&&state.record)reset();
   execution=mode;try{localStorage.setItem(EXECUTION_STORE,mode);}catch{}
   clearMessage();renderControls();
 }
@@ -68,15 +85,15 @@ function connectSource(path){
 function size(value){ return value>=1048576?`${(value/1048576).toFixed(1)} MiB`:`${(value/1024).toFixed(1)} KiB`; }
 function message(text){ $('message-text').textContent=text; $('global-message').hidden=false; }
 function clearMessage(){ $('global-message').hidden=true; }
-const errors = {network_error:'服务连接中断，请检查网络后重试。',model_unavailable:'分析服务尚未就绪，请稍后重试。',runner_unavailable:'分析服务暂不可用，请稍后重试。',media_tools_unavailable:'预览与导出服务暂不可用，请稍后重试。',mock_media_disabled:'当前演示模式不生成高光或成片。',mock_export_disabled:'当前演示模式不提供文件导出。',unsupported_media:'此媒体测试版本支持不超过 10 分钟、4K、120 fps 的单视频流素材。',unsupported_media_profile:'这段视频的旋转信息、像素比例或音轨起点暂不受支持。请重新选择视频，或重新导出后再导入。',invalid_media:'视频文件无法读取，可能不完整或已损坏。请确认原视频能正常播放后重新选择。',request_too_large:'视频超过服务允许的文件大小，请选择较小文件。',inference_failed:'视频分析失败，请稍后重试或更换视频。',worker_interrupted:'上次处理被中断，可重新创建任务。',no_enabled_segments:'没有选中的高光帧，可改为导出 JSONL。',export_active:'当前已有导出任务，请等待完成后重试。',invalid_segments:'片段时间必须在视频范围内，按原视频顺序排列且不能重叠。'};
+const errors = {remote_unavailable:'远程服务器未连接。可稍后重新检查连接，或新建本机演示任务。',network_error:'服务连接中断，请检查网络后重试。',model_unavailable:'分析服务尚未就绪，请稍后重试。',runner_unavailable:'分析服务暂不可用，请稍后重试。',media_tools_unavailable:'预览与导出服务暂不可用，请稍后重试。',mock_media_disabled:'当前演示模式不生成高光或成片。',mock_export_disabled:'当前演示模式不提供文件导出。',unsupported_media:'此媒体测试版本支持不超过 10 分钟、4K、120 fps 的单视频流素材。',unsupported_media_profile:'这段视频的旋转信息、像素比例或音轨起点暂不受支持。请重新选择视频，或重新导出后再导入。',invalid_media:'视频文件无法读取，可能不完整或已损坏。请确认原视频能正常播放后重新选择。',request_too_large:'视频超过服务允许的文件大小，请选择较小文件。',inference_failed:'视频分析失败，请稍后重试或更换视频。',worker_interrupted:'上次处理被中断，可重新创建任务。',no_enabled_segments:'没有选中的高光帧，可改为导出 JSONL。',export_active:'当前已有导出任务，请等待完成后重试。',invalid_segments:'片段时间必须在视频范围内，按原视频顺序排列且不能重叠。'};
 function describe(error){ const code=error.code||'network_error'; return errors[code]||'操作未完成，请稍后重试。'; }
-function safePath(path){ const url=new URL(path,location.origin); if(url.origin!==location.origin||!url.pathname.startsWith('/api/v1/')) throw new Error('服务返回了非本机资源地址'); return url.href; }
-async function api(path, options={}){
+function safePath(path){ const url=new URL(path,location.origin); if(url.origin!==location.origin||!url.pathname.startsWith('/api/v1/')) throw new Error('服务返回了非本机资源地址'); return new URL(servicePath(url.pathname+url.search),location.origin).href; }
+async function api(path, options={},backend=null){
   if(!localHost) throw Object.assign(new Error('此开发页面仅允许连接本机服务。'),{code:'local_only'});
   let response;
-  try{ response=await fetch(path,{...options,signal:AbortSignal.timeout(150000)}); }catch{ throw Object.assign(new Error('服务连接中断'),{code:'network_error'}); }
+  try{ response=await fetch(servicePath(path,backend),{...options,signal:options.signal||AbortSignal.timeout(150000)}); }catch{ throw Object.assign(new Error('服务连接中断'),{code:'network_error'}); }
   let body; try{body=await response.json();}catch{throw Object.assign(new Error('服务未返回有效数据'),{code:'invalid_response'});}
-  if(!response.ok) throw Object.assign(new Error(body.error?.message||`HTTP ${response.status}`),{code:body.error?.code||'http_error',status:response.status});
+  if(!response.ok){if(body.error?.code==='remote_unavailable'&&deployment.local_demo===true){if(serviceInfo.remote)serviceInfo.remote.ready=false;deployment.connection='unavailable';renderControls();}throw Object.assign(new Error(body.error?.message||`HTTP ${response.status}`),{code:body.error?.code||'http_error',status:response.status});}
   return body;
 }
 function post(path,body,key){return api(path,{method:'POST',headers:{'Content-Type':'application/json',...(key?{'Idempotency-Key':key}:{})},body:JSON.stringify(body)});}
@@ -97,6 +114,7 @@ function reset(){
   $('video').hidden=true;$('empty-state').hidden=false;$('video-caption').hidden=true;$('crop-canvas').hidden=true;$('crop-placeholder').hidden=true;$('file-input').value='';$('video-meta').textContent='尚未导入素材';$('file-summary').textContent='选择视频后即可开始';$('task-state').textContent='等待导入视频';$('task-state').classList.remove('busy');$('export-state').textContent='';$('export-state').classList.remove('busy');$('download').hidden=true;$('upload-progress').hidden=true;$('playhead').textContent='00:00.00';$('resume-task').hidden=true;$('source-view').classList.add('selected');$('crop-view').classList.remove('selected');$('source-view').setAttribute('aria-pressed','true');$('crop-view').setAttribute('aria-pressed','false');clearMessage();renderPlan();renderControls();persist();view('editor');
 }
 function renderControls(){
+  renderService();
   renderExecution();
   const locked=inputsLocked();
   $('start-analysis').disabled=!state.file||locked||needsNewSource()||!canProcess();
@@ -130,28 +148,27 @@ function renderControls(){
   document.querySelectorAll('.segment-export').forEach(el=>el.disabled=!state.record||state.busy||!!exportActive||pendingExport);
 }
 async function checkService(){
+  if(checkingService)return;checkingService=true;clearTimeout(serviceTimer);
   try { deployment=await api('/api/v1/deployment'); } catch { deployment={location:'local'}; }
   try{
-    const model=await api('/api/v1/model');
-    const health=await api('/ready').catch(()=>({ready:false}));
-    state.model=model;state.ready=!!model.available&&!!health.ready;
-    if(remoteService()&&!state.task&&!state.pending)execution=model.mock?'debug':'cloud';
-    $('service-dot').className=`status-dot ${state.ready?'online':'offline'}`;
-    $('service-label').textContent=state.ready?'服务已连接':'服务暂不可用';
-    $('mode-notice').textContent=model.mock?'演示模式：仅供体验操作流程，不进行真实内容分析。':'';
-    $('mode-explanation').textContent=model.mock
-      ?'演示模式可以体验导入、任务与编辑操作；不会调用 AI 分析视频内容。'
-      :'自动发现高光，支持片段调整、裁剪预览与成片下载。';
-    $('settings-engine').textContent=model.mock?'演示分析':'智能分析';
-    $('settings-mode').textContent=model.mock?'演示':remoteService()?'云端处理':'本机处理';
-    $('settings-ready').textContent=state.ready?'可以使用':'暂不可用';
+    const info=async backend=>{const [model,health]=await Promise.all([api('/api/v1/model',{signal:AbortSignal.timeout(5000)},backend),api('/ready',{signal:AbortSignal.timeout(5000)},backend).catch(()=>({ready:false}))]);return{model,ready:!!model.available&&!!health.ready};};
+    if(deployment.local_demo===true){
+      const unavailable={model:null,ready:false};[serviceInfo.remote,serviceInfo.demo]=await Promise.all([info('remote').catch(()=>unavailable),info('demo').catch(()=>unavailable)]);
+      if(!state.task&&!state.pending&&!state.file&&!state.record&&execution==='cloud'&&!cloudReady())execution='debug';
+      useActiveService();
+    }else{
+      const current=await info(null);state.model=current.model;state.ready=current.ready;
+      if(remoteService()&&!state.task&&!state.pending)execution=state.model.mock?'debug':'cloud';
+    }
   }catch(error){
     state.ready=false;$('service-dot').className='status-dot offline';$('service-label').textContent='连接已中断';
     $('mode-notice').textContent=describe(error);$('settings-ready').textContent='连接失败';
     $('mode-explanation').textContent='暂时无法连接服务，请重新检查连接。';
   }
-  renderControls();
+  checkingService=false;renderControls();
+  if(deployment.connection==='connecting')serviceTimer=setTimeout(checkService,2000);
 }
+async function refreshService(){if(deployment.local_demo===true){try{await post('/api/v1/deployment',{});}catch{}}await checkService();}
 
 function selectFile(file){
   if(!file||inputsLocked())return;
@@ -161,8 +178,8 @@ function selectFile(file){
   clearMessage();if(state.url)URL.revokeObjectURL(state.url);state.file=file;state.url=URL.createObjectURL(file);$('video').src=state.url;$('video').hidden=false;$('empty-state').hidden=true;$('video-caption').hidden=false;$('video-name').textContent=file.name;$('file-summary').textContent=`${file.name} · ${size(file.size)}`;$('video-meta').textContent='正在读取视频信息…';$('task-state').textContent='素材已就绪，选择画幅后开始分析';renderControls();
 }
 function upload(file){return new Promise((resolve,reject)=>{
-  const xhr=new XMLHttpRequest();xhr.open('POST',`/api/v1/uploads?filename=${encodeURIComponent(file.name)}`);xhr.setRequestHeader('Content-Type','application/octet-stream');xhr.timeout=600000;
-  xhr.upload.onprogress=e=>{if(e.lengthComputable){const pct=Math.round(e.loaded/e.total*100);$('upload-progress').value=pct;$('task-state').textContent=pct===100?'正在上传并保存素材…':`正在${remoteService()?'上传远程':'导入本机'} · ${pct}%`;}};
+  const xhr=new XMLHttpRequest();xhr.open('POST',servicePath(`/api/v1/uploads?filename=${encodeURIComponent(file.name)}`));xhr.setRequestHeader('Content-Type','application/octet-stream');xhr.timeout=600000;
+  xhr.upload.onprogress=e=>{if(e.lengthComputable){const pct=Math.round(e.loaded/e.total*100);$('upload-progress').value=pct;$('task-state').textContent=pct===100?'正在上传并保存素材…':`正在${remoteService()&&!localDemo()?'上传远程':'导入本机'} · ${pct}%`;}};
   xhr.onload=()=>{let body;try{body=JSON.parse(xhr.responseText);}catch{reject(Object.assign(new Error('上传响应无效'),{code:'invalid_response'}));return;}if(xhr.status>=200&&xhr.status<300)resolve(body);else reject(Object.assign(new Error(body.error?.message),{code:body.error?.code}));};
   xhr.onerror=xhr.ontimeout=()=>reject(Object.assign(new Error('导入连接中断'),{code:'network_error'}));xhr.send(file);
 });}
@@ -338,7 +355,7 @@ async function restore(record){
 }
 $('dismiss-message').onclick=clearMessage;
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>view(b.dataset.view));
-$('refresh-service').onclick=$('settings-refresh').onclick=checkService;
+$('refresh-service').onclick=$('settings-refresh').onclick=refreshService;
 $('mode-help').onclick=$('execution-guide').onclick=()=>view('settings');
 for(const button of document.querySelectorAll('[data-execution]'))button.onclick=()=>chooseExecution(button.dataset.execution);
 $('debug-mode').onclick=()=>chooseExecution('debug');
