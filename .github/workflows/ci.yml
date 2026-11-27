@@ -19,6 +19,7 @@ jobs:
       - name: Read private competition repository
         env:
           COMPETITION_READ_KEY: ${{ secrets.COMPETITION_READ_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python scripts/ci_submodule.py
       - run: python scripts/check_repository.py
       - name: Install CPU media tools

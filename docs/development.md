@@ -1,6 +1,6 @@
 # 开发、同步与边界
 
-更新：2026-11-25。本轮按照[最终改进分工计划](FINAL_IMPROVEMENTS_PLAN_20261125.md)进行大学生示例项目收尾；[baseline计划](baseline应用开发计划书.md)记录媒体与接口基线。A/B不再训练模型，四人均开发产品。当前能力见[状态页](STATUS_20261125.md)，不能把历史初稿或尚未执行的计划当作实现。
+更新：2026-11-27。本轮按照[最终改进分工计划](FINAL_IMPROVEMENTS_PLAN_20261125.md)进行大学生示例项目收尾；[baseline计划](baseline应用开发计划书.md)记录媒体与接口基线。A/B不再训练模型，四人均开发产品。当前能力见[状态页](STATUS_20261125.md)，不能把历史初稿或尚未执行的计划当作实现。
 
 ## 普通克隆即可开发
 
@@ -15,9 +15,9 @@ python scripts/smoke.py
 python -m apps.backend.server --port 8001 --runtime runtime/local-demo --adapter mock-media --allow-mock-media
 ```
 
-网页为原生HTML/CSS/JS，无npm构建步骤。基础Mock只需Python标准库；完整媒体模拟还需要Pillow与FFmpeg，测试依赖见requirements-dev.txt。当前没有一键启动器，该项由B在本轮实现。
+网页为原生HTML/CSS/JS，无npm构建步骤。基础Mock只需Python标准库；完整媒体模拟还需要Pillow与FFmpeg/FFprobe，测试依赖见requirements-dev.txt。已有统一入口 `Start-Demo.cmd`；服务器离线时也能打开网页并使用本机演示，详见[演示手册](demo-runbook.md)。
 
-拉取代码后使用`git pull --ff-only`，从main创建`feat/<功能>`短分支，例如A的`feat/final-media-acceptance`、B的`feat/final-launcher`、D的`feat/final-workbench`、E的`feat/final-runtime-maintenance`。不维持长期AB/DE主线，不重新选择框架。
+按用户2026-11-27的要求，后续直接在 `main` 修改、检查、提交并推送，不另建 PR。修改前使用 `git pull --ff-only` 获取更新，遇到他人提交先处理兼容与冲突，不覆盖他人工作。只有用户再次明确要求时才使用 PR。
 
 ## 可选的完整比赛子模块
 
@@ -41,6 +41,10 @@ Windows创建的worktree可能在.git记录Windows绝对路径，WSL直接调用
 
 普通Product checks CI通过COMPETITION_READ_KEY只读部署密钥读取私有比赛子模块，随后做引用、CPU接口和媒体检查。密钥只在Runner临时目录使用，不分发给个人；不要把旧自动同步工作流的写PR权限说明混到当前CI。CODEOWNERS只指定审核人，不等于已经强制分支保护或分配目录写权限。
 
+读取 GitHub 主机公钥的 `/meta` 请求使用 Actions 自动提供的 `GITHUB_TOKEN` 认证，工作流仍只需 `contents: read`；无需额外新建个人令牌或更改比赛仓库部署密钥。缺少令牌时明确报错，不退回匿名 API 请求；SSH 仍要求匹配从 HTTPS 取得的主机公钥。
+
+2026-11-27 故障记录（初稿）：main 提交 `7fe9908` 的[检查运行](https://github.com/Regulus-Blac/highlight-studio/actions/runs/45986808894)在准备比赛子模块时请求 `/meta`，收到 `HTTP Error 403: rate limit exceeded`。旧脚本未给该请求附加认证，导致检查在测试前约5秒失败，后续测试均跳过。该失败记录没有执行网页或视频测试；当时的功能分支检查已通过。修复为显式传入内置令牌，并增加真实 CI 入口回归：模拟匿名配额耗尽、确认认证请求成功、缺令牌时拒绝匿名回退，以及继续要求比赛只读密钥。回归使用临时假密钥与请求夹具，不接触真实子模块或凭据。
+
 ## 按改动验证
 
 - 文档：检查事实、文件/相对链接、命令与当前代码一致；不为文档变更启动GPU或下载模型。
@@ -49,7 +53,7 @@ Windows创建的worktree可能在.git记录Windows绝对路径，WSL直接调用
 - 完整引用：有子模块权限的环境运行`python scripts/check_repository.py`。
 - 真实推理：复用已验收部署，按[f1说明](f1-video-inference.md)和[演示手册](demo-runbook.md)有限复验；记录真实环境和结果，不以Mock代替。
 
-本地检查与远端Actions状态分别记录，不因本地通过声称CI通过。功能PR包含问题、最终改动与真实验证，精确暂存自己的文件；权重、视频、特征、运行结果和凭据不进Git。
+本地检查与远端Actions状态分别记录，不因本地通过声称CI通过。产品改动检查通过后直接提交 main，记录问题、最终改动与真实验证，精确暂存自己的文件；权重、视频、特征、运行结果和凭据不进Git。
 
 ## 单机演示与后续边界
 

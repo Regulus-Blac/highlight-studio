@@ -13,13 +13,20 @@ from model_ref import MODULE, ROOT, git
 key_value = os.environ.get("COMPETITION_READ_KEY")
 if not key_value:
     raise SystemExit("Missing Actions secret COMPETITION_READ_KEY (read-only upstream deploy key)")
+api_token = os.environ.get("GITHUB_TOKEN", "").strip()
+if not api_token:
+    raise SystemExit("Missing Actions token GITHUB_TOKEN (required for authenticated GitHub metadata)")
 directory = Path(os.environ["RUNNER_TEMP"]) / "competition-ssh"
 directory.mkdir(mode=0o700, exist_ok=True)
 key = directory / "id_ed25519"
 key.write_text(key_value.strip() + "\n", encoding="utf-8")
 key.chmod(0o600)
 # Fetch published host keys over verified HTTPS, then require an exact SSH match.
-request = urllib.request.Request("https://api.github.com/meta", headers={"User-Agent": "highlight-studio-ci"})
+request = urllib.request.Request("https://api.github.com/meta", headers={
+    "User-Agent": "highlight-studio-ci",
+    "Accept": "application/vnd.github+json",
+    "Authorization": "Bearer " + api_token,
+})
 with urllib.request.urlopen(request, timeout=30) as response:
     host_keys = json.load(response)["ssh_keys"]
 known_hosts = directory / "known_hosts"
